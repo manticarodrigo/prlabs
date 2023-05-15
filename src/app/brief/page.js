@@ -55,8 +55,22 @@ export default function Form() {
                     method: 'POST',
                     body: new FormData(e.target),
                   })
-                  const data = await res.json()
-                  setResponse(data)
+                  const data = res.body
+
+                  if (!data) {
+                    return
+                  }
+
+                  const reader = data.getReader()
+                  const decoder = new TextDecoder()
+                  let done = false
+
+                  while (!done) {
+                    const { value, done: doneReading } = await reader.read()
+                    done = doneReading
+                    const chunkValue = decoder.decode(value)
+                    setResponse((prev) => (prev || '') + chunkValue)
+                  }
                 } finally {
                   clearTimeout(stillLoadingTimeout)
                   setLoading('')

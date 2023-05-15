@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
-import { Configuration, OpenAIApi } from 'openai'
+import { OpenAIStream } from '@/utils/openai'
 
-async function generateResponse(prompt) {
-  const configuration = new Configuration({
-    organization: 'org-kUlPMn8g8FMJFmV6B1KdUGeU',
-    apiKey: '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',
-  })
-  const openai = new OpenAIApi(configuration)
-  const response = await openai.createChatCompletion({
+export const config = {
+  runtime: 'edge',
+}
+
+async function generateStream(prompt) {
+  const payload = {
     model: 'gpt-3.5-turbo',
+    stream: true,
     messages: [
       {
         role: 'system',
@@ -43,9 +43,9 @@ async function generateResponse(prompt) {
       },
       { role: 'user', content: prompt.substring(0, 8192) },
     ],
-  })
+  }
 
-  return response
+  return OpenAIStream(payload)
 }
 
 async function getNewsArticles({ author, site, country = 'US' }) {
@@ -80,7 +80,7 @@ export async function POST(request) {
     news,
   })
 
-  const response = await generateResponse(payload)
+  const stream = await generateStream(payload)
 
-  return NextResponse.json(response.data.choices[0].message.content)
+  return new NextResponse(stream)
 }

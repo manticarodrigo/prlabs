@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server'
-import { Configuration, OpenAIApi } from 'openai'
+import { OpenAIStream } from '@/utils/openai'
 
-async function generateResponse(prompt) {
-  const configuration = new Configuration({
-    organization: 'org-kUlPMn8g8FMJFmV6B1KdUGeU',
-    apiKey: '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',
-  })
-  const openai = new OpenAIApi(configuration)
-  const response = await openai.createChatCompletion({
+async function generateStream(prompt) {
+  const payload = {
     model: 'gpt-3.5-turbo',
+    stream: true,
     messages: [
       {
         role: 'system',
@@ -21,9 +17,9 @@ async function generateResponse(prompt) {
           "Please analyze the provided news articles written by interviewer from outlet. Identify and list the top or notable key terms used and any brands mentioned across all the analyzed articles. Additionally, identify recurring topics within the articles by recognizing significant keyword groupings. Based on these keyword groupings, determine a central theme for interviewers's work, as well as several sub-themes and assign a weight to each based on their prevalence in the articles analyzed. Provide direct references to the language/content from the articles to support each theme and sub-theme. Lastly, include a summary at the end of the analysis offering advice on the most effective way to engage with interviewer.",
       },
     ],
-  })
+  }
 
-  return response
+  return OpenAIStream(payload)
 }
 
 async function getNewsArticles({ author, site, country = 'US' }) {
@@ -55,7 +51,7 @@ export async function POST(request) {
     news,
   })
 
-  const response = await generateResponse(payload)
+  const stream = await generateStream(payload)
 
-  return NextResponse.json(response.data.choices[0].message.content)
+  return new NextResponse(stream)
 }

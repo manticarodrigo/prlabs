@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { OpenAIStream } from '@/utils/openai'
 
+export const runtime = 'edge'
+
 async function generateStream(prompt) {
   const payload = {
     model: 'gpt-3.5-turbo',

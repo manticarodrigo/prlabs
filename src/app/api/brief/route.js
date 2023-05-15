@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
 import { OpenAIStream } from '@/utils/openai'
 
-export const config = {
-  runtime: 'edge',
-}
+export const runtime = 'edge'
 
 async function generateStream(prompt) {
   const payload = {

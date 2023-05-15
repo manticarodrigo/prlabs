@@ -41,7 +41,7 @@ async function generateResponse(prompt) {
           Please provide the necessary information based on the context and specific details of the interview, ensuring a comprehensive and informative briefing.
 `,
       },
-      { role: 'user', content: prompt.substring(0, 4096) },
+      { role: 'user', content: prompt.substring(0, 8192) },
     ],
   })
 

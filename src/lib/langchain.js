@@ -31,7 +31,7 @@ export async function streamLLMChain(fn) {
   return stream.readable
 }
 
-export function answerContextualQuery(query, texts, metadatas) {
+export function answerContextualQuery({ query, texts, metadatas }) {
   return async function (model) {
     const vectorStore = await MemoryVectorStore.fromTexts(
       texts,

@@ -14,9 +14,7 @@ export async function POST(request) {
 
   const articles = await getNewsArticles(interviewer, outlet)
 
-  const texts = articles
-    .filter((article) => article.summary)
-    .map((article) => article.summary)
+  const texts = articles.map((article) => article.summary || '')
 
   const metadatas = articles.map((article) => {
     delete article.summary
@@ -24,7 +22,7 @@ export async function POST(request) {
   })
 
   const stream = await streamLLMChain(
-    answerContextualQuery(query, texts, metadatas),
+    answerContextualQuery({ query, texts, metadatas }),
   )
 
   return new Response(stream)

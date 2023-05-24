@@ -1,4 +1,5 @@
-import { answerContextualQuery, streamLLMChain } from '@/lib/langchain'
+import { PromptTemplate } from 'langchain/prompts'
+import { streamLLMChain, answerContextualQuery } from '@/lib/langchain'
 import { getNewsArticles } from '@/lib/newscatcher'
 
 export const runtime = 'edge'
@@ -6,47 +7,36 @@ export const runtime = 'edge'
 export async function POST(request) {
   const res = await request.formData()
   const entries = Object.fromEntries(res.entries())
-  const { preparer, interviewee, interviewer, outlet, prompt } = entries
+  const { interviewee, interviewer, outlet, prompt } = entries
 
-  const query = `
-    [Name of Preparer] = ${preparer}
-    [Name of Interviewee] = ${interviewee}
-    [Name of Journalist] = ${interviewer}
-    [Media Outlet] = ${outlet}
-    [Interview Context] = ${prompt}
-    Create a comprehensive briefing document to help [Name of Interviewee], [Title of Interviewee] at [Company], prepare for a media interview with [Name of Journalist], a reporter at [Media Outlet]. Ensure that the document covers the following aspects:
-    Prepared by: [Name of Preparer], [Title of Preparer] at [Agency/Company]
-    Interview details, including date, time, and format (in-person, virtual, phone, etc.)
-    Background information on [Name of Journalist]:
-    A brief bio, including their expertise, notable achievements, and journalistic style
-    Twitter page or other relevant social media profiles
-    Focus areas, beats, or topics they typically cover, with examples of previous interviews or articles
-    Interview context and focus, highlighting the main objective or angle, and explaining its relevance to the interviewee's company or industry
-    Expanded areas of discussion related to the interview focus, detailing several key topics and subtopics that might be addressed, along with relevant data, statistics, or trends
-    Sample questions and thorough responses for the interviewee, incorporating company-specific information and addressing potential concerns:
-    Include possible follow-up questions or probing inquiries from the journalist
-    Suggest ways for the interviewee to steer the conversation back to key messages if necessary
-    Summaries of [number] relevant articles by the journalist, including:
-    Links to the articles
-    3-4 bullet points summarizing each article's main points, findings, or conclusions
-    Any patterns or trends in the journalist's coverage that might inform the interviewee's preparation
-    Potential hazard areas or sensitive topics to be aware of during the interview, along with suggestions for handling them:
-    Include potential controversial questions or topics
-    Offer strategies for diplomatically addressing or deflecting these issues
-    Media interview best practice tips:
-    Provide 5 general tips to help the interviewee prepare effectively and perform well during the interview, tailored to the journalist's style and the interview format
-    Include specific examples or anecdotes to illustrate the tips, if possible
-    Any additional relevant information, resources, or tips to help the interviewee prepare effectively, such as:
-    Links to recent news stories or industry reports related to the interview focus
-    Insights on the journalist's interviewing style or preferences, if available
-    Please provide the necessary information based on the context and specific details of the interview, ensuring a comprehensive and informative briefing.
-`
+  const template = PromptTemplate.fromTemplate(
+    `
+      Prepare a brief for {interviewee} for a potential interview with {interviewer} at {outlet}.
+      The context for the interview is: {prompt}.
+      The format for the brief is as follows:
+      Background on {interviewer}:
+      Bio, expertise, achievements, style, social media profiles.
+      Areas of coverage, with examples of previous work.
+      Possible discussion areas: Key topics, subtopics, relevant data, statistics, trends.
+      Potential questions and responses for {interviewee}, addressing concerns.
+      Suggestions to return to key messages.
+      Summaries of recent articles by {interviewer}, noting patterns or trends.
+      Sensitive topics to be aware of, with suggestions for handling them.
+      Interview best practice tips, tailored to {interviewer} and the format.
+      Additional resources, including recent news stories, reports related to the focus, insights on {interviewer}'s style.
+    `,
+  )
+
+  const query = await template.format({
+    interviewee,
+    interviewer,
+    outlet,
+    prompt,
+  })
 
   const articles = await getNewsArticles(interviewer, outlet)
 
-  const texts = articles
-    .filter((article) => article.summary)
-    .map((article) => article.summary)
+  const texts = articles.map((article) => article.summary || ' ')
 
   const metadatas = articles.map((article) => {
     delete article.summary
@@ -54,7 +44,7 @@ export async function POST(request) {
   })
 
   const stream = await streamLLMChain(
-    answerContextualQuery(query, texts, metadatas),
+    answerContextualQuery({ query, texts, metadatas }),
   )
 
   return new Response(stream)

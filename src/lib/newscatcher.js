@@ -7,6 +7,7 @@ export const getNewsArticles = async (author, source) => {
     lang: 'en',
     from: '2023-01-01',
     sources: source,
+    page_size: 5,
   }
 
   const res = await fetch(`${endpoint}?${new URLSearchParams(query)}`, {
@@ -17,5 +18,5 @@ export const getNewsArticles = async (author, source) => {
 
   const json = await res.json()
 
-  return json.articles
+  return json.articles || []
 }

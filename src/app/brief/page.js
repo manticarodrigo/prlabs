@@ -79,10 +79,6 @@ export default function Form() {
               className="space-y-4"
             >
               <TextInput
-                name="preparer"
-                label="Who was this brief prepared by? (your name)"
-              />
-              <TextInput
                 name="interviewee"
                 label="Who is this brief prepared for? (your client)"
               />

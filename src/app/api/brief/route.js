@@ -11,6 +11,8 @@ export async function POST(request) {
 
   const template = PromptTemplate.fromTemplate(
     `
+      Please analyze the provided articles and use that context to create a briefing document for the interviewee.
+
       The context for the interview is: {prompt}.
 
       Create a comprehensive briefing document to help {interviewee}, prepare for a media interview with {interviewer}, a reporter at {outlet}.
@@ -37,6 +39,7 @@ export async function POST(request) {
       Media interview best practice tips:
       Provide 5 general tips to help the interviewee prepare effectively and perform well during the interview, tailored to the journalist's style and the interview format.
       Include specific examples or anecdotes to illustrate the tips, if possible.
+
       Any additional relevant information, resources, or tips to help the interviewee prepare effectively, such as:
       Links to recent news stories or industry reports related to the interview focus.
       Insights on the journalist's interviewing style or preferences, if available.

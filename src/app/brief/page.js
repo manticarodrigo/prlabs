@@ -22,8 +22,8 @@ export default function Form() {
   const [loading, setLoading] = useState('')
   const [response, setResponse] = useState(null)
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6 lg:p-24">
-      <div className="max-w-3xl whitespace-break-spaces">
+    <div className="flex w-full min-h-screen flex-col items-center justify-center p-6 lg:p-24">
+      <div className="w-full max-w-3xl whitespace-break-spaces">
         <h1 className="text-2xl font-bold uppercase">Briefing book</h1>
         {response ? (
           <>

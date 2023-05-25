@@ -1,46 +1,24 @@
-import { OpenAI } from 'langchain/llms/openai'
-import { RetrievalQAChain } from 'langchain/chains'
+import { ChatOpenAI } from 'langchain/chat_models/openai'
+import { ConversationalRetrievalQAChain } from 'langchain/chains'
 import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 
-export async function streamLLMChain(fn) {
-  const encoder = new TextEncoder()
-
-  const stream = new TransformStream()
-  const writer = stream.writable.getWriter()
-
-  const model = new OpenAI({
+export async function makeRetrievalQAChain({ texts, metadatas }) {
+  const model = new ChatOpenAI({
     modelName: 'gpt-3.5-turbo',
     streaming: true,
-    callbacks: [
-      {
-        async handleLLMNewToken(token) {
-          await writer.ready
-          await writer.write(encoder.encode(`${token}`))
-        },
-        async handleLLMEnd() {
-          await writer.ready
-          await writer.close()
-        },
-      },
-    ],
   })
 
-  fn(model)
+  const vectorStore = await MemoryVectorStore.fromTexts(
+    texts,
+    metadatas,
+    new OpenAIEmbeddings(),
+  )
 
-  return stream.readable
-}
+  const chain = ConversationalRetrievalQAChain.fromLLM(
+    model,
+    vectorStore.asRetriever(),
+  )
 
-export function answerContextualQuery({ query, texts, metadatas }) {
-  return async function (model) {
-    const vectorStore = await MemoryVectorStore.fromTexts(
-      texts,
-      metadatas,
-      new OpenAIEmbeddings(),
-    )
-
-    const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever())
-
-    await chain.call({ query })
-  }
+  return chain
 }

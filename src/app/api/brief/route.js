@@ -1,8 +1,8 @@
 import { PromptTemplate } from 'langchain/prompts'
 import { makeRetrievalQAChain } from '@/lib/langchain'
-import { getNewsTexts } from '@/lib/newscatcher'
+import { getNewsArticles } from '@/lib/newscatcher'
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 export async function POST(request) {
   const res = await request.formData()
@@ -56,12 +56,8 @@ export async function POST(request) {
     prompt,
   })
 
-  const { texts, metadatas } = await getNewsTexts(interviewer, outlet)
-
-  const chain = await makeRetrievalQAChain({
-    texts,
-    metadatas,
-  })
+  const articles = await getNewsArticles(interviewer, outlet)
+  const chain = await makeRetrievalQAChain(articles)
 
   const encoder = new TextEncoder()
   const stream = new TransformStream()

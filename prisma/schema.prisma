@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model Article {
+  id                       String                 @id @default(cuid())
+  title                    String?
+  author                   String?
+  published_date           DateTime?
+  published_date_precision String?
+  link                     String?
+  clean_url                String?
+  excerpt                  String?
+  summary                  String?
+  rights                   String?
+  rank                     Int?
+  topic                    String?
+  country                  String?
+  language                 String?
+  authors                  String?
+  media                    String?
+  is_opinion               Boolean?
+  twitter_account          String?
+  external_score           Float?
+  external_id              String?
+  vector                   Unsupported("vector")?
+}

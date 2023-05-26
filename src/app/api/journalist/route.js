@@ -1,7 +1,7 @@
 import { makeRetrievalQAChain } from '@/lib/langchain'
-import { getNewsTexts } from '@/lib/newscatcher'
+import { getNewsArticles } from '@/lib/newscatcher'
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 export async function POST(request) {
   const res = await request.formData()
@@ -21,12 +21,8 @@ export async function POST(request) {
     'What are the top 5 most discussed companies and corresponding executives in recent articles?',
   ]
 
-  const { texts, metadatas } = await getNewsTexts(interviewer, outlet)
-
-  const chain = await makeRetrievalQAChain({
-    texts,
-    metadatas,
-  })
+  const articles = await getNewsArticles(interviewer, outlet)
+  const chain = await makeRetrievalQAChain(articles)
 
   const encoder = new TextEncoder()
   const stream = new TransformStream()

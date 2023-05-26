@@ -2,7 +2,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { ConversationalRetrievalQAChain } from 'langchain/chains'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { PrismaVectorStore } from 'langchain/vectorstores/prisma'
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client/edge'
 
 import db from '@/lib/prisma'
 

@@ -2,7 +2,7 @@ import { PromptTemplate } from 'langchain/prompts'
 import { makeRetrievalQAChain } from '@/lib/langchain'
 import { getNewsArticles } from '@/lib/newscatcher'
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 export async function POST(request) {
   const res = await request.formData()

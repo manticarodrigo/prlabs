@@ -1,5 +1,5 @@
-import { ChatOpenAI } from 'langchain/chat_models/openai'
-import { ConversationalRetrievalQAChain } from 'langchain/chains'
+import { OpenAI } from 'langchain/llms/openai'
+import { RetrievalQAChain, loadQARefineChain } from 'langchain/chains'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { PrismaVectorStore } from 'langchain/vectorstores/prisma'
 import { Prisma } from '@prisma/client/edge'
@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client/edge'
 import db from '@/lib/prisma'
 
 export async function makeRetrievalQAChain(articles) {
-  const model = new ChatOpenAI({
+  const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
     streaming: true,
   })
@@ -52,10 +52,10 @@ export async function makeRetrievalQAChain(articles) {
 
   await vectorStore.addModels([...savedDocs, ...unsavedDocs])
 
-  const chain = ConversationalRetrievalQAChain.fromLLM(
-    model,
-    vectorStore.asRetriever(1),
-  )
+  const chain = new RetrievalQAChain({
+    combineDocumentsChain: loadQARefineChain(model),
+    retriever: vectorStore.asRetriever(),
+  })
 
   return chain
 }

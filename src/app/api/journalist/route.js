@@ -28,24 +28,18 @@ export async function POST(request) {
   const stream = new TransformStream()
   const writer = stream.writable.getWriter()
 
-  chain.call(
+  chain.call({ query: prompts.join('\n') }, [
     {
-      question: prompts.join('\n'),
-      chat_history: [],
-    },
-    [
-      {
-        async handleLLMNewToken(token) {
-          await writer.ready
-          await writer.write(encoder.encode(`${token}`))
-        },
-        async handleLLMClose() {
-          await writer.ready
-          await writer.close()
-        },
+      async handleLLMNewToken(token) {
+        await writer.ready
+        await writer.write(encoder.encode(`${token}`))
       },
-    ],
-  )
+      async handleLLMClose() {
+        await writer.ready
+        await writer.close()
+      },
+    },
+  ])
 
   return new Response(stream.readable)
 }

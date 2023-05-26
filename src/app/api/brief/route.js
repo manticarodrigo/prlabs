@@ -49,7 +49,7 @@ export async function POST(request) {
     `,
   )
 
-  const question = await template.format({
+  const query = await template.format({
     interviewee,
     interviewer,
     outlet,
@@ -63,24 +63,18 @@ export async function POST(request) {
   const stream = new TransformStream()
   const writer = stream.writable.getWriter()
 
-  chain.call(
+  chain.call({ query }, [
     {
-      question,
-      chat_history: [],
-    },
-    [
-      {
-        async handleLLMNewToken(token) {
-          await writer.ready
-          await writer.write(encoder.encode(`${token}`))
-        },
-        async handleLLMClose() {
-          await writer.ready
-          await writer.close()
-        },
+      async handleLLMNewToken(token) {
+        await writer.ready
+        await writer.write(encoder.encode(`${token}`))
       },
-    ],
-  )
+      async handleLLMClose() {
+        await writer.ready
+        await writer.close()
+      },
+    },
+  ])
 
   return new Response(stream.readable)
 }

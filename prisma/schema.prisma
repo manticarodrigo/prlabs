@@ -31,6 +31,6 @@ model Article {
   is_opinion               Boolean?
   twitter_account          String?
   external_score           Float?
-  external_id              String?
+  external_id              String?                @unique
   vector                   Unsupported("vector")?
 }

@@ -17,8 +17,8 @@ export async function POST(request) {
     'What are the top 5 narratives that this journalist has been focused on in recent articles? Provide the answer in a bulleted list weighted by (%). Each bullet should have links to related articles and a sublist of sub-trends that could be used to pitch the journalist to continue their narrative on that topic.',
     'Keywords:',
     'What are the most repeated keywords in recent articles?',
-    'Brands:',
-    'What are the top 5 most discussed companies and corresponding executives in recent articles?',
+    'Brands & People:',
+    'What are the most mentioned companies and people in recent articles?',
   ]
 
   const articles = await getNewsArticles(interviewer, outlet)

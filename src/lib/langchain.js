@@ -25,9 +25,20 @@ export async function makeRetrievalQAChain(articles) {
     },
   )
 
-  await vectorStore.addModels(
-    await db.$transaction(
-      articles.map(({ _id, _score, published_date, ...rest }) =>
+  const savedDocs = await db.article.findMany({
+    where: {
+      external_id: {
+        in: articles.map(({ _id }) => _id),
+      },
+    },
+  })
+
+  const unsavedDocs = await db.$transaction(
+    articles
+      .filter(
+        ({ _id }) => !savedDocs.find(({ external_id }) => external_id === _id),
+      )
+      .map(({ _id, _score, published_date, ...rest }) =>
         db.article.create({
           data: {
             ...rest,
@@ -37,12 +48,13 @@ export async function makeRetrievalQAChain(articles) {
           },
         }),
       ),
-    ),
   )
+
+  await vectorStore.addModels([...savedDocs, ...unsavedDocs])
 
   const chain = ConversationalRetrievalQAChain.fromLLM(
     model,
-    vectorStore.asRetriever(2),
+    vectorStore.asRetriever(1),
   )
 
   return chain

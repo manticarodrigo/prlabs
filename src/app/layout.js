@@ -1,6 +1,8 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
+import { getNotionDb } from '@/lib/notion'
+import RootNav from './nav'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -9,11 +11,14 @@ export const metadata = {
   description: 'Digital tools empowering PR professionals',
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const { results } = await getNotionDb()
+
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {children}
+    <html lang="en" className="w-full h-full">
+      <body className={inter.className + ' w-full h-full'}>
+        <RootNav results={results}>{children}</RootNav>
+
         <Analytics />
       </body>
     </html>

@@ -1,5 +1,7 @@
+import { PromptTemplate } from 'langchain/prompts'
 import { makeRetrievalQAChain } from '@/lib/langchain'
 import { getNewsArticles } from '@/lib/newscatcher'
+import { getNotionDb } from '@/lib/notion'
 
 export const runtime = 'edge'
 
@@ -9,17 +11,17 @@ export async function POST(request) {
 
   const { interviewer, outlet } = entries
 
-  const prompts = [
-    `Analyze the provided articles from journalist ${interviewer} at news outlet ${outlet} to answer the following prompts:`,
-    'Approach:',
-    'Provide a 5-10 line paragraph explaining how best to reach out to the journalist based on interests, narratives, central themes, and trends in their writing.',
-    'Narratives:',
-    'What are the top 5 narratives that this journalist has been focused on in recent articles? Provide the answer in a bulleted list weighted by (%). Each bullet should have links to related articles and a sublist of sub-trends that could be used to pitch the journalist to continue their narrative on that topic.',
-    'Keywords:',
-    'What are the most repeated keywords in recent articles?',
-    'Brands & People:',
-    'What are the most mentioned companies and people in recent articles?',
-  ]
+  const { results } = await getNotionDb()
+
+  const result = results.find(
+    (result) =>
+      result.properties.pathname?.rich_text[0]?.plain_text === 'journalist',
+  )
+  const template = PromptTemplate.fromTemplate(
+    result.properties.prompt?.rich_text[0]?.plain_text,
+  )
+
+  const query = await template.format({ interviewer, outlet })
 
   const articles = await getNewsArticles(interviewer, outlet)
   const chain = await makeRetrievalQAChain(articles)
@@ -28,7 +30,7 @@ export async function POST(request) {
   const stream = new TransformStream()
   const writer = stream.writable.getWriter()
 
-  chain.call({ query: prompts.join('\n') }, [
+  chain.call({ query }, [
     {
       async handleLLMNewToken(token) {
         await writer.ready

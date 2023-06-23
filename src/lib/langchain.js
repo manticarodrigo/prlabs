@@ -8,7 +8,7 @@ import db from '@/lib/prisma'
 
 export async function makeRetrievalQAChain(articles) {
   const model = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-3.5-turbo-16k',
     streaming: true,
   })
 

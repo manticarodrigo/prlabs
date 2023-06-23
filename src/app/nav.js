@@ -21,9 +21,9 @@ function RootHeader({ onToggleMenu }) {
         >
           <Menu className="w-6 h-6" />
         </button>
-        <span className="ml-3">
+        {/* <span className="ml-3">
           <UserButton afterSignOutUrl="/" />
-        </span>
+        </span> */}
       </div>
     </header>
   )

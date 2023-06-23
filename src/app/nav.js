@@ -1,5 +1,6 @@
 'use client'
 
+import { UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -12,13 +13,18 @@ function RootHeader({ onToggleMenu }) {
       <Link href="/" className="text-lg font-bold">
         <Image src="/logo.svg" width={150} height={50} alt="PR Labs Logo" />
       </Link>
-      <button
-        aria-label="Toggle Menu"
-        className="z-10 block lg:hidden"
-        onClick={onToggleMenu}
-      >
-        <Menu className="w-6 h-6" />
-      </button>
+      <div className="flex items-center">
+        <button
+          aria-label="Toggle Menu"
+          className="z-10 block lg:hidden"
+          onClick={onToggleMenu}
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        <span className="ml-3">
+          <UserButton afterSignOutUrl="/" />
+        </span>
+      </div>
     </header>
   )
 }

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.19.0",
     "@notionhq/client": "^2.2.5",
     "@prisma/client": "4.14.1",
     "@vercel/analytics": "^1.0.1",

@@ -78,9 +78,9 @@ export default function RootNav({ results, children }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="w-full h-full">
+    <div className="flex flex-col w-full h-full">
       <RootHeader onToggleMenu={() => setOpen((prev) => !prev)} />
-      <div className="flex flex-col lg:flex-row w-full h-full">
+      <div className="flex flex-col lg:flex-row w-full h-full min-h-0">
         <RootNavMenu results={results} open={open} setOpen={setOpen} />
         <main className="flex flex-col items-center p-12 w-full h-full overflow-auto">
           {children}

@@ -33,21 +33,35 @@ export async function makeRetrievalQAChain(articles) {
     },
   })
 
+  const unsavedArticles = articles.filter(
+    ({ _id }) => !savedDocs.find(({ external_id }) => external_id === _id),
+  )
+
   const unsavedDocs = await db.$transaction(
-    articles
-      .filter(
-        ({ _id }) => !savedDocs.find(({ external_id }) => external_id === _id),
-      )
-      .map(({ _id, _score, published_date, ...rest }) =>
-        db.article.create({
-          data: {
-            ...rest,
-            external_id: _id,
-            external_score: _score,
-            published_date: new Date(published_date),
+    unsavedArticles.map(({ _id, _score, published_date, author, ...rest }) =>
+      db.article.create({
+        data: {
+          ...rest,
+          external_id: _id,
+          external_score: _score,
+          published_date: new Date(published_date),
+          author: {
+            connectOrCreate: {
+              where: {
+                name_outlet: {
+                  name: author,
+                  outlet: rest.rights,
+                },
+              },
+              create: {
+                name: author,
+                outlet: rest.rights,
+              },
+            },
           },
-        }),
-      ),
+        },
+      }),
+    ),
   )
 
   await vectorStore.addModels([...savedDocs, ...unsavedDocs])

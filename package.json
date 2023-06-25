@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma generate --data-proxy && next dev",
+    "dev": "prisma generate && next dev",
     "build": "prisma generate --data-proxy && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,23 +11,24 @@
   "dependencies": {
     "@clerk/nextjs": "^4.19.0",
     "@notionhq/client": "^2.2.5",
-    "@prisma/client": "4.14.1",
+    "@prisma/client": "4.16.1",
     "@vercel/analytics": "^1.0.1",
-    "@vercel/postgres": "^0.3.0",
+    "@vercel/postgres": "^0.4.0",
+    "ai": "^2.1.8",
     "autoprefixer": "10.4.14",
-    "eslint": "8.40.0",
-    "eslint-config-next": "13.4.1",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
     "eventsource-parser": "^1.0.0",
-    "langchain": "^0.0.78",
+    "langchain": "^0.0.96",
     "next": "^13.4.3",
-    "postcss": "8.4.23",
+    "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
-    "prisma": "4.14.1",
+    "prisma": "4.16.1",
     "vercel": "^30.0.0"
   }
 }

@@ -2,7 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { ClerkProvider } from '@clerk/nextjs'
-import { getNotionDb } from '@/lib/notion'
+import prisma from '@/lib/prisma'
 import RootNav from './nav'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -13,13 +13,13 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }) {
-  const { results } = await getNotionDb()
+  const authors = await prisma.author.findMany({})
 
   return (
     <ClerkProvider>
-      <html lang="en" className="w-full h-full">
+      <html lang="en" className="w-full h-full overflow-hidden">
         <body className={inter.className + ' w-full h-full'}>
-          <RootNav results={results}>{children}</RootNav>
+          <RootNav authors={authors}>{children}</RootNav>
           <Analytics />
         </body>
       </html>

@@ -5,13 +5,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { Menu } from 'react-feather'
+import { Menu } from 'lucide-react'
 
 function RootHeader({ onToggleMenu }) {
   return (
-    <header className="z-20 flex justify-between items-center border-b border-violet-900 p-2">
+    <header className="z-20 flex justify-between items-center border-b border-slate-900 p-2">
       <Link href="/" className="text-lg font-bold">
-        <Image src="/logo.svg" width={150} height={50} alt="PR Labs Logo" />
+        <Image src="/logo.svg" width={123} height={32} alt="PR Labs Logo" />
       </Link>
       <div className="flex items-center">
         <button
@@ -19,9 +19,9 @@ function RootHeader({ onToggleMenu }) {
           className="z-10 block lg:hidden"
           onClick={onToggleMenu}
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-8 h-8" />
         </button>
-        <span className="ml-3">
+        <span className="ml-2 w-8 h-8">
           <UserButton afterSignOutUrl="/" />
         </span>
       </div>
@@ -29,7 +29,7 @@ function RootHeader({ onToggleMenu }) {
   )
 }
 
-function RootNavMenu({ results, open, setOpen }) {
+function RootNavMenu({ authors, open, setOpen }) {
   const pathname = usePathname()
 
   return (
@@ -44,11 +44,10 @@ function RootNavMenu({ results, open, setOpen }) {
       `}
     >
       <ul className="divide-y divide-slate-900 lg:border-r border-slate-900 h-full">
-        {results.map((result) => {
-          const { id, properties } = result
+        {authors.map((author) => {
+          const { id, name, outlet } = author
 
-          const title = properties.name?.title[0].plain_text
-          const slug = `/${properties.pathname?.rich_text[0]?.plain_text}`
+          const slug = `/author/${id}`
           const isActive = pathname === slug
 
           return (
@@ -62,9 +61,10 @@ function RootNavMenu({ results, open, setOpen }) {
               <Link
                 href={slug}
                 onClick={() => setOpen(false)}
-                className="flex items-center text-sm w-full h-full"
+                className="p-2 text-sm w-full h-full"
               >
-                <span className="p-4">{title}</span>
+                <div className="text-sm">{name}</div>
+                <div className="text-xs">{outlet}</div>
               </Link>
             </li>
           )
@@ -74,17 +74,15 @@ function RootNavMenu({ results, open, setOpen }) {
   )
 }
 
-export default function RootNav({ results, children }) {
+export default function RootNav({ authors, children }) {
   const [open, setOpen] = useState(false)
 
   return (
     <div className="flex flex-col w-full h-full">
       <RootHeader onToggleMenu={() => setOpen((prev) => !prev)} />
       <div className="flex flex-col lg:flex-row w-full h-full min-h-0">
-        <RootNavMenu results={results} open={open} setOpen={setOpen} />
-        <main className="flex flex-col items-center p-12 w-full h-full overflow-auto">
-          {children}
-        </main>
+        <RootNavMenu authors={authors} open={open} setOpen={setOpen} />
+        <main className="w-full h-full overflow-auto">{children}</main>
       </div>
     </div>
   )

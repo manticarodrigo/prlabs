@@ -18,7 +18,7 @@ export default function Chat() {
 
       <form onSubmit={handleSubmit}>
         <input
-          className="fixed w-full max-w-lg bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
+          className="fixed w-full max-w-lg bottom-0 border border-slate-300 rounded mb-8 shadow-xl p-2"
           value={input}
           placeholder="Say something..."
           onChange={handleInputChange}

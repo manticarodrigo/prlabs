@@ -1,6 +1,7 @@
 import {
   Command,
   CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
@@ -19,19 +20,21 @@ export default function JournalistSearch({ authors }: { authors: Author[] }) {
             Click to add a journalist
           </Link>
         </CommandEmpty>
-        {authors.map((author) => (
-          <CommandItem key={author.id} className="relative">
-            <Link
-              href={`/journalist/${author.id}`}
-              aria-label={`${author.name} - ${author.outlet}`}
-              className="absolute w-full h-full"
-            />
-            <div>
-              <div className="text-sm">{author.name}</div>
-              <div className="text-xs">{author.outlet}</div>
-            </div>
-          </CommandItem>
-        ))}
+        <CommandGroup>
+          {authors.map((author) => (
+            <CommandItem key={author.id} className="relative">
+              <Link
+                href={`/journalist/${author.id}`}
+                aria-label={`${author.name} - ${author.outlet}`}
+                className="absolute w-full h-full"
+              />
+              <div>
+                <div className="text-sm">{author.name}</div>
+                <div className="text-xs">{author.outlet}</div>
+              </div>
+            </CommandItem>
+          ))}
+        </CommandGroup>
       </CommandList>
     </Command>
   )

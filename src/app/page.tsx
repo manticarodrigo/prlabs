@@ -6,7 +6,7 @@ export default async function Home() {
 
   return (
     <main className="flex flex-col justify-center items-center w-full h-full">
-      <div className="rounded-lg max-w-xl w-full shadow-lg">
+      <div className="rounded-lg border max-w-xl w-full shadow-md">
         <JournalistSearch authors={authors} />
       </div>
     </main>

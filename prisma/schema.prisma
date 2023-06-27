@@ -4,16 +4,15 @@ generator client {
 }
 
 datasource db {
-  provider   = "postgresql"
-  url        = env("PRISMA_PROXY_URL") // uses connection pooling
-  directUrl  = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-  extensions = [vector]
+  provider  = "postgresql"
+  url       = env("PRISMA_PROXY_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Article {
-  id                       String                 @id @default(cuid())
+  id                       String    @id @default(cuid())
   title                    String?
-  author                   Author?                @relation(fields: [authorId], references: [id])
+  author                   Author?   @relation(fields: [authorId], references: [id])
   authorId                 String?
   published_date           DateTime?
   published_date_precision String?
@@ -31,8 +30,7 @@ model Article {
   is_opinion               Boolean?
   twitter_account          String?
   external_score           Float?
-  external_id              String?                @unique
-  vector                   Unsupported("vector")?
+  external_id              String?   @unique
 }
 
 model Author {

@@ -1,10 +1,14 @@
-export default function Home() {
+import JournalistSearch from '@/components/journalist/search'
+import prisma from '@/lib/prisma'
+
+export default async function Home() {
+  const authors = await prisma.author.findMany()
+
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full">
-      <h1 className="text-2xl font-bold uppercase">Welcome to PRLabs</h1>
-      <p className="mt-2 mb-6 text-center">
-        Try our AI-powered tools for Public Relations professionals!
-      </p>
-    </div>
+    <main className="flex flex-col justify-center items-center w-full h-full">
+      <div className="rounded-lg max-w-xl w-full shadow-lg">
+        <JournalistSearch authors={authors} />
+      </div>
+    </main>
   )
 }

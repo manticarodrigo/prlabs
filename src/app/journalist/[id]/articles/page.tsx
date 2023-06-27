@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma'
 import { Link } from 'lucide-react'
 
-export default async function AuthorArticlesPage({ params }) {
+export default async function JournalistArticlesPage({ params }) {
   const { id } = params
 
   const author = await prisma.author.findUnique({

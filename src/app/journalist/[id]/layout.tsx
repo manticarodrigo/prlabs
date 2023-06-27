@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma'
 
-export default async function AuthorLayout({ params, children }) {
+export default async function JournalistLayout({ params, children }) {
   const { id } = params
 
   const author = await prisma.author.findUnique({

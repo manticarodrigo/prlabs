@@ -1,8 +1,9 @@
-import { StreamingTextResponse, LangChainStream } from 'ai'
+import { LangChainStream, StreamingTextResponse } from 'ai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { AIChatMessage, HumanChatMessage } from 'langchain/schema'
 
-export const runtime = 'edge'
+export const runtime =
+  process.env.VERCEL_ENV === 'development' ? 'nodejs' : 'edge'
 
 export async function POST(req) {
   const { messages } = await req.json()

@@ -58,5 +58,5 @@ word-break: break-word !important;
 `
 
 export default function Page() {
-  return <div dangerouslySetInnerHTML={{ __html: snippet }} />
+  return <main dangerouslySetInnerHTML={{ __html: snippet }} />
 }

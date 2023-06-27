@@ -18,8 +18,5 @@ export async function getNewsArticles(author, source) {
 
   const json = await res.json()
 
-  return (json.articles || []).map((article) => ({
-    ...article,
-    summary: article.summary || ' ',
-  }))
+  return json.articles
 }

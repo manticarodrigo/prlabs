@@ -3,7 +3,8 @@ import { makeRetrievalQAChain } from '@/lib/langchain'
 import { getNewsArticles } from '@/lib/newscatcher'
 import { getNotionDb } from '@/lib/notion'
 
-export const runtime = process.env.NODE_ENV === 'development' ? 'node' : 'edge'
+export const runtime =
+  process.env.VERCEL_ENV === 'development' ? 'nodejs' : 'edge'
 
 export async function POST(request) {
   const res = await request.formData()

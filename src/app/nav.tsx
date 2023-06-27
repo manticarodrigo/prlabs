@@ -7,9 +7,31 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu } from 'lucide-react'
 
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+
 function RootHeader({ onToggleMenu }) {
   return (
     <header className="z-20 flex justify-between items-center border-b border-slate-900 p-2">
+      <Sheet>
+        <SheetTrigger>Open</SheetTrigger>
+        <SheetContent className="w-[400px] sm:w-[540px]">
+          <SheetHeader>
+            <SheetTitle>Are you sure absolutely sure?</SheetTitle>
+            <SheetDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+
       <Link href="/" className="text-lg font-bold">
         <Image src="/logo.svg" width={123} height={32} alt="PR Labs Logo" />
       </Link>

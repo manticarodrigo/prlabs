@@ -7,7 +7,7 @@ export async function getNewsArticles(author, source) {
     lang: 'en',
     from: '2023-01-01',
     sources: source,
-    page_size: 100,
+    page_size: '100',
   }
 
   const res = await fetch(`${endpoint}?${new URLSearchParams(query)}`, {

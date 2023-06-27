@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -16,9 +17,9 @@ export default function JournalistSearch({ authors }: { authors: Author[] }) {
       <CommandList>
         <CommandEmpty>
           <div>No results found.</div>
-          <Link href="/journalist" className="text-blue-600 underline">
-            Click to add a journalist
-          </Link>
+          <Button asChild className="mt-4">
+            <Link href="/journalist">Click to add a journalist</Link>
+          </Button>
         </CommandEmpty>
         <CommandGroup>
           {authors.map((author) => (

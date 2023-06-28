@@ -4,7 +4,7 @@ import { postJournalist } from '@/app/api/journalist/actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/input'
-import { AlertTriangle, RotateCcw } from 'lucide-react'
+import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 
 export default function JournalistCreatePage() {
@@ -45,7 +45,7 @@ export default function JournalistCreatePage() {
             label="Which website do they write for? (techcrunch.com)"
           />
           <Button disabled={loading}>
-            {loading && <RotateCcw className="mr-2 h-4 w-4 animate-spin" />}
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save journalist
           </Button>
         </form>

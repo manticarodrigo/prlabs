@@ -18,22 +18,21 @@ export async function getNotionDb() {
   return db
 }
 
-export async function getNotionPrompt(key: string) {
+export async function getNotionPrompts() {
   const { results } = await getNotionDb()
 
-  const result = results.find((result) => {
+  return results.map((result) => {
     if ('properties' in result) {
-      const property = result.properties.pathname
-      if ('rich_text' in property) {
-        return property.rich_text[0]?.plain_text === key
+      const { id, properties } = result
+      const { name, prompt } = properties
+
+      if ('title' in name && 'rich_text' in prompt) {
+        return {
+          id,
+          name: name.title[0]?.plain_text,
+          prompt: prompt.rich_text[0]?.plain_text,
+        }
       }
     }
   })
-
-  if ('properties' in result) {
-    const prompt = result.properties.prompt
-    if ('rich_text' in prompt) {
-      return prompt.rich_text[0]?.plain_text
-    }
-  }
 }

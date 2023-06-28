@@ -7,7 +7,7 @@ import { InputWithLabel } from '@/components/ui/input'
 import { AlertTriangle, RotateCcw } from 'lucide-react'
 import { useState } from 'react'
 
-export default function JournalistCreateForm() {
+export default function JournalistCreatePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 

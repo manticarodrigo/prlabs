@@ -1,7 +1,7 @@
 import JournalistSearch from '@/components/journalist/search'
 import prisma from '@/lib/prisma'
 
-export default async function Home() {
+export default async function HomePage() {
   const authors = await prisma.author.findMany()
 
   return (

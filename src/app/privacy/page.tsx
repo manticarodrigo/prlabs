@@ -57,6 +57,6 @@ word-break: break-word !important;
       </div>
 `
 
-export default function Page() {
+export default function PrivacyPage() {
   return <main dangerouslySetInnerHTML={{ __html: snippet }} />
 }

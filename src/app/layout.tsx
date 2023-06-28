@@ -17,7 +17,7 @@ export default async function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en" className="w-full h-full overflow-hidden">
         <body className={inter.className + ' w-full h-full flex flex-col'}>
-          <header className="flex justify-between items-center border-b border-slate-100 p-2">
+          <header className="flex justify-between items-center border-b p-2">
             <Link href="/" className="text-lg font-bold">
               <Image
                 src="/logo.svg"

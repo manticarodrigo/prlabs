@@ -21,6 +21,7 @@
     "@vercel/postgres": "^0.4.0",
     "ai": "^2.1.8",
     "autoprefixer": "10.4.14",
+    "autosize": "^6.0.1",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",

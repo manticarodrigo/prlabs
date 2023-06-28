@@ -20,10 +20,18 @@ export function JournalistDetailLayout({
   prompts: { id: string; name: string; prompt: string }[]
 }) {
   const { articles } = author
-  const { messages, input, setInput, handleInputChange, handleSubmit } =
-    useChat()
 
+  const { messages, input, setInput, handleInputChange, handleSubmit } =
+    useChat({
+      body: {
+        interviewer: author.name,
+        outlet: author.outlet,
+      },
+    })
+
+  const formRef = useRef(null)
   const inputRef = useRef(null)
+  const buttonRef = useRef(null)
 
   useEffect(() => {
     if (inputRef.current) {
@@ -134,6 +142,7 @@ export function JournalistDetailLayout({
         </div>
         <div className="p-2 w-full">
           <form
+            ref={formRef}
             onSubmit={handleSubmit}
             className="relative mx-auto w-full max-w-2xl"
           >
@@ -144,8 +153,18 @@ export function JournalistDetailLayout({
               placeholder="Chat with journalist..."
               className="pr-16 min-h-[2.5rem] max-h-32 resize-none shadow-xl"
               onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (
+                  buttonRef.current &&
+                  e.key === 'Enter' &&
+                  e.shiftKey == false
+                ) {
+                  e.preventDefault()
+                  buttonRef.current.click()
+                }
+              }}
             />
-            <Button aria-label="Submit" className="mt-4 w-full">
+            <Button ref={buttonRef} aria-label="Submit" className="mt-4 w-full">
               <Send className="mr-2 w-4 h-4" />
               Send message
             </Button>

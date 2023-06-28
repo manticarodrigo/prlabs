@@ -18,5 +18,5 @@ export async function getNewsArticles(author, source) {
 
   const json = await res.json()
 
-  return json.articles
+  return json.articles.filter((article) => article.summary)
 }

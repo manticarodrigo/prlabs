@@ -1,6 +1,6 @@
+import { JournalistDetailLayout } from '@/components/journalist/detail/layout'
 import { getNotionPrompts } from '@/lib/notion'
 import prisma from '@/lib/prisma'
-import { JournalistDetailLayout } from './components'
 
 export default async function JournalistDetailPage({ params }) {
   const { id } = params

@@ -1,6 +1,9 @@
 'use client'
 
 import { useChat } from 'ai/react'
+import autosize from 'autosize'
+import { Bot, Send, User } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,9 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Article, Author } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
-import autosize from 'autosize'
-import { Bot, Send, User } from 'lucide-react'
-import { useEffect, useRef } from 'react'
 
 export function JournalistDetailLayout({
   author,

@@ -1,8 +1,10 @@
-import { makeRetrievalQAChain } from '@/lib/langchain'
-import { getNewsArticles } from '@/lib/newscatcher'
 import { LangChainStream, StreamingTextResponse } from 'ai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { AIChatMessage, HumanChatMessage } from 'langchain/schema'
+
+import { makeRetrievalQAChain } from '@/lib/langchain'
+import { getNewsArticles } from '@/lib/newscatcher'
+
 import { upsertJournalist } from '../journalist/model'
 
 export const runtime =

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -8,7 +10,6 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { Author } from '@/lib/prisma'
-import Link from 'next/link'
 
 export default function JournalistSearch({ authors }: { authors: Author[] }) {
   return (

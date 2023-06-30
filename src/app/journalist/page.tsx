@@ -1,11 +1,12 @@
 'use client'
 
+import { AlertTriangle, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+
 import { postJournalist } from '@/app/api/journalist/actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/input'
-import { AlertTriangle, Loader2 } from 'lucide-react'
-import { useState } from 'react'
 
 export default function JournalistCreatePage() {
   const [loading, setLoading] = useState(false)

@@ -1,7 +1,9 @@
 'use server'
 
-import { getNewsArticles } from '@/lib/newscatcher'
 import { redirect } from 'next/navigation'
+
+import { getNewsArticles } from '@/lib/newscatcher'
+
 import { upsertJournalist } from './model'
 
 export async function postJournalist(formData) {

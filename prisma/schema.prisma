@@ -31,6 +31,8 @@ model Article {
   twitter_account          String?
   external_score           Float?
   external_id              String?   @unique
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @default(now()) @updatedAt
 }
 
 model Author {

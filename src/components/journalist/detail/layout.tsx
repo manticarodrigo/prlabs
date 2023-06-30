@@ -2,11 +2,18 @@
 
 import { useChat } from 'ai/react'
 import autosize from 'autosize'
+import dayjs from 'dayjs'
 import { Bot, Send, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Article, Author } from '@/lib/prisma'
@@ -107,6 +114,11 @@ export function JournalistDetailLayout({
                               {article.title}
                             </a>
                           </CardTitle>
+                          <CardDescription>
+                            {dayjs(article.published_date).format(
+                              'MMMM D, YYYY',
+                            )}
+                          </CardDescription>
                         </CardHeader>
                         <CardContent>{article.excerpt}</CardContent>
                       </Card>

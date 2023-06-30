@@ -9,7 +9,11 @@ export default async function JournalistDetailPage({ params }) {
     getNotionPrompts(),
     prisma.author.findUnique({
       where: { id },
-      include: { articles: true },
+      include: {
+        articles: {
+          orderBy: { published_date: 'desc' },
+        },
+      },
     }),
   ])
 

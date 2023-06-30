@@ -14,6 +14,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Article, Author } from '@/lib/prisma'
@@ -46,6 +55,11 @@ export function JournalistDetailLayout({
       autosize(inputRef.current)
     }
   }, [inputRef])
+
+  const twitter = articles
+    .find((article) => article.twitter_account)
+    .twitter_account.replace('@', '')
+
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
       <aside className="flex flex-col w-full h-full lg:max-w-sm md:border-r">
@@ -55,20 +69,45 @@ export function JournalistDetailLayout({
         >
           <header className="p-2 w-full">
             <h1 className="text-xl font-bold">{author.name}</h1>
-            <h2 className="text-lg">{author.outlet}</h2>
-            <TabsList className="mt-4">
+            <h2 className="text-sm">
+              {twitter && (
+                <a
+                  className="text-blue-500"
+                  href={`https://twitter.com/${twitter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  @{twitter}
+                </a>
+              )}
+              {twitter && author.outlet && ' | '}
+              {author.outlet && (
+                <a
+                  className="text-blue-500"
+                  href={`https://${author.outlet}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {author.outlet}
+                </a>
+              )}
+            </h2>
+            <TabsList className="mt-2">
               <TabsTrigger value="prompts">Prompts</TabsTrigger>
               <TabsTrigger value="articles">Articles</TabsTrigger>
             </TabsList>
           </header>
-          <TabsContent value="prompts" className="w-full h-full min-h-0">
+          <TabsContent
+            value="prompts"
+            className="border-t w-full h-full min-h-0"
+          >
             <ul className="space-y-2 p-2 w-full h-full min-h-0 overflow-auto">
               {prompts.map((prompt) => {
                 return (
                   <li key={prompt.id}>
                     <article>
-                      <Card
-                        className="w-full cursor-pointer"
+                      <button
+                        className="text-left"
                         onClick={() => {
                           setInput(
                             prompt.prompt
@@ -82,46 +121,82 @@ export function JournalistDetailLayout({
                           })
                         }}
                       >
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            {prompt.name}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          {prompt.prompt.substring(0, 100)}...
-                        </CardContent>
-                      </Card>
+                        <Card className="w-full">
+                          <CardHeader>
+                            <CardTitle className="text-lg">
+                              {prompt.name}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            {prompt.prompt
+                              .replace('{interviewer}', author.name)
+                              .replace('{outlet}', author.outlet)
+                              .substring(0, 100)}
+                            ...
+                          </CardContent>
+                        </Card>
+                      </button>
                     </article>
                   </li>
                 )
               })}
             </ul>
           </TabsContent>
-          <TabsContent value="articles" className="w-full h-full min-h-0">
+          <TabsContent
+            value="articles"
+            className="border-t w-full h-full min-h-0"
+          >
             <ul className="space-y-2 p-2 w-full h-full min-h-0 overflow-auto">
               {articles.map((article) => {
                 return (
                   <li key={article.id}>
                     <article>
-                      <Card className="w-full">
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            <a
-                              href={article.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
+                      <Dialog>
+                        <DialogTrigger className="text-left">
+                          <Card className="w-full">
+                            <CardHeader>
+                              <CardTitle className="text-lg">
+                                {article.title}
+                              </CardTitle>
+                              <CardDescription>
+                                {dayjs(article.published_date).format(
+                                  'MMMM D, YYYY',
+                                )}
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent>{article.excerpt}</CardContent>
+                          </Card>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-lg">
+                          <DialogHeader>
+                            <DialogTitle className="pr-4">
                               {article.title}
-                            </a>
-                          </CardTitle>
-                          <CardDescription>
-                            {dayjs(article.published_date).format(
-                              'MMMM D, YYYY',
-                            )}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent>{article.excerpt}</CardContent>
-                      </Card>
+                            </DialogTitle>
+                            <DialogDescription>
+                              {dayjs(article.published_date).format(
+                                'MMMM D, YYYY',
+                              )}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <p className="max-h-[50vh] overflow-auto">
+                            {article.summary || article.excerpt}
+                          </p>
+                          <DialogFooter>
+                            <Button asChild color="blue">
+                              <a
+                                href={article.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                Link to source
+                              </a>
+                            </Button>
+                            <DialogTrigger>
+                              <Button>Done</Button>
+                            </DialogTrigger>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </article>
                   </li>
                 )

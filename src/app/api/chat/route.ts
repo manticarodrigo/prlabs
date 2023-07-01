@@ -8,8 +8,7 @@ import { getNewsArticles, prepareNewsArticle } from '@/lib/newscatcher'
 
 import { upsertJournalist } from '../journalist/model'
 
-export const runtime =
-  process.env.VERCEL_ENV === 'development' ? 'nodejs' : 'edge'
+export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   const { messages, interviewer, outlet } = await req.json()

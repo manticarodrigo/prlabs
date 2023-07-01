@@ -6,8 +6,7 @@ import { prepareNewsArticle } from '@/lib/newscatcher'
 import { getNotionPrompts } from '@/lib/notion'
 import prisma from '@/lib/prisma'
 
-export const runtime =
-  process.env.VERCEL_ENV === 'development' ? 'nodejs' : 'edge'
+export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   const { prompt: id } = await req.json()

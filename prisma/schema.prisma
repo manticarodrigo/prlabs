@@ -9,11 +9,21 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+model Author {
+  id       String    @id @default(cuid())
+  name     String?
+  outlet   String?
+  articles Article[]
+
+  @@unique([name, outlet])
+}
+
 model Article {
-  id                       String    @id @default(cuid())
+  id                       String            @id @default(cuid())
   title                    String?
-  author                   Author?   @relation(fields: [authorId], references: [id])
+  author                   Author?           @relation(fields: [authorId], references: [id])
   authorId                 String?
+  analyses                 ArticleAnalysis[]
   published_date           DateTime?
   published_date_precision String?
   link                     String?
@@ -30,16 +40,16 @@ model Article {
   is_opinion               Boolean?
   twitter_account          String?
   external_score           Float?
-  external_id              String?   @unique
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @default(now()) @updatedAt
+  external_id              String?           @unique
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
 }
 
-model Author {
-  id       String    @id @default(cuid())
-  name     String?
-  outlet   String?
-  articles Article[]
-
-  @@unique([name, outlet])
+model ArticleAnalysis {
+  id        String   @id @default(cuid())
+  content   String
+  article   Article  @relation(fields: [articleId], references: [id])
+  articleId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/command'
 import { Author } from '@/lib/prisma'
 
-export default function JournalistSearch({ authors }: { authors: Author[] }) {
+export function JournalistSearch({ authors }: { authors: Author[] }) {
   return (
     <Command>
       <CommandInput placeholder="Find a journalist..." />

@@ -1,4 +1,4 @@
-import { JournalistDetailLayout } from '@/components/journalist/detail/layout'
+import { JournalistDetailComponent } from '@/app/journalist/[id]/component'
 import { getNotionPrompts } from '@/lib/notion'
 import prisma from '@/lib/prisma'
 
@@ -12,10 +12,15 @@ export default async function JournalistDetailPage({ params }) {
       include: {
         articles: {
           orderBy: { published_date: 'desc' },
+          include: {
+            analyses: {
+              orderBy: { createdAt: 'desc' },
+            },
+          },
         },
       },
     }),
   ])
 
-  return <JournalistDetailLayout author={author} prompts={prompts} />
+  return <JournalistDetailComponent author={author} prompts={prompts} />
 }

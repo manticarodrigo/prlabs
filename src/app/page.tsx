@@ -1,4 +1,4 @@
-import JournalistSearch from '@/components/journalist/search'
+import { JournalistSearch } from '@/components/journalist/search'
 import prisma from '@/lib/prisma'
 
 export default async function HomePage() {

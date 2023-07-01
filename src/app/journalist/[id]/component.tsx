@@ -2,33 +2,18 @@
 
 import { useChat } from 'ai/react'
 import autosize from 'autosize'
-import dayjs from 'dayjs'
 import { Bot, Send, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
+import { JournalistArticle } from '@/components/journalist/article'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { Article, Author } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
 
-export function JournalistDetailLayout({
+export function JournalistDetailComponent({
   author,
   prompts,
 }: {
@@ -111,8 +96,8 @@ export function JournalistDetailLayout({
                         onClick={() => {
                           setInput(
                             prompt.prompt
-                              .replace('{interviewer}', author.name)
-                              .replace('{outlet}', author.outlet),
+                              .replace(/{interviewer}/g, author.name)
+                              .replace(/{outlet}/g, author.outlet),
                           )
                           setTimeout(() => {
                             if (inputRef.current) {
@@ -150,54 +135,7 @@ export function JournalistDetailLayout({
               {articles.map((article) => {
                 return (
                   <li key={article.id}>
-                    <article>
-                      <Dialog>
-                        <DialogTrigger className="text-left">
-                          <Card className="w-full">
-                            <CardHeader>
-                              <CardTitle className="text-lg">
-                                {article.title}
-                              </CardTitle>
-                              <CardDescription>
-                                {dayjs(article.published_date).format(
-                                  'MMMM D, YYYY',
-                                )}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent>{article.excerpt}</CardContent>
-                          </Card>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-lg">
-                          <DialogHeader>
-                            <DialogTitle className="pr-4">
-                              {article.title}
-                            </DialogTitle>
-                            <DialogDescription>
-                              {dayjs(article.published_date).format(
-                                'MMMM D, YYYY',
-                              )}
-                            </DialogDescription>
-                          </DialogHeader>
-                          <p className="max-h-[50vh] overflow-auto">
-                            {article.summary || article.excerpt}
-                          </p>
-                          <DialogFooter>
-                            <Button asChild color="blue">
-                              <a
-                                href={article.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Link to source
-                              </a>
-                            </Button>
-                            <DialogTrigger>
-                              <Button>Done</Button>
-                            </DialogTrigger>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </article>
+                    <JournalistArticle article={article} />
                   </li>
                 )
               })}

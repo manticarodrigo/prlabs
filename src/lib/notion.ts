@@ -24,11 +24,12 @@ export async function getNotionPrompts() {
   return results.map((result) => {
     if ('properties' in result) {
       const { id, properties } = result
-      const { name, prompt } = properties
+      const { name, prompt, pathname } = properties
 
-      if ('title' in name && 'rich_text' in prompt) {
+      if ('title' in name && 'rich_text' in prompt && 'rich_text' in pathname) {
         return {
           id,
+          key: pathname.rich_text[0]?.plain_text,
           name: name.title[0]?.plain_text,
           prompt: prompt.rich_text[0]?.plain_text,
         }

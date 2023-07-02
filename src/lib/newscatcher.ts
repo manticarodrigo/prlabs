@@ -23,10 +23,8 @@ export async function getNewsArticles(author, source) {
   return (json.articles || []).filter((article) => article.summary)
 }
 
-export function prepareNewsArticle({
+export function getNewsArticleMetadata({
   author,
-  summary,
-  excerpt,
   link,
   published_date,
   country,
@@ -36,7 +34,8 @@ export function prepareNewsArticle({
   is_opinion,
 }) {
   return `
-        author: ${author}
+        author: ${author.name}
+        outlet: ${author.outlet}
         link: ${link}
         date: ${published_date}
         country: ${country}
@@ -44,6 +43,5 @@ export function prepareNewsArticle({
         authors: ${authors}
         twitter account: ${twitter_account}
         is opinion: ${is_opinion}
-        content: ${summary || excerpt}
   `
 }

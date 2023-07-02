@@ -6,6 +6,8 @@ import { Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { Toaster } from '@/components/ui/toaster'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -34,6 +36,7 @@ export default async function RootLayout({ children }) {
             </div>
           </header>
           <div className="w-full h-full min-h-0 overflow-auto">{children}</div>
+          <Toaster />
           <Analytics />
         </body>
       </html>

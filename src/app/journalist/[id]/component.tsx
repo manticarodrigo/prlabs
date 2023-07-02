@@ -2,7 +2,7 @@
 
 import { useChat } from 'ai/react'
 import autosize from 'autosize'
-import { Bot, Send, User } from 'lucide-react'
+import { Bot, Loader2, RefreshCw, Send, StopCircle, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import { JournalistArticle } from '@/components/journalist/article'
@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { ToastAction } from '@/components/ui/toast'
+import { useToast } from '@/components/ui/use-toast'
 import { Article, Author } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
 
@@ -22,13 +24,33 @@ export function JournalistDetailComponent({
 }) {
   const { articles } = author
 
-  const { messages, input, setInput, handleInputChange, handleSubmit } =
-    useChat({
-      body: {
-        interviewer: author.name,
-        outlet: author.outlet,
-      },
-    })
+  const { toast } = useToast()
+
+  const {
+    messages,
+    input,
+    setInput,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    stop,
+    reload,
+  } = useChat({
+    api: '/api/journalist',
+    body: {
+      id: author.id,
+    },
+    onResponse(response) {
+      if (response.status >= 400) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request.',
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        })
+      }
+    },
+  })
 
   const formRef = useRef(null)
   const inputRef = useRef(null)
@@ -165,12 +187,29 @@ export function JournalistDetailComponent({
             )
           })}
         </div>
-        <div className="p-2 w-full">
+        <div className="border-t p-2 w-full">
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="relative mx-auto w-full max-w-2xl"
+            className="relative mx-auto w-full max-w-2xl space-y-2"
           >
+            <div className="flex justify-center w-full">
+              {!!isLoading ? (
+                <Button onClick={() => stop()}>
+                  <StopCircle className="mr-2 w-4 h-4" />
+                  Stop generating
+                </Button>
+              ) : (
+                <>
+                  {messages?.length > 0 && (
+                    <Button onClick={() => reload()}>
+                      <RefreshCw className="mr-2 w-4 h-4" />
+                      Regenerate response
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
             <Textarea
               rows={1}
               ref={inputRef}
@@ -189,8 +228,18 @@ export function JournalistDetailComponent({
                 }
               }}
             />
-            <Button ref={buttonRef} aria-label="Submit" className="mt-4 w-full">
-              <Send className="mr-2 w-4 h-4" />
+            <Button
+              ref={buttonRef}
+              type="submit"
+              disabled={isLoading}
+              aria-label="Submit"
+              className="w-full"
+            >
+              {isLoading ? (
+                <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="mr-2 w-4 h-4" />
+              )}
               Send message
             </Button>
           </form>

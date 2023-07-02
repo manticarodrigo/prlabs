@@ -1,24 +1,9 @@
+import { OpenAI } from 'langchain'
+
+import { getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
+import { getNotionPrompts } from '@/lib/notion'
 import prisma from '@/lib/prisma'
-
-function mostCommonString(strings: string[]): string | null {
-  if (!strings.length) return null // Return null if array is empty
-
-  let stringFrequency = new Map<string, number>()
-  let maxCount = 0
-  let mostCommon = ''
-
-  for (let str of strings) {
-    let currentCount = (stringFrequency.get(str) || 0) + 1
-    stringFrequency.set(str, currentCount)
-
-    if (currentCount > maxCount) {
-      maxCount = currentCount
-      mostCommon = str
-    }
-  }
-
-  return mostCommon
-}
+import { mostCommonString } from '@/util/string'
 
 export function upsertJournalist(articles) {
   const names: string[] = articles.map(({ author }) => author)
@@ -58,4 +43,87 @@ export function upsertJournalist(articles) {
       articles: articlePayload,
     },
   })
+}
+
+export async function getJournalistSummaries(id, take = 15) {
+  const author = await prisma.author.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  await upsertJournalist(await getNewsArticles(author.name, author.outlet))
+
+  const articles = await prisma.article.findMany({
+    where: {
+      author: {
+        name: author.name,
+        outlet: author.outlet,
+      },
+    },
+    take,
+    orderBy: {
+      published_date: 'desc',
+    },
+    include: {
+      author: true,
+      analyses: {
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+    },
+  })
+
+  const prompts = await getNotionPrompts()
+  const summarizationPrompt = prompts.find((p) => p.key === 'native').prompt
+
+  const summarizationLlm = new OpenAI({
+    modelName: 'gpt-3.5-turbo',
+  })
+
+  const summaries = await Promise.all(
+    articles.map((article) => {
+      const metadata = getNewsArticleMetadata(article)
+      if (article.analyses.length > 0) {
+        return `
+          Article metadata:
+          ${metadata}
+
+          Article summary/analysis:
+          ${article.analyses[0].content}
+        `
+      }
+      return summarizationLlm
+        .call(
+          `
+            ${summarizationPrompt}
+
+            Article metadata:
+            ${metadata}
+
+            Article content:
+            ${article.summary || article.excerpt}
+          `,
+        )
+        .then(async (res) => {
+          await prisma.articleAnalysis.create({
+            data: {
+              articleId: article.id,
+              content: res,
+            },
+          })
+
+          return `
+            Article metadata:
+            ${metadata}
+
+            Article summary/analysis:
+            ${res}
+          `
+        })
+    }),
+  )
+
+  return summaries
 }

@@ -58,10 +58,10 @@ export function JournalistArticle({
               <TabsTrigger value="analysis">Analysis</TabsTrigger>
             </TabsList>
             <TabsContent value="original" className="border-t">
-              <p className="max-h-[50vh] overflow-auto">
+              <p className="py-4 max-h-[50vh] overflow-auto">
                 {article.summary || article.excerpt}
               </p>
-              <DialogFooter>
+              <DialogFooter className="border-t pt-4">
                 <Button asChild>
                   <a
                     href={article.link}
@@ -77,7 +77,7 @@ export function JournalistArticle({
               </DialogFooter>
             </TabsContent>
             <TabsContent value="analysis" className="border-t">
-              <p className="max-h-[50vh] overflow-auto whitespace-pre-wrap">
+              <p className="py-4 max-h-[50vh] overflow-auto whitespace-pre-wrap">
                 {completion || isLoading ? (
                   <>
                     {completion}
@@ -91,7 +91,7 @@ export function JournalistArticle({
                   <>{article.analyses[0]?.content || 'No analysis found.'}</>
                 )}
               </p>
-              <DialogFooter>
+              <DialogFooter className="border-t pt-4">
                 <Button
                   onClick={() => {
                     complete(article.id)

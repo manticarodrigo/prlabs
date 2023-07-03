@@ -5,7 +5,7 @@ export default async function HomePage() {
   const authors = await prisma.author.findMany()
 
   return (
-    <main className="flex flex-col justify-center items-center w-full h-full">
+    <main className="flex flex-col justify-center items-center p-2 w-full h-full">
       <div className="rounded-lg border max-w-xl w-full shadow-md">
         <JournalistSearch authors={authors} />
       </div>

@@ -4,6 +4,13 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 })
 
+export type Prompt = {
+  id: string
+  key: string
+  name: string
+  prompt: string
+}
+
 export async function getNotionDb() {
   const db = await notion.databases.query({
     database_id: '204d481c3793493ba350638812677657',
@@ -18,7 +25,7 @@ export async function getNotionDb() {
   return db
 }
 
-export async function getNotionPrompts() {
+export async function getNotionPrompts(): Promise<Prompt[]> {
   const { results } = await getNotionDb()
 
   return results.map((result) => {

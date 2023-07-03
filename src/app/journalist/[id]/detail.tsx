@@ -5,23 +5,20 @@ import autosize from 'autosize'
 import { Bot, Loader2, RefreshCw, Send, StopCircle, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
-import { JournalistArticle } from '@/components/journalist/article'
+import { JournalistSidebar } from '@/components/journalist/sidebar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
+import { Prompt } from '@/lib/notion'
 import { Article, Author } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
 
-export function JournalistDetailComponent({
-  author,
-  prompts,
-}: {
+type JournalistDetailProps = {
   author: Author & { articles: Article[] }
-  prompts: { id: string; name: string; prompt: string }[]
-}) {
+  prompts: Prompt[]
+}
+export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
   const { articles } = author
 
   const { toast } = useToast()
@@ -69,102 +66,22 @@ export function JournalistDetailComponent({
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
-      <aside className="flex flex-col w-full h-full lg:max-w-sm md:border-r">
-        <Tabs
-          defaultValue="prompts"
-          className="flex flex-col w-full h-full min-h-0"
-        >
-          <header className="p-2 w-full">
-            <h1 className="text-xl font-bold">{author.name}</h1>
-            <h2 className="text-sm">
-              {twitter && (
-                <a
-                  className="text-blue-500"
-                  href={`https://twitter.com/${twitter}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  @{twitter}
-                </a>
-              )}
-              {twitter && author.outlet && ' | '}
-              {author.outlet && (
-                <a
-                  className="text-blue-500"
-                  href={`https://${author.outlet}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {author.outlet}
-                </a>
-              )}
-            </h2>
-            <TabsList className="mt-2">
-              <TabsTrigger value="prompts">Prompts</TabsTrigger>
-              <TabsTrigger value="articles">Articles</TabsTrigger>
-            </TabsList>
-          </header>
-          <TabsContent
-            value="prompts"
-            className="border-t w-full h-full min-h-0"
-          >
-            <ul className="space-y-2 p-2 w-full h-full min-h-0 overflow-auto">
-              {prompts.map((prompt) => {
-                return (
-                  <li key={prompt.id}>
-                    <article>
-                      <button
-                        className="text-left"
-                        onClick={() => {
-                          setInput(
-                            prompt.prompt
-                              .replace(/{interviewer}/g, author.name)
-                              .replace(/{outlet}/g, author.outlet),
-                          )
-                          setTimeout(() => {
-                            if (inputRef.current) {
-                              autosize.update(inputRef.current)
-                            }
-                          })
-                        }}
-                      >
-                        <Card className="w-full">
-                          <CardHeader>
-                            <CardTitle className="text-lg">
-                              {prompt.name}
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            {prompt.prompt
-                              .replace('{interviewer}', author.name)
-                              .replace('{outlet}', author.outlet)
-                              .substring(0, 100)}
-                            ...
-                          </CardContent>
-                        </Card>
-                      </button>
-                    </article>
-                  </li>
-                )
-              })}
-            </ul>
-          </TabsContent>
-          <TabsContent
-            value="articles"
-            className="border-t w-full h-full min-h-0"
-          >
-            <ul className="space-y-2 p-2 w-full h-full min-h-0 overflow-auto">
-              {articles.map((article) => {
-                return (
-                  <li key={article.id}>
-                    <JournalistArticle article={article} />
-                  </li>
-                )
-              })}
-            </ul>
-          </TabsContent>
-        </Tabs>
-      </aside>
+      <JournalistSidebar
+        author={author}
+        prompts={prompts}
+        onClickPrompt={(prompt) => {
+          setInput(
+            prompt.prompt
+              .replace(/{interviewer}/g, author.name)
+              .replace(/{outlet}/g, author.outlet),
+          )
+          setTimeout(() => {
+            if (inputRef.current) {
+              autosize.update(inputRef.current)
+            }
+          })
+        }}
+      />
       <main className="flex flex-col w-full h-full">
         <div className="divide-y w-full h-full min-h-0 overflow-auto">
           {messages.map((m) => {

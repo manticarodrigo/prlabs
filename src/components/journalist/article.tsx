@@ -22,11 +22,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Article } from '@/lib/prisma'
 
-export function JournalistArticle({
-  article,
-}: {
+type JournalistArticleProps = {
   article: Article & { analyses?: ArticleAnalysis[] }
-}) {
+}
+
+export function JournalistArticle({ article }: JournalistArticleProps) {
   const { completion, isLoading, complete } = useCompletion({
     api: '/api/article',
   })

@@ -1,7 +1,7 @@
+import { kv } from '@vercel/kv'
 import { OpenAI } from 'langchain'
 
 import { getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
-import { getNotionPrompts } from '@/lib/notion'
 import prisma from '@/lib/prisma'
 import { mostCommonString } from '@/util/string'
 
@@ -75,8 +75,7 @@ export async function getJournalistSummaries(id, take = 15) {
     },
   })
 
-  const prompts = await getNotionPrompts()
-  const summarizationPrompt = prompts.find((p) => p.key === 'native').prompt
+  const summarizationPrompt = await kv.get('native-prompt')
 
   const summarizationLlm = new OpenAI({
     modelName: 'gpt-3.5-turbo',

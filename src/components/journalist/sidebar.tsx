@@ -26,36 +26,15 @@ type JournalistSidebarProps = {
 }
 
 function JournalistSubtitle({ author }: { author: AuthorWithArticles }) {
-  const { articles } = author
-
-  const twitter = articles
-    .find((article) => article.twitter_account)
-    .twitter_account.replace('@', '')
-
   return (
-    <>
-      {twitter && (
-        <a
-          className="text-blue-500"
-          href={`https://twitter.com/${twitter}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          @{twitter}
-        </a>
-      )}
-      {twitter && author.outlet && ' | '}
-      {author.outlet && (
-        <a
-          className="text-blue-500"
-          href={`https://${author.outlet}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {author.outlet}
-        </a>
-      )}
-    </>
+    <a
+      className="text-blue-500"
+      href={`https://${author.outlet}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {author.outlet}
+    </a>
   )
 }
 
@@ -73,7 +52,7 @@ function JournalistSidebarTabs({
     >
       <div className="px-2">
         <TabsList>
-          <TabsTrigger value="prompts">Prompts</TabsTrigger>
+          <TabsTrigger value="prompts">Workflows</TabsTrigger>
           <TabsTrigger value="articles">Articles</TabsTrigger>
         </TabsList>
       </div>
@@ -83,7 +62,6 @@ function JournalistSidebarTabs({
             return (
               <li key={prompt.id}>
                 <JournalistPrompt
-                  author={author}
                   prompt={prompt}
                   onClick={() => {
                     onClickPrompt(prompt)

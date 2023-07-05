@@ -32,9 +32,9 @@ export function JournalistArticle({ article }: JournalistArticleProps) {
   })
 
   return (
-    <article>
+    <article className="w-full">
       <Dialog>
-        <DialogTrigger className="text-left">
+        <DialogTrigger className="w-full text-left">
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-lg">{article.title}</CardTitle>

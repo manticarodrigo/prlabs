@@ -19,8 +19,6 @@ type JournalistDetailProps = {
   prompts: Prompt[]
 }
 export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
-  const { articles } = author
-
   const { toast } = useToast()
 
   const {
@@ -59,10 +57,6 @@ export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
       autosize(inputRef.current)
     }
   }, [inputRef])
-
-  const twitter = articles
-    .find((article) => article.twitter_account)
-    .twitter_account.replace('@', '')
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">

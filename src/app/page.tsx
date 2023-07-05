@@ -6,8 +6,13 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col justify-center items-center p-2 w-full h-full">
-      <div className="rounded-lg border max-w-xl w-full shadow-md">
-        <JournalistSearch authors={authors} />
+      <div className="max-w-xl w-full space-y-4">
+        <h1 className="text-lg text-center font-medium">
+          Choose a journalist to begin your workflow.
+        </h1>
+        <div className="rounded-lg border w-full shadow-md">
+          <JournalistSearch authors={authors} />
+        </div>
       </div>
     </main>
   )

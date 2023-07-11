@@ -9,7 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Author } from '@/lib/prisma'
+import { Author } from '@/lib/drizzle'
 
 export function JournalistSearch({ authors }: { authors: Author[] }) {
   return (

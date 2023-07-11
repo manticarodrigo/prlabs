@@ -1,8 +1,8 @@
 import { JournalistSearch } from '@/components/journalist/search'
-import prisma from '@/lib/prisma'
+import { author, db } from '@/lib/drizzle'
 
 export default async function HomePage() {
-  const authors = await prisma.author.findMany()
+  const authors = await db.select().from(author)
 
   return (
     <main className="flex flex-col justify-center items-center p-2 w-full h-full">

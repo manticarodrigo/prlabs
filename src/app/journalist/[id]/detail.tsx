@@ -10,12 +10,12 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
+import { AuthorWithArticlesWithAnalyses } from '@/lib/drizzle'
 import { Prompt } from '@/lib/notion'
-import { Article, Author } from '@/lib/prisma'
 import { cn } from '@/lib/utils'
 
 type JournalistDetailProps = {
-  author: Author & { articles: Article[] }
+  author: AuthorWithArticlesWithAnalyses
   prompts: Prompt[]
 }
 export function JournalistDetail({ author, prompts }: JournalistDetailProps) {

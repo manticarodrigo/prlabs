@@ -1,19 +1,20 @@
+import { sql } from '@vercel/postgres'
 import { InferModel } from 'drizzle-orm'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
+import { drizzle } from 'drizzle-orm/vercel-postgres'
 
-import { article, articleAnalysis, author } from '../../drizzle/schema'
+import * as schema from '../../drizzle/schema'
 
-const client = postgres(process.env.POSTGRES_URL_NON_POOLING, {
-  ssl:
-    process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'development'
-      ? 'require'
-      : undefined,
-})
+export const db = drizzle(sql, { schema, logger: true })
 
-export const db = drizzle(client, { logger: true })
-export { article, articleAnalysis, author }
+export type Article = InferModel<typeof schema.article>
+export type ArticleAnalysis = InferModel<typeof schema.articleAnalysis>
+export type Author = InferModel<typeof schema.author>
 
-export type Article = InferModel<typeof article>
-export type ArticleAnalysis = InferModel<typeof articleAnalysis>
-export type Author = InferModel<typeof author>
+export type ArticleWithAnalyses = Article & { analyses?: ArticleAnalysis[] }
+
+export type AuthorWithArticlesWithAnalyses = Author & {
+  articles?: ArticleWithAnalyses[]
+}
+
+export * from 'drizzle-orm'
+export { schema }

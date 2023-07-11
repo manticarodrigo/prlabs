@@ -1,4 +1,3 @@
-import { ArticleAnalysis } from '@prisma/client'
 import { useCompletion } from 'ai/react'
 import dayjs from 'dayjs'
 
@@ -20,7 +19,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Article } from '@/lib/prisma'
+import { Article, ArticleAnalysis } from '@/lib/drizzle'
 
 type JournalistArticleProps = {
   article: Article & { analyses?: ArticleAnalysis[] }
@@ -71,9 +70,9 @@ export function JournalistArticle({ article }: JournalistArticleProps) {
                     Link to source
                   </a>
                 </Button>
-                <DialogTrigger>
-                  <Button>Done</Button>
-                </DialogTrigger>
+                <Button asChild>
+                  <DialogTrigger>Done</DialogTrigger>
+                </Button>
               </DialogFooter>
             </TabsContent>
             <TabsContent value="analysis" className="border-t">
@@ -99,9 +98,9 @@ export function JournalistArticle({ article }: JournalistArticleProps) {
                 >
                   Generate Analysis
                 </Button>
-                <DialogTrigger>
-                  <Button>Done</Button>
-                </DialogTrigger>
+                <Button asChild>
+                  <DialogTrigger>Done</DialogTrigger>
+                </Button>
               </DialogFooter>
             </TabsContent>
           </Tabs>

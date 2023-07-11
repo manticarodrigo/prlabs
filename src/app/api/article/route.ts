@@ -1,27 +1,21 @@
+import { createId } from '@paralleldrive/cuid2'
 import { kv } from '@vercel/kv'
 import { LangChainStream, StreamingTextResponse } from 'ai'
 import { OpenAI } from 'langchain'
 import { NextRequest } from 'next/server'
 
+import { db, eq, schema } from '@/lib/drizzle'
 import { getNewsArticleMetadata } from '@/lib/newscatcher'
-import prisma from '@/lib/prisma'
 
 export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   const { prompt: id } = await req.json()
 
-  const article = await prisma.article.findUnique({
-    where: {
-      id,
-    },
-    include: {
+  const article = await db.query.article.findFirst({
+    where: eq(schema.article.id, id),
+    with: {
       author: true,
-      analyses: {
-        orderBy: {
-          createdAt: 'desc',
-        },
-      },
     },
   })
 
@@ -50,11 +44,11 @@ export async function POST(req: NextRequest) {
   `,
     )
     .then(async (res) => {
-      await prisma.articleAnalysis.create({
-        data: {
-          articleId: id,
-          content: res,
-        },
+      await db.insert(schema.articleAnalysis).values({
+        id: createId(),
+        articleId: id,
+        content: res,
+        updatedAt: new Date().toISOString(),
       })
 
       handlers.handleChainEnd()

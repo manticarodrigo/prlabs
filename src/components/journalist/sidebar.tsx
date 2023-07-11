@@ -14,18 +14,16 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Author, AuthorWithArticlesWithAnalyses } from '@/lib/drizzle'
 import { Prompt } from '@/lib/notion'
-import { Article, Author } from '@/lib/prisma'
-
-type AuthorWithArticles = Author & { articles: Article[] }
 
 type JournalistSidebarProps = {
-  author: AuthorWithArticles
+  author: AuthorWithArticlesWithAnalyses
   prompts: Prompt[]
   onClickPrompt: (prompt: Prompt) => void
 }
 
-function JournalistSubtitle({ author }: { author: AuthorWithArticles }) {
+function JournalistSubtitle({ author }: { author: Author }) {
   return (
     <a
       className="text-blue-500"
@@ -44,7 +42,6 @@ function JournalistSidebarTabs({
   onClickPrompt,
 }: JournalistSidebarProps) {
   const { articles } = author
-
   return (
     <Tabs
       defaultValue="prompts"

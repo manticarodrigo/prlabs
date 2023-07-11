@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import {
   boolean,
   doublePrecision,
@@ -62,13 +63,13 @@ export const article = pgTable(
   {
     id: text('id').primaryKey().notNull(),
     title: text('title'),
-    publishedDate: timestamp('published_date', {
+    published_date: timestamp('published_date', {
       precision: 3,
       mode: 'string',
     }),
-    publishedDatePrecision: text('published_date_precision'),
+    published_date_precision: text('published_date_precision'),
     link: text('link'),
-    cleanUrl: text('clean_url'),
+    clean_url: text('clean_url'),
     excerpt: text('excerpt'),
     summary: text('summary'),
     rights: text('rights'),
@@ -78,10 +79,10 @@ export const article = pgTable(
     language: text('language'),
     authors: text('authors'),
     media: text('media'),
-    isOpinion: boolean('is_opinion'),
-    twitterAccount: text('twitter_account'),
-    externalScore: doublePrecision('external_score'),
-    externalId: text('external_id'),
+    is_opinion: boolean('is_opinion'),
+    twitter_account: text('twitter_account'),
+    external_score: doublePrecision('external_score'),
+    external_id: text('external_id'),
     authorId: text('authorId').references(() => author.id, {
       onDelete: 'set null',
       onUpdate: 'cascade',
@@ -97,8 +98,30 @@ export const article = pgTable(
   (table) => {
     return {
       externalIdKey: uniqueIndex('Article_external_id_key').on(
-        table.externalId,
+        table.external_id,
       ),
     }
   },
+)
+
+export const authorRelations = relations(author, ({ many }) => ({
+  articles: many(article),
+}))
+
+export const articleRelations = relations(article, ({ one, many }) => ({
+  author: one(author, {
+    fields: [article.authorId],
+    references: [author.id],
+  }),
+  analyses: many(articleAnalysis),
+}))
+
+export const articleAnalysisRelations = relations(
+  articleAnalysis,
+  ({ one }) => ({
+    article: one(article, {
+      fields: [articleAnalysis.articleId],
+      references: [article.id],
+    }),
+  }),
 )

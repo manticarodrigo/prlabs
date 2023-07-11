@@ -1,20 +1,21 @@
 import { JournalistDetail } from '@/app/journalist/[id]/detail'
+import { db, desc, eq, schema } from '@/lib/drizzle'
 import { getNotionPrompts } from '@/lib/notion'
-import prisma from '@/lib/prisma'
 
 export default async function JournalistDetailPage({ params }) {
   const { id } = params
 
   const [prompts, author] = await Promise.all([
     getNotionPrompts(),
-    prisma.author.findUnique({
-      where: { id },
-      include: {
+    db.query.author.findFirst({
+      where: eq(schema.author.id, id),
+      with: {
         articles: {
-          orderBy: { published_date: 'desc' },
-          include: {
+          orderBy: [desc(schema.article.published_date)],
+          with: {
             analyses: {
-              orderBy: { createdAt: 'desc' },
+              limit: 1,
+              orderBy: [desc(schema.articleAnalysis.createdAt)],
             },
           },
         },

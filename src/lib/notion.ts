@@ -38,11 +38,14 @@ export async function getNotionPrompts(): Promise<Prompt[]> {
         'rich_text' in description &&
         'rich_text' in prompt
       ) {
+        if (name.title[0]?.plain_text === 'Recent Coverage Topics 🌐') {
+          console.log(prompt)
+        }
         return {
           id,
           description: description.rich_text[0]?.plain_text,
           name: name.title[0]?.plain_text,
-          prompt: prompt.rich_text[0]?.plain_text,
+          prompt: prompt.rich_text.map((text) => text.plain_text).join(' '),
         }
       }
     }

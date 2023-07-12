@@ -1,5 +1,6 @@
 'use client'
 
+import { useUser } from '@clerk/nextjs'
 import { useChat } from 'ai/react'
 import autosize from 'autosize'
 import { Bot, Loader2, RefreshCw, Send, StopCircle, User } from 'lucide-react'
@@ -20,6 +21,7 @@ type JournalistDetailProps = {
 }
 export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
   const { toast } = useToast()
+  const { user } = useUser()
 
   const {
     messages,
@@ -78,6 +80,23 @@ export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
       />
       <main className="flex flex-col w-full h-full">
         <div className="divide-y w-full h-full min-h-0 overflow-auto">
+          {messages.length === 0 && (
+            <div className="flex justify-center items-center w-full h-full min-h-0">
+              <article className="rounded-lg border p-4 text-center max-w-md shadow-lg space-y-2">
+                <h2 className="text-2xl font-medium">
+                  Hi, {user?.firstName || 'friend'}!
+                </h2>
+                <p>
+                  I&apos;m a bot that has read and analyzed {author.name}&apos;s
+                  recent articles.
+                </p>
+                <p>
+                  Ask me anything, or choose from our curated workflows in the
+                  sidebar.
+                </p>
+              </article>
+            </div>
+          )}
           {messages.map((m) => {
             return (
               <div

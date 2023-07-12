@@ -61,7 +61,7 @@ export function upsertJournalist(articles) {
   })
 }
 
-export async function getJournalistSummaries(id, take = 15) {
+export async function getJournalistSummaries(id, take = 12) {
   const author = await db.query.author.findFirst({
     where: eq(schema.author.id, id),
   })

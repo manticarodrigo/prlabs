@@ -12,36 +12,34 @@ export async function POST(req: NextRequest) {
 
   const { stream, handlers } = LangChainStream()
 
-  await handlers.handleLLMNewToken('Fetching articles...\n\n')
+  getJournalistSummaries(id).then((summaries) => {
+    const llm = new ChatOpenAI({
+      modelName: 'gpt-3.5-turbo-16k',
+      streaming: true,
+    })
 
-  const summaries = await getJournalistSummaries(id)
+    llm
+      .call(
+        (messages as Message[]).map((m, i) => {
+          const isLast = i === messages.length - 1
 
-  const llm = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo-16k',
-    streaming: true,
+          if (isLast) {
+            m.content = `
+              ${m.content}
+  
+              Article summaries / analyses:
+              ${summaries.join('\n####\n')}
+            `
+          }
+          return m.role == 'user'
+            ? new HumanChatMessage(m.content)
+            : new AIChatMessage(m.content)
+        }),
+        {},
+        [handlers],
+      )
+      .catch((e) => console.error(e.message))
   })
-
-  llm
-    .call(
-      (messages as Message[]).map((m, i) => {
-        const isLast = i === messages.length - 1
-
-        if (isLast) {
-          m.content = `
-            ${m.content}
-
-            Article summaries / analyses:
-            ${summaries.join('\n####\n')}
-          `
-        }
-        return m.role == 'user'
-          ? new HumanChatMessage(m.content)
-          : new AIChatMessage(m.content)
-      }),
-      {},
-      [handlers],
-    )
-    .catch((e) => console.error(e.message))
 
   return new StreamingTextResponse(stream)
 }

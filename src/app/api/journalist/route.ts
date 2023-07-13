@@ -10,9 +10,11 @@ export const runtime = 'edge'
 export async function POST(req: NextRequest) {
   const { messages, id } = await req.json()
 
-  const summaries = await getJournalistSummaries(id)
-
   const { stream, handlers } = LangChainStream()
+
+  handlers.handleLLMNewToken('Fetching articles...\n\n')
+
+  const summaries = await getJournalistSummaries(id)
 
   const llm = new ChatOpenAI({
     modelName: 'gpt-3.5-turbo-16k',

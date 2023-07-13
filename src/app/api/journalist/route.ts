@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
   const { stream, handlers } = LangChainStream()
 
-  handlers.handleLLMNewToken('Fetching articles...\n\n')
+  await handlers.handleLLMNewToken('Fetching articles...\n\n')
 
   const summaries = await getJournalistSummaries(id)
 

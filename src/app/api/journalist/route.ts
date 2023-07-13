@@ -12,12 +12,12 @@ export async function POST(req: NextRequest) {
 
   const { stream, handlers } = LangChainStream()
 
-  getJournalistSummaries(id).then((summaries) => {
-    const llm = new ChatOpenAI({
-      modelName: 'gpt-3.5-turbo-16k',
-      streaming: true,
-    })
+  const llm = new ChatOpenAI({
+    modelName: 'gpt-3.5-turbo-16k',
+    streaming: true,
+  })
 
+  getJournalistSummaries(id).then((summaries) => {
     llm
       .call(
         (messages as Message[]).map((m, i) => {

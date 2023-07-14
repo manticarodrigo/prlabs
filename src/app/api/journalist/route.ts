@@ -3,7 +3,7 @@ import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { AIChatMessage, HumanChatMessage } from 'langchain/schema'
 import { NextRequest } from 'next/server'
 
-import { getJournalistSummaries } from '../journalist/model'
+import { getJournalistSummaries } from '@/app/api/journalist/model'
 
 export const runtime = 'edge'
 

@@ -45,8 +45,8 @@ dependencies:
     specifier: ^0.4.0
     version: 0.4.0
   ai:
-    specifier: ^2.1.8
-    version: 2.1.8(react@18.2.0)(svelte@3.59.2)(vue@3.3.4)
+    specifier: ^2.1.20
+    version: 2.1.20(react@18.2.0)(svelte@3.59.2)(vue@3.3.4)
   autoprefixer:
     specifier: 10.4.14
     version: 10.4.14(postcss@8.4.24)
@@ -4081,12 +4081,12 @@ packages:
     resolution: {integrity: sha512-hCOfMzbFx5IDutmWLAt6MZwOUjIfSM9G9FyVxytmE4Rs/5YDPWQrD/+IR1w+FweD9H2oOZEnv36TmkjhNURBVA==}
     dev: true
 
-  /ai@2.1.8(react@18.2.0)(svelte@3.59.2)(vue@3.3.4):
-    resolution: {integrity: sha512-r3/bLvfWe69Y9MvHJHwemMI/YCXGbKK8bqYJwvuFG732PElvBBWA2a6C3Kwh0rZLvomlkboWsq+XFW8edLRoLw==}
+  /ai@2.1.20(react@18.2.0)(svelte@3.59.2)(vue@3.3.4):
+    resolution: {integrity: sha512-MZeq+kT9eUT+3H8QMffKuEZ/+wf4EYuANr5j69gHRg2Gre8UemXj48fAdZfzuzwwdshVOmwoaeT9pMwKl9h+vA==}
     engines: {node: '>=14.6'}
     peerDependencies:
-      react: ^18.0.0
-      svelte: ^3.29.0
+      react: ^18.2.0
+      svelte: ^3.0.0 || ^4.0.0
       vue: ^3.3.4
     peerDependenciesMeta:
       react:

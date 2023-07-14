@@ -28,7 +28,6 @@ export async function POST(req: NextRequest) {
   const llm = new OpenAI({
     modelName: 'gpt-3.5-turbo',
     streaming: true,
-    callbacks: [{ ...handlers, handleChainEnd: () => {} }],
   })
 
   llm
@@ -42,6 +41,8 @@ export async function POST(req: NextRequest) {
         Article content:
         ${article.summary || article.excerpt}
   `,
+      {},
+      [handlers],
     )
     .then(async (res) => {
       await db.insert(schema.articleAnalysis).values({
@@ -50,8 +51,6 @@ export async function POST(req: NextRequest) {
         content: res,
         updatedAt: new Date().toISOString(),
       })
-
-      handlers.handleChainEnd()
     })
 
   return new StreamingTextResponse(stream)

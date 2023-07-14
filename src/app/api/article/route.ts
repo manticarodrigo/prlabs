@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         ${article.summary || article.excerpt}
   `,
       {},
-      [handlers],
+      [{ ...handlers, handleChainEnd: undefined }],
     )
     .then(async (res) => {
       await db.insert(schema.articleAnalysis).values({
@@ -51,6 +51,8 @@ export async function POST(req: NextRequest) {
         content: res,
         updatedAt: new Date().toISOString(),
       })
+
+      handlers.handleChainEnd(res, 'article')
     })
 
   return new StreamingTextResponse(stream)

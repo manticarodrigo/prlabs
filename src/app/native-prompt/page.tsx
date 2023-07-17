@@ -2,6 +2,8 @@ import { kv } from '@vercel/kv'
 
 import { NativePromptForm } from './form'
 
+export const runtime = 'edge'
+
 export default async function NativePromptPage() {
   const prompt = (await kv.get('native-prompt')) as string
 

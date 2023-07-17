@@ -1,6 +1,8 @@
 import { JournalistSearch } from '@/components/journalist/search'
 import { db, schema } from '@/lib/drizzle'
 
+export const runtime = 'edge'
+
 export default async function HomePage() {
   const authors = await db.select().from(schema.author)
 

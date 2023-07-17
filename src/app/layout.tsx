@@ -17,6 +17,8 @@ export const metadata = {
   description: 'Digital tools empowering PR professionals',
 }
 
+export const runtime = 'edge'
+
 export default async function RootLayout({ children }) {
   return (
     <html lang="en" className="w-full h-full overflow-hidden">

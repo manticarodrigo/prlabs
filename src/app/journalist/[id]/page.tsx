@@ -2,6 +2,8 @@ import { JournalistDetail } from '@/app/journalist/[id]/detail'
 import { db, desc, eq, schema } from '@/lib/drizzle'
 import { getNotionPrompts } from '@/lib/notion'
 
+export const runtime = 'edge'
+
 export default async function JournalistDetailPage({ params }) {
   const { id } = params
 

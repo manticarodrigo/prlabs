@@ -1,5 +1,7 @@
 import { clerkClient } from '@clerk/nextjs'
 
+export const runtime = 'edge'
+
 export default async function UsersPage() {
   const users = await clerkClient.users.getUserList({ limit: 100 })
 

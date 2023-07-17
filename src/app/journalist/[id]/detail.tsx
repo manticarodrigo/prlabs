@@ -19,6 +19,7 @@ type JournalistDetailProps = {
   author: AuthorWithArticlesWithAnalyses
   prompts: Prompt[]
 }
+
 export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
   const { toast } = useToast()
   const { user } = useUser()

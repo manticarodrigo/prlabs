@@ -8,6 +8,8 @@ import { getJournalistSummaries } from '@/app/api/journalist/model'
 export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
+  console.log('starting journalist chat routine')
+
   const { messages, id } = await req.json()
 
   const { stream, handlers } = LangChainStream()
@@ -21,6 +23,7 @@ export async function POST(req: NextRequest) {
 
   getJournalistSummaries(id)
     .then((summaries) => {
+      console.log('got summaries', summaries.length)
       llm
         .call(
           (messages as Message[]).map((m, i) => {

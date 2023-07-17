@@ -88,6 +88,8 @@ export async function getJournalistSummaries(id, take = 12) {
     },
   })
 
+  console.log('existing articles', articles.length)
+
   const summarizationPrompt = await kv.get('native-prompt')
 
   const summarizationLlm = new OpenAI({
@@ -119,6 +121,7 @@ export async function getJournalistSummaries(id, take = 12) {
           `,
         )
         .then(async (res) => {
+          console.log('inserting analysis')
           await db.insert(schema.articleAnalysis).values({
             id: createId(),
             articleId: article.id,

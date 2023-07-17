@@ -8,6 +8,8 @@ import Link from 'next/link'
 
 import { Toaster } from '@/components/ui/toaster'
 
+import { ProgressBar } from '../components/ui/progress'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -17,9 +19,9 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="w-full h-full overflow-hidden">
-        <body className={inter.className + ' w-full h-full flex flex-col'}>
+    <html lang="en" className="w-full h-full overflow-hidden">
+      <body className={inter.className + ' w-full h-full flex flex-col'}>
+        <ClerkProvider>
           <header className="flex justify-between items-center border-b p-2">
             <Link href="/" className="text-lg font-bold">
               <Image
@@ -37,9 +39,10 @@ export default async function RootLayout({ children }) {
           </header>
           <div className="w-full h-full min-h-0 overflow-auto">{children}</div>
           <Toaster />
+          <ProgressBar />
           <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }

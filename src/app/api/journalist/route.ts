@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     streaming: true,
   })
 
-  handlers.handleLLMNewToken('Loading articles...')
+  handlers.handleLLMNewToken('Loading articles...\n\n')
 
   getJournalistSummaries(id)
     .then((summaries) => {

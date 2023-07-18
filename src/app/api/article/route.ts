@@ -23,16 +23,24 @@ export async function POST(req: NextRequest) {
 
   const summarizationPrompt = await kv.get('native-prompt')
 
-  const { stream, handlers } = LangChainStream()
+  const { stream, handlers } = LangChainStream({
+    onCompletion: async (res) => {
+      await db.insert(schema.articleAnalysis).values({
+        id: createId(),
+        articleId: id,
+        content: res,
+        updatedAt: new Date().toISOString(),
+      })
+    },
+  })
 
   const llm = new OpenAI({
     modelName: 'gpt-3.5-turbo',
     streaming: true,
   })
 
-  llm
-    .call(
-      `
+  llm.call(
+    `
         ${summarizationPrompt}
 
         Article metadata:
@@ -41,19 +49,9 @@ export async function POST(req: NextRequest) {
         Article content:
         ${article.summary || article.excerpt}
   `,
-      {},
-      [{ ...handlers, handleChainEnd: undefined }],
-    )
-    .then(async (res) => {
-      await db.insert(schema.articleAnalysis).values({
-        id: createId(),
-        articleId: id,
-        content: res,
-        updatedAt: new Date().toISOString(),
-      })
-
-      handlers.handleChainEnd(res, 'article')
-    })
+    {},
+    [handlers],
+  )
 
   return new StreamingTextResponse(stream)
 }

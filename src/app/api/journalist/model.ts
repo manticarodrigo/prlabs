@@ -62,18 +62,14 @@ export function upsertJournalist(articles) {
 }
 
 export async function getJournalistSummaries(id, take = 10) {
-  console.log('getting author')
   const author = await db.query.author.findFirst({
     where: eq(schema.author.id, id),
   })
 
-  console.log('getting news articles')
   const _articles = await getNewsArticles(author.name, author.outlet)
 
-  console.log('upserting journalist')
   await upsertJournalist(_articles)
 
-  console.log('getting db articles')
   const { articles } = await db.query.author.findFirst({
     where: and(
       eq(schema.author.name, author.name),
@@ -93,8 +89,6 @@ export async function getJournalistSummaries(id, take = 10) {
       },
     },
   })
-
-  console.log('found db articles', articles.length)
 
   const summarizationPrompt = await kv.get('native-prompt')
 
@@ -127,7 +121,6 @@ export async function getJournalistSummaries(id, take = 10) {
           `,
         )
         .then(async (res) => {
-          console.log('inserting analysis')
           await db.insert(schema.articleAnalysis).values({
             id: createId(),
             articleId: article.id,

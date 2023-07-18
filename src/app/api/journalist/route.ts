@@ -10,8 +10,6 @@ export const runtime = 'edge'
 export async function POST(req: NextRequest) {
   const { messages, id } = await req.json()
 
-  console.log('got chat message', id)
-
   const { stream, handlers } = LangChainStream()
 
   const llm = new ChatOpenAI({
@@ -20,8 +18,6 @@ export async function POST(req: NextRequest) {
   })
 
   const summaries = await getJournalistSummaries(id)
-
-  console.log('got summaries', summaries.length)
 
   llm
     .call(

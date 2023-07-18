@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const summarizationPrompt = await kv.get('native-prompt')
 
   const llm = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-3.5-turbo-16k',
   })
 
   const summaries = await Promise.all(

@@ -57,6 +57,7 @@
     "drizzle-kit": "^0.19.3",
     "encoding": "^0.1.13",
     "only-allow": "^1.1.1",
+    "prettier-plugin-organize-imports": "^3.2.3",
     "vercel": "^30.0.0"
   }
 }

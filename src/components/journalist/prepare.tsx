@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/nextjs'
+// import { useUser } from '@clerk/nextjs'
 import { Hammer, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -20,7 +20,7 @@ function prepare({ id }) {
 }
 
 export function JournalistPrepare({ author }: JournalistPrepareProps) {
-  const { user } = useUser()
+  const { user } = {} // useUser()
   const [isLoading, setIsLoading] = useState(false)
 
   return (

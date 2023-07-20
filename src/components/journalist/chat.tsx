@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/nextjs'
+// import { useUser } from '@clerk/nextjs'
 import { Message } from 'ai'
 import autosize from 'autosize'
 import { Bot, Loader2, RefreshCw, Send, StopCircle, User } from 'lucide-react'
@@ -36,7 +36,7 @@ export function JournalistChat({
   handleInputChange,
   handleSubmit,
 }: JournalistChatProps) {
-  const { user } = useUser()
+  const { user } = {} // useUser()
 
   useEffect(() => {
     if (inputRef.current) {

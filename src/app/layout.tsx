@@ -1,14 +1,14 @@
 import './globals.css'
 
-import { ClerkProvider, UserButton } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/react'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { ProgressBar } from '@/components/ui/progress'
 import { Toaster } from '@/components/ui/toaster'
 
-import { ProgressBar } from '../components/ui/progress'
+import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,7 +23,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" className="w-full h-full overflow-hidden">
       <body className={inter.className + ' w-full h-full flex flex-col'}>
-        <ClerkProvider>
+        <Providers>
           <header className="flex justify-between items-center border-b p-2">
             <Link href="/" className="text-lg font-bold">
               <Image
@@ -35,7 +35,7 @@ export default async function RootLayout({ children }) {
             </Link>
             <div className="flex items-center">
               <span className="ml-2 w-8 h-8">
-                <UserButton afterSignOutUrl="/" />
+                {/* <UserButton afterSignOutUrl="/" /> */}
               </span>
             </div>
           </header>
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
           <Toaster />
           <ProgressBar />
           <Analytics />
-        </ClerkProvider>
+        </Providers>
       </body>
     </html>
   )

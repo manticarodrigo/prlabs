@@ -7,13 +7,7 @@ import {
 } from '@/components/ui/card'
 import { Customer } from '@/lib/drizzle'
 
-export const runtime = 'edge'
-
-export default async function CustomerCard({
-  customer,
-}: {
-  customer: Customer
-}) {
+export default function CustomerCard({ customer }: { customer: Customer }) {
   return (
     <Card className="w-full max-w-xl">
       <CardHeader>

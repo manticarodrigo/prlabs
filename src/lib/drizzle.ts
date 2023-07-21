@@ -9,6 +9,7 @@ export const db = drizzle(sql, { schema, logger: true })
 export type Article = InferModel<typeof schema.article>
 export type ArticleAnalysis = InferModel<typeof schema.articleAnalysis>
 export type Author = InferModel<typeof schema.author>
+export type Customer = InferModel<typeof schema.customer>
 
 export type ArticleWithAnalyses = Article & { analyses?: ArticleAnalysis[] }
 

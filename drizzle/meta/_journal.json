@@ -15,6 +15,13 @@
       "when": 1689134332254,
       "tag": "0001_cold_shard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1689918708308,
+      "tag": "0002_odd_lethal_legion",
+      "breakpoints": true
     }
   ]
 }

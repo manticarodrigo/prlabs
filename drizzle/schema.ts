@@ -87,6 +87,21 @@ export const article = pgTable(
   },
 )
 
+export const customer = pgTable('Customer', {
+  id: text('id').primaryKey().notNull(),
+  userId: text('userId').notNull(),
+  name: text('name'),
+  description: text('description'),
+  strategy: text('strategy'),
+  createdAt: timestamp('createdAt', { precision: 3, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp('updatedAt', {
+    precision: 3,
+    mode: 'string',
+  }).notNull(),
+})
+
 export const authorRelations = relations(author, ({ many }) => ({
   articles: many(article),
 }))

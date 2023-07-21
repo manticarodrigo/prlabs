@@ -1,6 +1,7 @@
 import './globals.css'
 
 import { ClerkProvider, UserButton } from '@clerk/nextjs'
+import { GoogleTagManagerBody, GoogleTagManagerHead } from '@thgh/next-gtm'
 import { Analytics } from '@vercel/analytics/react'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
@@ -22,6 +23,7 @@ export const runtime = 'edge'
 export default async function RootLayout({ children }) {
   return (
     <html lang="en" className="w-full h-full overflow-hidden">
+      <head>{GoogleTagManagerHead}</head>
       <body className={inter.className + ' w-full h-full flex flex-col'}>
         <ClerkProvider>
           <header className="flex justify-between items-center border-b p-2">
@@ -44,6 +46,7 @@ export default async function RootLayout({ children }) {
           <ProgressBar />
           <Analytics />
         </ClerkProvider>
+        {GoogleTagManagerBody}
       </body>
     </html>
   )

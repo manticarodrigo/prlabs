@@ -35,6 +35,9 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.6
     version: 1.0.6(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
+  '@thgh/next-gtm':
+    specifier: ^0.1.4
+    version: 0.1.4(next@13.4.10)(react-dom@18.2.0)(react@18.2.0)
   '@vercel/analytics':
     specifier: ^1.0.1
     version: 1.0.1
@@ -3287,6 +3290,18 @@ packages:
     dependencies:
       defer-to-connect: 2.0.1
     dev: true
+
+  /@thgh/next-gtm@0.1.4(next@13.4.10)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LjAlzzPJ7xcp/cwQE9gFnh9wnqEaOWrYimjaUdyQDsm3w1V24dXywBC6HaUmEUKYmq+GtIuVNdhUK2SxGANmFQ==}
+    peerDependencies:
+      next: ^13
+      react: ^18
+      react-dom: ^18
+    dependencies:
+      next: 13.4.10(@babel/core@7.22.5)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@tootallnate/once@1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}

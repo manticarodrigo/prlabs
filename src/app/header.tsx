@@ -1,5 +1,3 @@
-'use server'
-
 import { currentUser, SignInButton } from '@clerk/nextjs'
 import { User } from 'lucide-react'
 import Image from 'next/image'

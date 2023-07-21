@@ -14,7 +14,14 @@ export async function AppHeader() {
         <Image src="/logo.svg" width={123} height={32} alt="PR Labs Logo" />
       </Link>
       {user ? (
-        <UserMenu user={user} />
+        <UserMenu
+          user={{
+            firstName: user.firstName,
+            lastName: user.lastName,
+            emailAddress: user.emailAddresses[0].emailAddress,
+            profileImageUrl: user.profileImageUrl,
+          }}
+        />
       ) : (
         <SignInButton>
           <button className="flex items-center font-medium">

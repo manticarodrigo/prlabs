@@ -1,7 +1,6 @@
 'use client'
 
 import { useClerk } from '@clerk/nextjs'
-import { User } from '@clerk/nextjs/dist/types/server'
 import Link from 'next/link'
 
 import {
@@ -16,7 +15,18 @@ import {
 
 import { UserAvatar } from './user-avatar'
 
-export function UserMenu({ user }: { user: User }) {
+export type User = {
+  firstName?: string
+  lastName?: string
+  emailAddress: string
+  profileImageUrl?: string
+}
+
+interface UserMenuProps {
+  user: User
+}
+
+export function UserMenu({ user }: UserMenuProps) {
   const { signOut } = useClerk()
 
   let title = ''
@@ -28,7 +38,7 @@ export function UserMenu({ user }: { user: User }) {
       title += ' ' + user.lastName
     }
   } else {
-    title += user.emailAddresses[0]
+    title += user.emailAddress
   }
 
   return (
@@ -37,9 +47,7 @@ export function UserMenu({ user }: { user: User }) {
         <UserAvatar user={user} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>
-          {user.firstName} {user.lastName}
-        </DropdownMenuLabel>
+        <DropdownMenuLabel>{title}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>

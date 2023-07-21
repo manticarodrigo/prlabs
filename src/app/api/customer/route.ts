@@ -1,5 +1,3 @@
-'use server'
-
 import { auth } from '@clerk/nextjs'
 import { createId } from '@paralleldrive/cuid2'
 import { NextRequest, NextResponse } from 'next/server'

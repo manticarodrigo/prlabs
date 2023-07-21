@@ -1,23 +1,25 @@
-import { User } from '@clerk/nextjs/dist/types/server'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-export function UserAvatar({ user }: { user: User }) {
+import { User } from './user-menu'
+
+interface UserAvatarProps {
+  user: User
+}
+
+export function UserAvatar({ user }: UserAvatarProps) {
   let initials = ''
 
-  if (user) {
-    if (user.firstName) {
-      initials += user.firstName[0]
+  if (user.firstName) {
+    initials += user.firstName[0]
 
-      if (user.lastName) {
-        initials += user.lastName[0]
-      } else {
-        initials += user.firstName[1]
-      }
+    if (user.lastName) {
+      initials += user.lastName[0]
     } else {
-      initials += user.emailAddresses[0][0]
-      initials += user.emailAddresses[0][1]
+      initials += user.firstName[1]
     }
+  } else {
+    initials += user.emailAddress[0]
+    initials += user.emailAddress[1]
   }
 
   return (

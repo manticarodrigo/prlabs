@@ -1,6 +1,7 @@
 import './globals.css'
 
 import { ClerkProvider } from '@clerk/nextjs'
+import { GoogleTagManagerBody, GoogleTagManagerHead } from '@thgh/next-gtm'
 import { Analytics } from '@vercel/analytics/react'
 import { Inter } from 'next/font/google'
 
@@ -21,6 +22,7 @@ export const runtime = 'edge'
 export default async function AppLayout({ children }) {
   return (
     <html lang="en" className="w-full h-full overflow-hidden">
+      <head>{GoogleTagManagerHead}</head>
       <body className={inter.className + ' w-full h-full flex flex-col'}>
         <ClerkProvider>
           <AppHeader />
@@ -29,6 +31,7 @@ export default async function AppLayout({ children }) {
           <ProgressBar />
           <Analytics />
         </ClerkProvider>
+        {GoogleTagManagerBody}
       </body>
     </html>
   )

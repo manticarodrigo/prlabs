@@ -28,7 +28,7 @@ export function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="pr-0">
+      <SheetContent side="left" className="pr-0 h-full">
         <MobileLink
           href="/"
           className="flex items-center"
@@ -36,7 +36,7 @@ export function MobileNav() {
         >
           <Image src="/logo.svg" width={93} height={24} alt="PRLabs logo" />
         </MobileLink>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+        <ScrollArea className="my-4 h-full min-h-0">
           <div className="flex flex-col space-y-3">
             {links.map(
               (item) =>

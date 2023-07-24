@@ -12,7 +12,7 @@ export function DesktopNav() {
   const pathname = usePathname()
 
   return (
-    <div className="mr-4 hidden md:flex space-x-4">
+    <div className="mr-4 hidden md:flex space-x-6">
       <Link href="/" className="text-lg font-bold">
         <Image src="/logo.svg" width={93} height={24} alt="PRLabs logo" />
       </Link>

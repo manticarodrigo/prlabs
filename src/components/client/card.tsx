@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card'
 import { Customer } from '@/lib/drizzle'
 
-export default function CustomerCard({ customer }: { customer: Customer }) {
+export default function ClientCard({ customer }: { customer: Customer }) {
   return (
     <Card className="w-full max-w-xl">
       <CardHeader>

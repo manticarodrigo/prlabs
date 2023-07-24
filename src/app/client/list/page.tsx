@@ -1,12 +1,12 @@
 import { auth } from '@clerk/nextjs'
 import Link from 'next/link'
 
-import CustomerCard from '@/components/customer/card'
+import ClientCard from '@/components/client/card'
 import { db, eq, schema } from '@/lib/drizzle'
 
 export const runtime = 'edge'
 
-export default async function CustomerListPage() {
+export default async function ClientListPage() {
   const { userId } = auth()
 
   const customers = await db.query.customer.findMany({
@@ -24,7 +24,7 @@ export default async function CustomerListPage() {
                 href={`/customer/${customer.id}`}
                 className="text-blue-600 hover:underline"
               >
-                <CustomerCard customer={customer} />
+                <ClientCard customer={customer} />
               </Link>
             </li>
           ))}

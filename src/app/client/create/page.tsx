@@ -19,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-const createCustomerSchema = z.object({
+const createClientSchema = z.object({
   name: z
     .string()
     .min(4, 'Name must be at least 4 characters')
@@ -34,15 +34,15 @@ const createCustomerSchema = z.object({
     .max(1000, 'Strategy must be less than 1000 characters'),
 })
 
-type CreateCustomerInput = z.infer<typeof createCustomerSchema>
+type CreateClientInput = z.infer<typeof createClientSchema>
 
 export const runtime = 'edge'
 
-export default function CustomerCreatePage() {
+export default function ClientCreatePage() {
   const router = useRouter()
 
-  const form = useForm<CreateCustomerInput>({
-    resolver: zodResolver(createCustomerSchema),
+  const form = useForm<CreateClientInput>({
+    resolver: zodResolver(createClientSchema),
     defaultValues: {
       name: '',
       description: '',
@@ -51,21 +51,21 @@ export default function CustomerCreatePage() {
 
   const { isSubmitting } = form.formState
 
-  async function onSubmit(values: CreateCustomerInput) {
-    const res = await fetch('/api/customer', {
+  async function onSubmit(values: CreateClientInput) {
+    const res = await fetch('/api/client', {
       method: 'POST',
       body: JSON.stringify(values),
     })
 
-    const customer = await res.json()
+    const client = await res.json()
 
-    router.push(`/customer/${customer.id}`)
+    router.push(`/client/${client.id}`)
   }
 
   return (
     <main className="flex justify-center items-center p-8 w-full min-h-full">
       <div className="flex flex-col justify-center items-center w-full max-w-xl space-y-4">
-        <h1 className="text-2xl font-bold">Create customer profile</h1>
+        <h1 className="text-2xl font-bold">Create client profile</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -137,7 +137,7 @@ export default function CustomerCreatePage() {
               ) : (
                 <PlusCircle className="mr-2 w-4 h-4" />
               )}
-              Add customer
+              Add client
             </Button>
           </form>
         </Form>

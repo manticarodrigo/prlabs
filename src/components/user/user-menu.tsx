@@ -37,8 +37,6 @@ export function UserMenu({ user }: UserMenuProps) {
     if (user.lastName) {
       title += ' ' + user.lastName
     }
-  } else {
-    title += user.emailAddress
   }
 
   return (
@@ -47,16 +45,16 @@ export function UserMenu({ user }: UserMenuProps) {
         <UserAvatar user={user} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{title}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/customer/list">Customer profiles</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/customer/create">Add new customer</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuLabel>
+          {title ? (
+            <>
+              {title}
+              <div className="text-xs font-light">{user.emailAddress}</div>
+            </>
+          ) : (
+            user.emailAddress
+          )}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>

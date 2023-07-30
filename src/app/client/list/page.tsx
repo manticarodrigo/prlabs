@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs'
 import Link from 'next/link'
 
-import ClientCard from '@/components/client/card'
+import TeamCard from '@/components/team/card'
 import { db, eq, schema } from '@/lib/drizzle'
 
 export const runtime = 'edge'
@@ -24,7 +24,7 @@ export default async function ClientListPage() {
                 href={`/customer/${customer.id}`}
                 className="text-blue-600 hover:underline"
               >
-                <ClientCard customer={customer} />
+                <TeamCard customer={customer} />
               </Link>
             </li>
           ))}

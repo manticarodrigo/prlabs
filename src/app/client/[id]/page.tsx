@@ -1,4 +1,4 @@
-import ClientCard from '@/components/client/card'
+import TeamCard from '@/components/team/card'
 import { db, eq, schema } from '@/lib/drizzle'
 
 export const runtime = 'edge'
@@ -12,7 +12,7 @@ export default async function ClientDetailPage({ params }) {
 
   return (
     <main className="flex justify-center items-center p-8 w-full min-h-full">
-      <ClientCard customer={customer} />
+      <TeamCard customer={customer} />
     </main>
   )
 }

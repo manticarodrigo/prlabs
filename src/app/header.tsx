@@ -3,14 +3,18 @@ import { User } from 'lucide-react'
 
 import { AppNav } from '@/components/nav/app-nav'
 import { UserMenu } from '@/components/user/user-menu'
+import { db, eq, schema } from '@/lib/drizzle'
 
 export async function AppHeader() {
   const user = await currentUser()
+  const teams = await db.query.customer.findMany({
+    where: eq(schema.customer.userId, user.id),
+  })
 
   return (
     <header className="border-b">
       <div className="container flex justify-between items-center p-2">
-        <AppNav />
+        <AppNav teams={teams} />
         {user ? (
           <UserMenu
             user={{

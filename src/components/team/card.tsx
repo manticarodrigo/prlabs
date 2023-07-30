@@ -5,9 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Customer } from '@/lib/drizzle'
+import { Team } from '@/lib/drizzle'
 
-export default function ClientCard({ customer }: { customer: Customer }) {
+export default function TeamCard({ customer }: { customer: Team }) {
   return (
     <Card className="w-full max-w-xl">
       <CardHeader>

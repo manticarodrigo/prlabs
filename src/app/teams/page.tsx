@@ -14,8 +14,6 @@ export const metadata: Metadata = {
   description: 'A task and issue tracker build using Tanstack Table.',
 }
 
-export const runtime = 'edge'
-
 export default async function TeamListPage() {
   const { userId } = auth()
 

@@ -36,8 +36,6 @@ const createClientSchema = z.object({
 
 type CreateClientInput = z.infer<typeof createClientSchema>
 
-export const runtime = 'edge'
-
 export default function ClientCreatePage() {
   const router = useRouter()
 

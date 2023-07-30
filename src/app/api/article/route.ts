@@ -7,7 +7,6 @@ import { NextRequest } from 'next/server'
 import { db, eq, schema } from '@/lib/drizzle'
 import { getNewsArticleMetadata } from '@/lib/newscatcher'
 
-export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   const { prompt: id } = await req.json()

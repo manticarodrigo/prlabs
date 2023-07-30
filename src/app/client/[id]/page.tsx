@@ -1,8 +1,6 @@
 import TeamCard from '@/components/team/card'
 import { db, eq, schema } from '@/lib/drizzle'
 
-export const runtime = 'edge'
-
 export default async function ClientDetailPage({ params }) {
   const { id } = params
 

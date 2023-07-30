@@ -6,7 +6,6 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { db, schema } from '@/lib/drizzle'
 
-export const runtime = 'edge'
 
 export async function createCustomer(request: NextRequest) {
   const { userId } = auth()

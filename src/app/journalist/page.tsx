@@ -8,8 +8,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { InputWithLabel } from '@/components/ui/input'
 
-export const runtime = 'edge'
-
 export default function JournalistCreatePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

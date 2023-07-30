@@ -4,8 +4,6 @@ import Link from 'next/link'
 import TeamCard from '@/components/team/card'
 import { db, eq, schema } from '@/lib/drizzle'
 
-export const runtime = 'edge'
-
 export default async function ClientListPage() {
   const { userId } = auth()
 

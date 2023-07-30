@@ -14,8 +14,6 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-export const runtime = 'edge'
-
 export default function DashboardPage() {
   return (
     <>

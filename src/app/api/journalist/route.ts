@@ -5,7 +5,6 @@ import { NextRequest } from 'next/server'
 
 import { getJournalistSummaries } from '@/app/api/journalist/model'
 
-export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   const { messages, id } = await req.json()

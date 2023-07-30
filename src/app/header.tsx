@@ -7,9 +7,11 @@ import { db, eq, schema } from '@/lib/drizzle'
 
 export async function AppHeader() {
   const user = await currentUser()
-  const teams = await db.query.customer.findMany({
-    where: eq(schema.customer.userId, user.id),
-  })
+  const teams =
+    user &&
+    (await db.query.customer.findMany({
+      where: eq(schema.customer.userId, user.id),
+    }))
 
   return (
     <header className="border-b">

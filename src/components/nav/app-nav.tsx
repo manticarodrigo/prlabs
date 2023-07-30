@@ -1,5 +1,6 @@
 'use client'
 import { Menu } from 'lucide-react'
+import { Route } from 'next'
 import Image from 'next/image'
 import Link, { LinkProps } from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -12,7 +13,13 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Team } from '@/lib/drizzle'
 import { cn } from '@/lib/utils'
 
-export const links = [
+type LinkConfig = {
+  title: string
+  href: Route
+  matches: string
+}
+
+export const links: LinkConfig[] = [
   {
     title: 'Teams',
     href: '/teams',
@@ -25,12 +32,12 @@ export const links = [
   },
   {
     title: 'Topics',
-    href: '/topic/search',
+    href: '/',
     matches: '/topic',
   },
   {
     title: 'Conferences',
-    href: '/conference/list',
+    href: '/',
     matches: '/conference',
   },
 ]
@@ -107,25 +114,27 @@ export function AppNav({ teams }: Props) {
   )
 }
 
-interface MobileLinkProps extends LinkProps {
+interface MobileLinkProps<R> extends LinkProps<R> {
   onOpenChange?: (open: boolean) => void
   children: React.ReactNode
   className?: string
 }
 
-function MobileLink({
+function MobileLink<R extends string>({
   href,
   onOpenChange,
   className,
   children,
   ...props
-}: MobileLinkProps) {
+}: MobileLinkProps<R>) {
   const router = useRouter()
   return (
     <Link
       href={href}
       onClick={() => {
-        router.push(href.toString())
+        if (typeof href === 'string') {
+          router.push(href)
+        }
         onOpenChange?.(false)
       }}
       className={cn(className)}

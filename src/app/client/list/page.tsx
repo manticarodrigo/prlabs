@@ -19,7 +19,7 @@ export default async function ClientListPage() {
           {customers.map((customer) => (
             <li key={customer.id}>
               <Link
-                href={`/customer/${customer.id}`}
+                href={`/client/${customer.id}`}
                 className="text-blue-600 hover:underline"
               >
                 <TeamCard customer={customer} />

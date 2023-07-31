@@ -10,8 +10,6 @@ import { ProgressBar } from '@/components/ui/progress'
 import { Toaster } from '@/components/ui/toaster'
 import { TrpcProvider } from '@/util/trpc'
 
-import { AppHeader } from './header'
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -28,10 +26,7 @@ export default function AppLayout({ children }) {
       <body className={inter.className + ' w-full h-full flex flex-col'}>
         <TrpcProvider>
           <ClerkProvider>
-            <AppHeader />
-            <div className="w-full h-full min-h-0 overflow-auto">
-              <div className="container w-full h-full min-h-0">{children}</div>
-            </div>
+            {children}
             <Toaster />
             <ProgressBar />
             <Analytics />

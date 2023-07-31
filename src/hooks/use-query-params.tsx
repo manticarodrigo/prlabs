@@ -1,12 +1,14 @@
 'use client'
 
 import { Route } from 'next'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
+
+import { useRouter } from '@/hooks/use-router'
 
 type Params = { [k: string]: string }
 type SetParams = (next: Params) => void
 
-export function useParams(): [Params, SetParams] {
+export function useQueryParams(): [Params, SetParams] {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

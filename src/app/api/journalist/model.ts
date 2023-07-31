@@ -6,6 +6,10 @@ import { and, db, desc, eq, schema } from '@/lib/drizzle'
 import { getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
 import { mostCommonString } from '@/util/string'
 
+export function getJournalists() {
+  return db.select().from(schema.author)
+}
+
 export function upsertJournalist(articles) {
   const names: string[] = articles.map(({ author }) => author)
   const outlets: string[] = articles.map(({ clean_url }) => clean_url)

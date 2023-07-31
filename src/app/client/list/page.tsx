@@ -7,8 +7,8 @@ import { db, eq, schema } from '@/lib/drizzle'
 export default async function ClientListPage() {
   const { userId } = auth()
 
-  const customers = await db.query.customer.findMany({
-    where: eq(schema.customer.userId, userId),
+  const customers = await db.query.team.findMany({
+    where: eq(schema.team.userId, userId),
   })
 
   return (

@@ -19,7 +19,7 @@ export async function createCustomer(request: NextRequest) {
   const { name, description, strategy } = await request.json()
 
   const [customer] = await db
-    .insert(schema.customer)
+    .insert(schema.team)
     .values({
       id: createId(),
       userId,
@@ -28,7 +28,7 @@ export async function createCustomer(request: NextRequest) {
       strategy,
       updatedAt: new Date().toISOString(),
     })
-    .returning({ id: schema.customer.id })
+    .returning({ id: schema.team.id })
 
   return NextResponse.json(customer)
 }

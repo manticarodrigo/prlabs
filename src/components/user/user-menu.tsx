@@ -3,6 +3,7 @@
 import { useClerk } from '@clerk/nextjs'
 import Link from 'next/link'
 
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,8 +42,10 @@ export function UserMenu({ user }: UserMenuProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <UserAvatar user={user} />
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <UserAvatar user={user} />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>

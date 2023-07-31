@@ -16,23 +16,23 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { ToastAction } from '@/components/ui/toast'
 import { toast } from '@/components/ui/use-toast'
-import { CreateClientInput, CreateClientSchema } from '@/schema/team'
+import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { trpc } from '@/util/trpc'
 
 interface TeamFormProps {
-  onSuccess: (id: string) => void
+  onSuccess: (slug: string) => void
 }
 
 export function TeamForm({ onSuccess }: TeamFormProps) {
-  const form = useForm({ resolver: zodResolver(CreateClientSchema) })
+  const form = useForm({ resolver: zodResolver(TeamSchema) })
   const mutation = trpc.upsertTeam.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
-  async function onSubmit(values: CreateClientInput) {
+  async function onSubmit(values: TeamSchemaInput) {
     mutation.mutate(values, {
       onSuccess: (res) => {
-        onSuccess(res.id)
+        onSuccess(res.slug)
       },
       onError: (error) => {
         toast({
@@ -60,6 +60,24 @@ export function TeamForm({ onSuccess }: TeamFormProps) {
                   {...field}
                   required
                   placeholder="Enter team name..."
+                  value={field.value || ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Slug</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  required
+                  placeholder="Enter slug..."
                   value={field.value || ''}
                 />
               </FormControl>

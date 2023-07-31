@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  varchar,
 } from 'drizzle-orm/pg-core'
 
 export const articleAnalysis = pgTable('ArticleAnalysis', {
@@ -33,7 +34,7 @@ export const author = pgTable(
   },
   (table) => {
     return {
-      nameOutletKey: uniqueIndex('Author_name_outlet_key').on(
+      nameOutletKey: uniqueIndex().on(
         table.name,
         table.outlet,
       ),
@@ -80,17 +81,18 @@ export const article = pgTable(
   },
   (table) => {
     return {
-      externalIdKey: uniqueIndex('Article_external_id_key').on(
+      externalIdKey: uniqueIndex().on(
         table.external_id,
       ),
     }
   },
 )
 
-export const customer = pgTable('Customer', {
-  id: text('id').primaryKey().notNull(),
-  userId: text('userId').notNull(),
-  name: text('name'),
+export const team = pgTable('Team', {
+  id: varchar('id', { length: 255 }).primaryKey().notNull(),
+  userId: varchar('userId', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 100 }).notNull(),
+  name: varchar('name', { length: 255 }),
   description: text('description'),
   strategy: text('strategy'),
   createdAt: timestamp('createdAt', { precision: 3, mode: 'string' })
@@ -100,6 +102,10 @@ export const customer = pgTable('Customer', {
     precision: 3,
     mode: 'string',
   }).notNull(),
+}, (table) => {
+  return {
+    userIdSlugKey: uniqueIndex().on(table.userId, table.slug),
+  }
 })
 
 export const authorRelations = relations(author, ({ many }) => ({

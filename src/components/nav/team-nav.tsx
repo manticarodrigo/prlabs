@@ -7,6 +7,7 @@ import Link, { LinkProps } from 'next/link'
 import { usePathname } from 'next/navigation'
 import * as React from 'react'
 
+import TeamSwitcher from '@/components/team/switcher'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -45,19 +46,18 @@ export const links: LinkConfig[] = [
 
 interface Props {
   teams: Team[]
-  children?: JSX.Element
 }
 
-export function AppNav({ teams, children }: Props) {
+export function AppNav({ teams }: Props) {
   const pathname = usePathname()
   const [open, setOpen] = React.useState(false)
   return (
     <>
-      <div className="hidden md:flex items-center space-x-6">
+      <div className="mr-4 hidden md:flex items-center space-x-6">
         <Link href="/" className="text-lg font-bold">
           <Image src="/logo.svg" width={93} height={24} alt="PRLabs logo" />
         </Link>
-        {children}
+        <TeamSwitcher teams={teams} />
         <nav className="flex items-center space-x-6 text-sm font-medium">
           {links.map((link) => (
             <Link
@@ -76,18 +76,16 @@ export function AppNav({ teams, children }: Props) {
         </nav>
       </div>
       <Sheet open={open} onOpenChange={setOpen}>
-        <div className="flex items-center md:hidden space-x-4">
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          {children}
-        </div>
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          >
+            <Menu className="mr-2 h-6 w-6" />
+            <Image src="/logo.svg" width={93} height={24} alt="PRLabs logo" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </SheetTrigger>
         <SheetContent side="left" className="pr-0 h-full">
           <MobileLink
             href="/"

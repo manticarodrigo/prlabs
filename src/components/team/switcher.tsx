@@ -1,6 +1,8 @@
 'use client'
 
 import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
+import { Route } from 'next'
+import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 
 import { TeamForm } from '@/components/forms/team'
@@ -28,7 +30,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { useParams } from '@/hooks/use-params'
+import { useQueryParams } from '@/hooks/use-query-params'
+import { useRouter } from '@/hooks/use-router'
 import { Team } from '@/lib/drizzle'
 import { cn } from '@/lib/utils'
 
@@ -56,27 +59,39 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
   teams?: Team[]
 }
 
+const CREATE_TEAM_ID = 'create'
+
 export default function TeamSwitcher({
   teams = [],
   className,
 }: TeamSwitcherProps) {
-  const [params, setParams] = useParams()
-  const { teamId } = params
+  const router = useRouter()
+  const params = useParams()
+  const pathname = usePathname()
+  const [queryParams, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)
-  const selectedTeam = teams.find((team) => team.id === teamId)
-  const showNewTeamDialog = !selectedTeam && teamId === 'new'
+  const selectedTeam = teams.find((it) => it.slug === params.team)
+  const unselectedTeams = teams.filter((it) => it.slug !== params.team)
 
-  const setShowNewTeamDialog = (show: boolean) => {
+  const setShowCreateTeamDialog = (show: boolean) => {
     if (show) {
-      setParams({ teamId: 'new' })
+      setQueryParams({ team: CREATE_TEAM_ID })
     } else {
-      setParams({ teamId: '' })
+      setQueryParams({ team: '' })
     }
   }
 
+  const handleTeamSelect = (slug: string) => {
+    router.push(pathname.replace(params.team as string, slug) as Route)
+    setOpen(false)
+  }
+
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+    <Dialog
+      open={queryParams.team === CREATE_TEAM_ID}
+      onOpenChange={setShowCreateTeamDialog}
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -103,23 +118,20 @@ export default function TeamSwitcher({
                   </CommandItem>
                 </CommandGroup>
               )}
-              <CommandGroup heading="Teams">
-                {teams
-                  .filter((team) => team.id !== teamId)
-                  .map((team) => (
+              {unselectedTeams.length > 0 && (
+                <CommandGroup heading="Teams">
+                  {unselectedTeams.map((team) => (
                     <CommandItem
                       key={team.id}
-                      value={team.id}
+                      value={team.slug}
                       className="text-sm"
-                      onSelect={(value) => {
-                        setParams({ teamId: value })
-                        setOpen(false)
-                      }}
+                      onSelect={handleTeamSelect}
                     >
                       <TeamLabel team={team} />
                     </CommandItem>
                   ))}
-              </CommandGroup>
+                </CommandGroup>
+              )}
             </CommandList>
             <CommandSeparator />
             <CommandList>
@@ -128,7 +140,7 @@ export default function TeamSwitcher({
                   <CommandItem
                     onSelect={() => {
                       setOpen(false)
-                      setShowNewTeamDialog(true)
+                      setShowCreateTeamDialog(true)
                     }}
                   >
                     <PlusCircle className="mr-2 h-5 w-5" />
@@ -147,12 +159,7 @@ export default function TeamSwitcher({
             Add a new team to manage products and customers.
           </DialogDescription>
         </DialogHeader>
-        <TeamForm
-          onSuccess={(id) => {
-            setParams({ teamId: id })
-            setShowNewTeamDialog(false)
-          }}
-        />
+        <TeamForm onSuccess={handleTeamSelect} />
       </DialogContent>
     </Dialog>
   )

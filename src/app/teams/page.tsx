@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 export default async function TeamListPage() {
   const { userId } = auth()
 
-  const teams = await db.query.customer.findMany({
-    where: eq(schema.customer.userId, userId),
+  const teams = await db.query.team.findMany({
+    where: eq(schema.team.userId, userId),
   })
 
   const data = teams.map((team) =>

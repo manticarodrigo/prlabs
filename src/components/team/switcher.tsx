@@ -53,10 +53,13 @@ function TeamLabel({ team }: TeamLabelProps) {
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface TeamSwitcherProps extends PopoverTriggerProps {
-  teams: Team[]
+  teams?: Team[]
 }
 
-export default function TeamSwitcher({ teams, className }: TeamSwitcherProps) {
+export default function TeamSwitcher({
+  teams = [],
+  className,
+}: TeamSwitcherProps) {
   const [params, setParams] = useParams()
   const { teamId } = params
 

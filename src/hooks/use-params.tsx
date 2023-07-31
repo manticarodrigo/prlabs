@@ -1,5 +1,6 @@
 'use client'
 
+import { Route } from 'next'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 type Params = { [k: string]: string }
@@ -9,10 +10,10 @@ export function useParams(): [Params, SetParams] {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const current = new URLSearchParams(Array.from(searchParams.entries()))
-  const params: Params = Object.fromEntries(current)
+  const params: Params = Object.fromEntries(searchParams)
 
   const setParams: SetParams = (next) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()))
     for (const [key, value] of Object.entries(next)) {
       if (value) {
         current.set(key, value.trim())
@@ -23,7 +24,8 @@ export function useParams(): [Params, SetParams] {
     }
     const search = current.toString()
     const query = search ? `?${search}` : ''
-    router.push(`${pathname}${query}`)
+    const route = `${pathname}${query}` as Route
+    router.push(route)
   }
 
   return [params, setParams]

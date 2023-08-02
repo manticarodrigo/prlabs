@@ -32,7 +32,6 @@ import {
 import { useQueryParams } from '@/hooks/use-query-params'
 import { useRouter } from '@/hooks/use-router'
 import { Team } from '@/lib/drizzle'
-import { cn } from '@/lib/utils'
 
 interface TeamLabelProps {
   team?: Team
@@ -62,7 +61,7 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
 
 const CREATE_ID = 'create'
 
-export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
+export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
   const router = useRouter()
   const params = useParams()
   const pathname = usePathname()
@@ -103,7 +102,7 @@ export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
             role="combobox"
             aria-expanded={open}
             aria-label="Select a team"
-            className={cn('w-[200px] justify-between', className)}
+            className="w-[200px] justify-between"
           >
             <TeamLabel team={selectedTeam} />
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />

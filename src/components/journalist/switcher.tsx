@@ -32,7 +32,6 @@ import {
 import { useQueryParams } from '@/hooks/use-query-params'
 import { useRouter } from '@/hooks/use-router'
 import { Author } from '@/lib/drizzle'
-import { cn } from '@/lib/utils'
 
 interface JournalistLabelProps {
   journalist?: Author
@@ -64,7 +63,6 @@ const CREATE_ID = 'create'
 
 export function JournalistSwitcher({
   journalists = [],
-  className,
 }: JournalistSwitcherProps) {
   const router = useRouter()
   const params = useParams()
@@ -114,7 +112,7 @@ export function JournalistSwitcher({
             role="combobox"
             aria-expanded={open}
             aria-label="Select a journalist"
-            className={cn('w-[200px] justify-between', className)}
+            className="w-[200px] justify-between"
           >
             <JournalistLabel journalist={selectedJournalist} />
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />

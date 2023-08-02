@@ -2,7 +2,6 @@ import { currentUser, SignInButton } from '@clerk/nextjs'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-import { getTeams } from '@/app/api/team/model'
 import Discord from '@/components/icons/discord'
 import { AppNav } from '@/components/nav/app-nav'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -15,15 +14,16 @@ import { Separator } from '@/components/ui/separator'
 import { UserMenu } from '@/components/user/user-menu'
 import { cn } from '@/lib/utils'
 
-export default async function HomePage() {
+import TeamListPage from './teams/page'
+
+export default async function HomePage({ params }) {
   const user = await currentUser()
-  const teams = await getTeams(user.id)
   return (
     <>
       <header className="border-b">
         <div className="lg:container px-2">
           <div className="flex justify-between items-center p-2">
-            <AppNav teams={teams} />
+            <AppNav />
             {user ? (
               <UserMenu
                 user={{
@@ -49,7 +49,7 @@ export default async function HomePage() {
           <div className="relative">
             <PageHeader className="pb-8">
               <Link
-                href="/journalist/search"
+                href="/teams"
                 className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium"
               >
                 🎉 <Separator className="mx-2 h-4" orientation="vertical" />{' '}
@@ -62,10 +62,7 @@ export default async function HomePage() {
                 analysis with generative AI interactions.
               </PageHeaderDescription>
               <div className="flex w-full items-center space-x-4 pb-8 pt-4 md:pb-10">
-                <Link
-                  href="/journalist/search"
-                  className={cn(buttonVariants())}
-                >
+                <Link href="/teams" className={cn(buttonVariants())}>
                   Get Started
                 </Link>
                 <Link
@@ -80,7 +77,9 @@ export default async function HomePage() {
               </div>
             </PageHeader>
             <section className="">
-              <div className="overflow-hidden rounded-lg border bg-background shadow"></div>
+              <div className="flex items-center justify-center rounded-lg border p-6 bg-background shadow gap-2">
+                <TeamListPage />
+              </div>
             </section>
           </div>
         </div>

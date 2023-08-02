@@ -6,33 +6,31 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { ToastAction } from '@/components/ui/toast'
 import { toast } from '@/components/ui/use-toast'
-import { TeamSchema, TeamSchemaInput } from '@/schema/team'
+import { JournalistSchema, JournalistSchemaInput } from '@/schema/journalist'
 import { trpc } from '@/util/trpc'
 
 interface Props {
-  onSuccess: (slug: string) => void
+  onSuccess: (id: string) => void
 }
 
-export function TeamForm({ onSuccess }: Props) {
-  const form = useForm({ resolver: zodResolver(TeamSchema) })
-  const mutation = trpc.upsertTeam.useMutation()
+export function JournalistForm({ onSuccess }: Props) {
+  const form = useForm({ resolver: zodResolver(JournalistSchema) })
+  const mutation = trpc.upsertJournalist.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
-  async function onSubmit(values: TeamSchemaInput) {
+  async function onSubmit(values: JournalistSchemaInput) {
     mutation.mutate(values, {
       onSuccess: (res) => {
-        onSuccess(res.slug)
+        onSuccess(res.id)
       },
       onError: (error) => {
         toast({
@@ -59,7 +57,7 @@ export function TeamForm({ onSuccess }: Props) {
                 <Input
                   {...field}
                   required
-                  placeholder="Enter team name..."
+                  placeholder="Enter journalist name..."
                   value={field.value || ''}
                 />
               </FormControl>
@@ -69,60 +67,18 @@ export function TeamForm({ onSuccess }: Props) {
         />
         <FormField
           control={form.control}
-          name="slug"
+          name="outlet"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Slug</FormLabel>
+              <FormLabel>Outlet</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   required
-                  placeholder="Enter slug..."
+                  placeholder="Enter outlet name..."
                   value={field.value || ''}
                 />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  {...field}
-                  required
-                  placeholder="Enter description..."
-                  value={field.value || ''}
-                />
-              </FormControl>
-              <FormDescription>
-                Relevant business, client, or brand information.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="strategy"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Strategy</FormLabel>
-              <FormControl>
-                <Textarea
-                  {...field}
-                  required
-                  placeholder="Enter strategy..."
-                  value={field.value || ''}
-                />
-              </FormControl>
-              <FormDescription>
-                Key themes or pillars of your company&apos;s external messaging.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -133,7 +89,7 @@ export function TeamForm({ onSuccess }: Props) {
           ) : (
             <PlusCircle className="mr-2 w-4 h-4" />
           )}
-          Create team
+          Create journalist
         </Button>
       </form>
     </Form>

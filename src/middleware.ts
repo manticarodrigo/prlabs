@@ -1,6 +1,6 @@
 import { authMiddleware, redirectToSignIn } from '@clerk/nextjs';
+import { NextResponse } from 'next/server';
 
-import { getTeams } from '@/app/api/team/model';
 
 export default authMiddleware({
   publicRoutes: ['/'],
@@ -11,13 +11,9 @@ export default authMiddleware({
     }
     // redirect them to team overview page
     if (auth.userId && req.nextUrl.pathname === "/") {
-      const teams = await getTeams(auth.userId)
 
       const { origin } = req.nextUrl
-      // if (teams.length === 0) {
-      //   return NextResponse.redirect(origin + `/team/create`)
-      // }
-      // return NextResponse.redirect(origin + `/${teams[0].slug}`)
+      return NextResponse.redirect(origin + `/teams`)
     }
   }
 })

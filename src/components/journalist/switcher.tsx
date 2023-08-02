@@ -5,7 +5,7 @@ import { Route } from 'next'
 import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 
-import { TeamForm } from '@/components/forms/team'
+import { JournalistForm } from '@/components/forms/journalist'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -32,64 +32,75 @@ import {
 } from '@/components/ui/popover'
 import { useQueryParams } from '@/hooks/use-query-params'
 import { useRouter } from '@/hooks/use-router'
-import { Team } from '@/lib/drizzle'
+import { Author } from '@/lib/drizzle'
 import { cn } from '@/lib/utils'
 
-interface TeamLabelProps {
-  team?: Team
+interface JournalistLabelProps {
+  journalist?: Author
 }
 
-function TeamLabel({ team }: TeamLabelProps) {
-  if (!team) {
-    return <span className="text-muted-foreground">No team selected</span>
+function JournalistLabel({ journalist }: JournalistLabelProps) {
+  if (!journalist) {
+    return <span className="text-muted-foreground">No journalist selected</span>
   }
   return (
     <>
       <Avatar className="mr-2 h-5 w-5">
         <AvatarFallback className="uppercase">
-          {team.name.slice(0, 2)}
+          {journalist.name.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
-      {team.name}
+      {journalist.name}
     </>
   )
 }
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
-interface TeamSwitcherProps extends PopoverTriggerProps {
-  teams?: Team[]
+interface JournalistSwitcherProps extends PopoverTriggerProps {
+  journalists?: Author[]
 }
 
 const CREATE_ID = 'create'
 
-export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
+export function JournalistSwitcher({
+  journalists = [],
+  className,
+}: JournalistSwitcherProps) {
   const router = useRouter()
   const params = useParams()
   const pathname = usePathname()
   const [queryParams, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)
-  const selectedTeam = teams.find((it) => it.slug === params.team)
-  const unselectedTeams = teams.filter((it) => it.slug !== params.team)
+  const selectedJournalist = journalists.find(
+    (it) => it.id === params.journalist,
+  )
+  const unselectedJournalists = journalists.filter(
+    (it) => it.id !== params.journalist,
+  )
 
-  const setShowCreateTeamDialog = (show: boolean) => {
+  const setShowCreateJournalistDialog = (show: boolean) => {
     if (show) {
-      setQueryParams({ team: CREATE_ID })
+      setQueryParams({ journalist: CREATE_ID })
     } else {
-      setQueryParams({ team: '' })
+      setQueryParams({ journalist: '' })
     }
   }
 
-  const handleTeamSelect = (slug: string) => {
-    router.push(pathname.replace(params.team as string, slug) as Route)
+  const handleJournalistSelect = (id: string) => {
+    router.push(pathname.replace(params.journalist as string, id) as Route)
     setOpen(false)
+  }
+
+  if (!params.team) {
+    return null
   }
 
   return (
     <Dialog
-      open={queryParams.team === CREATE_ID}
-      onOpenChange={setShowCreateTeamDialog}
+      open={queryParams.journalist === CREATE_ID}
+      onOpenChange={setShowCreateJournalistDialog}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -97,36 +108,39 @@ export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            aria-label="Select a team"
+            aria-label="Select a journalist"
             className={cn('w-[200px] justify-between', className)}
           >
-            <TeamLabel team={selectedTeam} />
+            <JournalistLabel journalist={selectedJournalist} />
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandInput placeholder="Search team..." />
-              <CommandEmpty>No team found.</CommandEmpty>
-              {selectedTeam && (
-                <CommandGroup heading="Selected team">
-                  <CommandItem value={selectedTeam.id} className="text-sm">
-                    <TeamLabel team={selectedTeam} />
+              <CommandInput placeholder="Search journalists..." />
+              <CommandEmpty>No journalist found.</CommandEmpty>
+              {selectedJournalist && (
+                <CommandGroup heading="Selected journalist">
+                  <CommandItem
+                    value={selectedJournalist.id}
+                    className="text-sm"
+                  >
+                    <JournalistLabel journalist={selectedJournalist} />
                     <Check className="ml-auto h-4 w-4" />
                   </CommandItem>
                 </CommandGroup>
               )}
-              {unselectedTeams.length > 0 && (
-                <CommandGroup heading="Teams">
-                  {unselectedTeams.map((team) => (
+              {unselectedJournalists.length > 0 && (
+                <CommandGroup heading="Journalists">
+                  {unselectedJournalists.map((journalist) => (
                     <CommandItem
-                      key={team.id}
-                      value={team.slug}
+                      key={journalist.id}
+                      value={journalist.id}
                       className="text-sm"
-                      onSelect={handleTeamSelect}
+                      onSelect={handleJournalistSelect}
                     >
-                      <TeamLabel team={team} />
+                      <JournalistLabel journalist={journalist} />
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -139,11 +153,11 @@ export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
                   <CommandItem
                     onSelect={() => {
                       setOpen(false)
-                      setShowCreateTeamDialog(true)
+                      setShowCreateJournalistDialog(true)
                     }}
                   >
                     <PlusCircle className="mr-2 h-5 w-5" />
-                    Create Team
+                    Create Journalist
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>
@@ -153,12 +167,12 @@ export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
       </Popover>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
+          <DialogTitle>Create journalist</DialogTitle>
           <DialogDescription>
-            Add a new team to manage products and customers.
+            Add a new journalist to manage products and customers.
           </DialogDescription>
         </DialogHeader>
-        <TeamForm onSuccess={handleTeamSelect} />
+        <JournalistForm onSuccess={handleJournalistSelect} />
       </DialogContent>
     </Dialog>
   )

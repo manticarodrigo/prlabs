@@ -1,10 +1,12 @@
 import { auth } from "@clerk/nextjs";
-import { createId } from "@paralleldrive/cuid2";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import invariant from 'tiny-invariant';
 
-import { db, schema } from "@/lib/drizzle";
+import { upsertJournalist } from "@/app/api/journalist/model";
+import { upsertTeam } from "@/app/api/team/model";
+import { getNewsArticles } from "@/lib/newscatcher";
+import { JournalistSchema } from "@/schema/journalist";
 import { TeamSchema } from "@/schema/team";
 
 const t = initTRPC.create({
@@ -17,21 +19,23 @@ export const appRouter = t.router({
 
     invariant(userId, 'You must be logged in to create a team.')
 
-    const { name, slug, description, strategy } = input
+    return upsertTeam({ ...input, userId })
+  }),
+  upsertJournalist: t.procedure.input(JournalistSchema).mutation(async ({ ctx, input }) => {
+    const { userId } = auth()
 
-    const [team] = await db
-      .insert(schema.team)
-      .values({
-        id: createId(),
-        userId,
-        name,
-        slug,
-        description,
-        strategy,
-        updatedAt: new Date().toISOString(),
-      })
-      .returning({ slug: schema.team.slug })
-    return team;
+    invariant(userId, 'You must be logged in to create a journalist.')
+
+    const { name, outlet } = input
+
+    invariant(name, 'You must provide a name to create a journalist.')
+    invariant(outlet, 'You must provide an outlet to create a journalist.')
+
+    const articles = await getNewsArticles(name, outlet)
+
+    invariant(articles && articles.length, 'No articles found. Please update the form and try again.')
+
+    return upsertJournalist(articles)
   }),
 });
 

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 
-import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -11,22 +10,25 @@ import {
 } from '@/components/ui/command'
 import { Author } from '@/lib/drizzle'
 
-export function JournalistSearch({ authors }: { authors: Author[] }) {
+export function JournalistSearch({
+  team,
+  authors,
+}: {
+  team: string
+  authors: Author[]
+}) {
   return (
     <Command>
       <CommandInput placeholder="Find a journalist..." />
       <CommandList>
         <CommandEmpty>
           <div>No results found.</div>
-          <Button asChild className="mt-4">
-            <Link href="/journalist">Click to add a journalist</Link>
-          </Button>
         </CommandEmpty>
         <CommandGroup>
           {authors.map((author) => (
             <CommandItem key={author.id} className="relative">
               <Link
-                href={`/journalist/${author.id}`}
+                href={`/teams/${team}/journalists/${author.id}`}
                 aria-label={`${author.name} - ${author.outlet}`}
                 className="absolute w-full h-full"
               />

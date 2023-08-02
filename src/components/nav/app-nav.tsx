@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useRouter } from '@/hooks/use-router'
-import { Team } from '@/lib/drizzle'
 import { cn } from '@/lib/utils'
 
 type LinkConfig = {
@@ -27,28 +26,22 @@ export const links: LinkConfig[] = [
     matches: '/teams',
   },
   {
-    title: 'Journalists',
-    href: '/journalist/search',
-    matches: '/journalist',
+    title: 'Privacy',
+    href: '/privacy',
+    matches: '/privacy-policy',
   },
   {
-    title: 'Topics',
-    href: '/',
-    matches: '/topic',
-  },
-  {
-    title: 'Conferences',
-    href: '/',
-    matches: '/conference',
+    title: 'Account',
+    href: '/account',
+    matches: '/account',
   },
 ]
 
 interface Props {
-  teams: Team[]
   children?: JSX.Element
 }
 
-export function AppNav({ teams, children }: Props) {
+export function AppNav({ children }: Props) {
   const pathname = usePathname()
   const [open, setOpen] = React.useState(false)
   return (

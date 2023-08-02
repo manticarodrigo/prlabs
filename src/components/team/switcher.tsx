@@ -1,7 +1,6 @@
 'use client'
 
 import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
-import { Route } from 'next'
 import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 
@@ -82,7 +81,13 @@ export function TeamSwitcher({ teams = [], className }: TeamSwitcherProps) {
   }
 
   const handleTeamSelect = (slug: string) => {
-    router.push(pathname.replace(params.team as string, slug) as Route)
+    const team = (params.team as string) ?? ''
+    const hasTeamInPath = team && pathname.includes(team)
+    const route = hasTeamInPath
+      ? pathname.replace(team, slug)
+      : `/teams/${slug}`
+
+    router.push(route)
     setOpen(false)
   }
 

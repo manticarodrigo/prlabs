@@ -1,7 +1,6 @@
 'use client'
 
 import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
-import { Route } from 'next'
 import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 
@@ -89,7 +88,13 @@ export function JournalistSwitcher({
   }
 
   const handleJournalistSelect = (id: string) => {
-    router.push(pathname.replace(params.journalist as string, id) as Route)
+    const journalist = (params.journalist as string) ?? ''
+    const hasJournalistInPath = journalist && pathname.includes(journalist)
+    const route = hasJournalistInPath
+      ? pathname.replace(journalist, id)
+      : `journalists/${id}`
+
+    router.push(route)
     setOpen(false)
   }
 

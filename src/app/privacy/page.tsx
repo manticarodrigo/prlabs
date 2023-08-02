@@ -58,5 +58,10 @@ word-break: break-word !important;
 `
 
 export default function PrivacyPage() {
-  return <main dangerouslySetInnerHTML={{ __html: snippet }} />
+  return (
+    <main
+      dangerouslySetInnerHTML={{ __html: snippet }}
+      className="w-full h-full p-8 overflow-auto"
+    />
+  )
 }

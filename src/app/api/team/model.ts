@@ -29,3 +29,9 @@ export async function upsertTeam({ userId, name = undefined, description = undef
     .returning({ id: schema.team.id })
   return team
 }
+
+export async function deleteTeam(id: string) {
+  return db
+    .delete(schema.team)
+    .where(eq(schema.team.id, id))
+}

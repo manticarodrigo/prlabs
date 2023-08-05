@@ -14,10 +14,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { ToastAction } from '@/components/ui/toast'
-import { toast } from '@/components/ui/use-toast'
+import { trpc } from '@/lib/trpc'
 import { TeamSchema, TeamSchemaInput } from '@/schema/team'
-import { trpc } from '@/util/trpc'
+import { onErrorToast } from '@/util/toast'
 
 interface Props {
   onSuccess: (id: string) => void
@@ -25,7 +24,7 @@ interface Props {
 
 export function TeamForm({ onSuccess }: Props) {
   const form = useForm({ resolver: zodResolver(TeamSchema) })
-  const mutation = trpc.upsertTeam.useMutation()
+  const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
@@ -34,15 +33,7 @@ export function TeamForm({ onSuccess }: Props) {
       onSuccess: (res) => {
         onSuccess(res.id)
       },
-      onError: (error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description:
-            error.message || 'There was a problem with your request.',
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        })
-      },
+      onError: onErrorToast,
     })
   }
 

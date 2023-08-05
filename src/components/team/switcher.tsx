@@ -160,7 +160,12 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
             Add a new team to manage products and customers.
           </DialogDescription>
         </DialogHeader>
-        <TeamForm onSuccess={handleTeamSelect} />
+        <TeamForm
+          onSuccess={() => {
+            setShowCreateTeamDialog(false)
+            router.refresh()
+          }}
+        />
       </DialogContent>
     </Dialog>
   )

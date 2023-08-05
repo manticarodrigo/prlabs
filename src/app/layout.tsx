@@ -8,7 +8,7 @@ import { Inter } from 'next/font/google'
 
 import { ProgressBar } from '@/components/ui/progress'
 import { Toaster } from '@/components/ui/toaster'
-import { TrpcProvider } from '@/util/trpc'
+import { TrpcProvider } from '@/lib/trpc'
 
 const inter = Inter({ subsets: ['latin'] })
 

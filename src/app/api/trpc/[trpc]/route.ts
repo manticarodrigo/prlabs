@@ -3,7 +3,7 @@ import {
   fetchRequestHandler,
 } from "@trpc/server/adapters/fetch";
 
-import { appRouter } from "../router";
+import { appRouter } from "../app.router";
 
 const handler = (request: Request) => {
   console.log(`incoming request ${request.url}`);

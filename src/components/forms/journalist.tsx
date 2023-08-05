@@ -12,10 +12,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { ToastAction } from '@/components/ui/toast'
-import { toast } from '@/components/ui/use-toast'
+import { trpc } from '@/lib/trpc'
 import { JournalistSchema, JournalistSchemaInput } from '@/schema/journalist'
-import { trpc } from '@/util/trpc'
+import { onErrorToast } from '@/util/toast'
 
 interface Props {
   onSuccess: (id: string) => void
@@ -23,7 +22,7 @@ interface Props {
 
 export function JournalistForm({ onSuccess }: Props) {
   const form = useForm({ resolver: zodResolver(JournalistSchema) })
-  const mutation = trpc.upsertJournalist.useMutation()
+  const mutation = trpc.journalist.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
@@ -32,15 +31,7 @@ export function JournalistForm({ onSuccess }: Props) {
       onSuccess: (res) => {
         onSuccess(res.id)
       },
-      onError: (error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description:
-            error.message || 'There was a problem with your request.',
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        })
-      },
+      onError: onErrorToast,
     })
   }
 

@@ -7,10 +7,10 @@ import { useRef } from 'react'
 import { JournalistChat } from '@/components/journalist/chat'
 import { JournalistPrepare } from '@/components/journalist/prepare'
 import { JournalistSidebar } from '@/components/journalist/sidebar'
-import { ToastAction } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
 import { AuthorWithArticlesWithAnalyses } from '@/lib/drizzle'
 import { Prompt } from '@/lib/notion'
+import { onErrorToast } from '@/util/toast'
 
 type JournalistDetailProps = {
   author: AuthorWithArticlesWithAnalyses
@@ -36,12 +36,7 @@ export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
     },
     onResponse(response) {
       if (response.status >= 400) {
-        toast({
-          variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.',
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        })
+        onErrorToast()
       }
     },
   })

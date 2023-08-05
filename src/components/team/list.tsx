@@ -12,13 +12,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { useRouter } from '@/hooks/use-router'
 import { Team } from '@/lib/drizzle'
+import { trpc } from '@/lib/trpc'
+import { onErrorToast } from '@/util/toast'
 
 interface Props {
   teams: Team[]
 }
 
 export function TeamList({ teams }: Props) {
+  const router = useRouter()
+  const mutation = trpc.team.delete.useMutation()
+
   return (
     <Card>
       <CardHeader>
@@ -34,7 +40,12 @@ export function TeamList({ teams }: Props) {
               <TeamListItem
                 team={team}
                 onEdit={() => null}
-                onDelete={() => null}
+                onDelete={() =>
+                  mutation.mutate(team.id, {
+                    onSuccess: router.refresh,
+                    onError: onErrorToast,
+                  })
+                }
               />
             </li>
           ))}

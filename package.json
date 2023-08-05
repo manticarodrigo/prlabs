@@ -76,6 +76,7 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^4.32.0",
+    "@types/autosize": "^4.0.1",
     "@types/react": "18.2.15",
     "drizzle-kit": "^0.19.12",
     "encoding": "^0.1.13",

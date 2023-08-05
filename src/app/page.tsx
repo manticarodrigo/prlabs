@@ -78,7 +78,7 @@ export default async function HomePage({ params }) {
             </PageHeader>
             <section className="">
               <div className="flex items-center justify-center rounded-lg border p-6 bg-background shadow gap-2">
-                <TeamListPage />
+                <TeamListPage searchParams={{}} />
               </div>
             </section>
           </div>

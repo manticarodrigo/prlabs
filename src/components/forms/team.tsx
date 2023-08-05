@@ -27,7 +27,7 @@ interface Props {
 export function TeamForm({ team, onSuccess }: Props) {
   const form = useForm<TeamSchemaInput>({
     resolver: zodResolver(TeamSchema),
-    defaultValues: TeamSchema.parse(team),
+    defaultValues: team && TeamSchema.parse(team),
   })
   const mutation = trpc.team.upsert.useMutation()
 

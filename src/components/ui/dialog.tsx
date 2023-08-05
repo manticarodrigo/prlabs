@@ -17,7 +17,7 @@ const DialogPortal = ({
   <DialogPrimitive.Portal
     className={cn(className)}
     {...props}
-    container={document.body}
+    container={typeof document !== 'undefined' ? document.body : undefined}
   />
 )
 DialogPortal.displayName = DialogPrimitive.Portal.displayName

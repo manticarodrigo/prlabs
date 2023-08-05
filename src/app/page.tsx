@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils'
 
 import TeamListPage from './teams/page'
 
-export default async function HomePage({ params }) {
+export default async function HomePage() {
   const user = await currentUser()
   return (
     <>
@@ -78,7 +78,7 @@ export default async function HomePage({ params }) {
             </PageHeader>
             <section className="">
               <div className="flex items-center justify-center rounded-lg border p-6 bg-background shadow gap-2">
-                <TeamListPage searchParams={{}} />
+                <TeamListPage />
               </div>
             </section>
           </div>

@@ -25,13 +25,13 @@ const teams = [
 ]
 
 interface Props {
-  searchParams: {
+  searchParams?: {
     team: string
   }
 }
 
 export default async function TeamListPage({ searchParams }: Props) {
-  const { team: teamId } = searchParams
+  const { team: teamId } = searchParams ?? {}
   const user = await currentUser()
 
   invariant(user, 'No user found.')

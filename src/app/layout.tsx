@@ -19,7 +19,11 @@ export const metadata: Metadata = {
 
 export const runtime = 'edge'
 
-export default function AppLayout({ children }) {
+interface Props {
+  children: React.ReactNode
+}
+
+export default function AppLayout({ children }: Props) {
   return (
     <html lang="en" className="w-full h-full overflow-hidden">
       <head>{GoogleTagManagerHead}</head>

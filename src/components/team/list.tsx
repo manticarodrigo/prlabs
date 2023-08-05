@@ -39,7 +39,7 @@ export function TeamList({ teams }: Props) {
             <li key={team.id} className="p-2">
               <TeamListItem
                 team={team}
-                onEdit={() => null}
+                onEdit={() => router.push(`/teams?team=${team.id}`)}
                 onDelete={() =>
                   mutation.mutate(team.id, {
                     onSuccess: router.refresh,

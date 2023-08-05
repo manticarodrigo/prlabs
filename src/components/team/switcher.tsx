@@ -4,7 +4,6 @@ import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 
-import { TeamForm } from '@/components/forms/team'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,14 +15,6 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import {
   Popover,
   PopoverContent,
@@ -59,24 +50,18 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
   teams?: Team[]
 }
 
-const CREATE_ID = 'create'
-
 export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
   const router = useRouter()
   const params = useParams()
   const pathname = usePathname()
-  const [queryParams, setQueryParams] = useQueryParams()
+  const [, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)
   const selectedTeam = teams.find((it) => it.id === params.team)
   const unselectedTeams = teams.filter((it) => it.id !== params.team)
 
   const setShowCreateTeamDialog = (show: boolean) => {
-    if (show) {
-      setQueryParams({ team: CREATE_ID })
-    } else {
-      setQueryParams({ team: '' })
-    }
+    setQueryParams({ team: show ? 'create' : '' })
   }
 
   const handleTeamSelect = (id: string) => {
@@ -89,84 +74,63 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
   }
 
   return (
-    <Dialog
-      open={queryParams.team === CREATE_ID}
-      onOpenChange={setShowCreateTeamDialog}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select a team"
-            className="w-[200px] justify-between"
-          >
-            <TeamLabel team={selectedTeam} />
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandList>
-              <CommandInput placeholder="Search team..." />
-              <CommandEmpty>No team found.</CommandEmpty>
-              {selectedTeam && (
-                <CommandGroup heading="Selected team">
-                  <CommandItem value={selectedTeam.id} className="text-sm">
-                    <TeamLabel team={selectedTeam} />
-                    <Check className="ml-auto h-4 w-4" />
-                  </CommandItem>
-                </CommandGroup>
-              )}
-              {unselectedTeams.length > 0 && (
-                <CommandGroup heading="Teams">
-                  {unselectedTeams.map((team) => (
-                    <CommandItem
-                      key={team.id}
-                      value={team.id}
-                      className="text-sm"
-                      onSelect={handleTeamSelect}
-                    >
-                      <TeamLabel team={team} />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                <DialogTrigger asChild>
-                  <CommandItem
-                    onSelect={() => {
-                      setOpen(false)
-                      setShowCreateTeamDialog(true)
-                    }}
-                  >
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Create Team
-                  </CommandItem>
-                </DialogTrigger>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          aria-label="Select a team"
+          className="w-[200px] justify-between"
+        >
+          <TeamLabel team={selectedTeam} />
+          <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandList>
+            <CommandInput placeholder="Search team..." />
+            <CommandEmpty>No team found.</CommandEmpty>
+            {selectedTeam && (
+              <CommandGroup heading="Selected team">
+                <CommandItem value={selectedTeam.id} className="text-sm">
+                  <TeamLabel team={selectedTeam} />
+                  <Check className="ml-auto h-4 w-4" />
+                </CommandItem>
               </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
-          <DialogDescription>
-            Add a new team to manage products and customers.
-          </DialogDescription>
-        </DialogHeader>
-        <TeamForm
-          onSuccess={() => {
-            setShowCreateTeamDialog(false)
-            router.refresh()
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+            )}
+            {unselectedTeams.length > 0 && (
+              <CommandGroup heading="Teams">
+                {unselectedTeams.map((team) => (
+                  <CommandItem
+                    key={team.id}
+                    value={team.id}
+                    className="text-sm"
+                    onSelect={handleTeamSelect}
+                  >
+                    <TeamLabel team={team} />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+          <CommandSeparator />
+          <CommandList>
+            <CommandGroup>
+              <CommandItem
+                onSelect={() => {
+                  setOpen(false)
+                  setShowCreateTeamDialog(true)
+                }}
+              >
+                <PlusCircle className="mr-2 h-5 w-5" />
+                Create Team
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   )
 }

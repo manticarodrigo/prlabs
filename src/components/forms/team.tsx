@@ -19,11 +19,15 @@ import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { onErrorToast } from '@/util/toast'
 
 interface Props {
+  team?: TeamSchemaInput
   onSuccess: (id: string) => void
 }
 
-export function TeamForm({ onSuccess }: Props) {
-  const form = useForm({ resolver: zodResolver(TeamSchema) })
+export function TeamForm({ team, onSuccess }: Props) {
+  const form = useForm({
+    resolver: zodResolver(TeamSchema),
+    defaultValues: team,
+  })
   const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting

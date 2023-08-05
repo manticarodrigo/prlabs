@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs'
 
 import { getTeams } from '@/app/api/team/model'
 import { TeamList } from '@/components/team/list'
+import { TeamModal } from '@/components/team/modal'
 
 const teams = [
   ['Apple', 'Think different.'],
@@ -35,10 +36,11 @@ function genTeams() {
   }))
 }
 
-export default async function TeamListPage() {
+export default async function TeamListPage({ searchParams }) {
+  const { team: teamId } = searchParams
   const user = await currentUser()
-
   const teams = user ? await getTeams(user.id) : genTeams()
+  const team = user ? teams.find((team) => team.id === teamId) : null
 
   return (
     <main className="container flex flex-col py-6 px-4 w-full h-full gap-4 sm:gap-6">
@@ -49,6 +51,7 @@ export default async function TeamListPage() {
         <p className="text-muted-foreground">Select a team to get started.</p>
       </div>
       <TeamList teams={teams} />
+      <TeamModal team={team} />
     </main>
   )
 }

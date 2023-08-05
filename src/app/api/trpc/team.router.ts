@@ -1,29 +1,17 @@
-import { auth } from "@clerk/nextjs";
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
-import invariant from 'tiny-invariant';
 import { z } from "zod";
 
 import { deleteTeam, upsertTeam } from "@/app/api/team/model";
 import { TeamSchema } from "@/schema/team";
 
-const t = initTRPC.create({
-  transformer: superjson,
-});
+import { createRouter, protectedProcedure } from "./trpc";
 
-export const teamRouter = t.router({
-  upsert: t.procedure.input(TeamSchema).mutation(async ({ input }) => {
-    const { userId } = auth()
 
-    invariant(userId, 'You must be logged in to create a team.')
-
+export const teamRouter = createRouter({
+  upsert: protectedProcedure.input(TeamSchema).mutation(async ({ ctx, input }) => {
+    const { userId } = ctx.session
     return upsertTeam({ ...input, userId })
   }),
-  delete: t.procedure.input(z.string()).mutation(async ({ input }) => {
-    const { userId } = auth()
-
-    invariant(userId, 'You must be logged in to delete a team.')
-
+  delete: protectedProcedure.input(z.string()).mutation(async ({ input }) => {
     return deleteTeam(input)
   }),
 });

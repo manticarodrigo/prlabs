@@ -5,10 +5,6 @@ export const TeamSchema = z.object({
     .string()
     .min(2, 'Name must be at least 2 characters')
     .max(100, 'Name must be less than 255 characters'),
-  slug: z
-    .string()
-    .min(2, 'Slug must be at least 2 characters')
-    .max(100, 'Slug must be less than 255 characters'),
   description: z
     .string()
     .min(10, 'Description must be at least 10 characters')

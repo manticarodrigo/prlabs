@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs'
 
 import { getTeams } from '@/app/api/team/model'
-import { TeamSearch } from '@/components/team/search'
+import { TeamList } from '@/components/team/list'
 
 const teams = [
   ['Apple', 'Think different.'],
@@ -28,7 +28,6 @@ function genTeams() {
     id: `${i}`,
     userId: `${i}`,
     name,
-    slug: '',
     description,
     strategy: '',
     updatedAt: timestamp,
@@ -42,18 +41,14 @@ export default async function TeamListPage() {
   const teams = user ? await getTeams(user.id) : genTeams()
 
   return (
-    <main className="flex flex-col lg:justify-center items-center py-4 px-2 w-full h-full">
-      <section className="flex flex-col justify-center items-center max-w-xl w-full space-y-4">
-        <header>
-          <h1 className="text-lg text-center font-medium">
-            Welcome back {user?.firstName ?? 'friend'}!
-          </h1>
-          <p className="text-muted-foreground">Choose a team to continue.</p>
-        </header>
-        <div className="rounded-lg border w-full shadow-md">
-          <TeamSearch teams={teams} />
-        </div>
-      </section>
+    <main className="container flex flex-col py-6 px-4 w-full h-full gap-4 sm:gap-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">
+          Welcome back {user.firstName}!
+        </h1>
+        <p className="text-muted-foreground">Select a team to get started.</p>
+      </div>
+      <TeamList teams={teams} />
     </main>
   )
 }

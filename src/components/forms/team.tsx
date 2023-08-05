@@ -20,7 +20,7 @@ import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { trpc } from '@/util/trpc'
 
 interface Props {
-  onSuccess: (slug: string) => void
+  onSuccess: (id: string) => void
 }
 
 export function TeamForm({ onSuccess }: Props) {
@@ -32,7 +32,7 @@ export function TeamForm({ onSuccess }: Props) {
   async function onSubmit(values: TeamSchemaInput) {
     mutation.mutate(values, {
       onSuccess: (res) => {
-        onSuccess(res.slug)
+        onSuccess(res.id)
       },
       onError: (error) => {
         toast({
@@ -60,24 +60,6 @@ export function TeamForm({ onSuccess }: Props) {
                   {...field}
                   required
                   placeholder="Enter team name..."
-                  value={field.value || ''}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  required
-                  placeholder="Enter slug..."
                   value={field.value || ''}
                 />
               </FormControl>

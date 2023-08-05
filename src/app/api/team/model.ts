@@ -9,24 +9,23 @@ export function getTeams(userId: string) {
   })
 }
 
-export function getTeam(slug: string) {
+export function getTeam(id: string) {
   return db.query.team.findFirst({
-    where: eq(schema.team.slug, slug),
+    where: eq(schema.team.id, id),
   })
 }
 
-export async function upsertTeam({ userId, name = undefined, slug = undefined, description = undefined, strategy = undefined }) {
+export async function upsertTeam({ userId, name = undefined, description = undefined, strategy = undefined }) {
   const [team] = await db
     .insert(schema.team)
     .values({
       id: createId(),
       userId,
       name,
-      slug,
       description,
       strategy,
       updatedAt: new Date().toISOString(),
     })
-    .returning({ slug: schema.team.slug })
+    .returning({ id: schema.team.id })
   return team
 }

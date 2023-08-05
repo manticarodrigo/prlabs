@@ -22,7 +22,7 @@ export function TeamSearch({ teams }: { teams: Team[] }) {
           {teams.map((team) => (
             <CommandItem key={team.id} className="relative">
               <Link
-                href={`/teams/${team.slug}`}
+                href={`/teams/${team.id}`}
                 className="absolute w-full h-full"
               />
               <div className="truncate w-full">

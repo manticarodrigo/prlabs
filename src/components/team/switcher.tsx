@@ -68,8 +68,8 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
   const [queryParams, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)
-  const selectedTeam = teams.find((it) => it.slug === params.team)
-  const unselectedTeams = teams.filter((it) => it.slug !== params.team)
+  const selectedTeam = teams.find((it) => it.id === params.team)
+  const unselectedTeams = teams.filter((it) => it.id !== params.team)
 
   const setShowCreateTeamDialog = (show: boolean) => {
     if (show) {
@@ -79,12 +79,10 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
     }
   }
 
-  const handleTeamSelect = (slug: string) => {
+  const handleTeamSelect = (id: string) => {
     const team = (params.team as string) ?? ''
     const hasTeamInPath = team && pathname.includes(team)
-    const route = hasTeamInPath
-      ? pathname.replace(team, slug)
-      : `/teams/${slug}`
+    const route = hasTeamInPath ? pathname.replace(team, id) : `/teams/${id}`
 
     router.push(route)
     setOpen(false)
@@ -126,7 +124,7 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
                   {unselectedTeams.map((team) => (
                     <CommandItem
                       key={team.id}
-                      value={team.slug}
+                      value={team.id}
                       className="text-sm"
                       onSelect={handleTeamSelect}
                     >

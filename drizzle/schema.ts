@@ -91,7 +91,6 @@ export const article = pgTable(
 export const team = pgTable('Team', {
   id: varchar('id', { length: 255 }).primaryKey().notNull(),
   userId: varchar('userId', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 100 }).notNull(),
   name: varchar('name', { length: 255 }),
   description: text('description'),
   strategy: text('strategy'),
@@ -102,10 +101,6 @@ export const team = pgTable('Team', {
     precision: 3,
     mode: 'string',
   }).notNull(),
-}, (table) => {
-  return {
-    userIdSlugKey: uniqueIndex().on(table.userId, table.slug),
-  }
 })
 
 export const authorRelations = relations(author, ({ many }) => ({

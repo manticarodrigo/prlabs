@@ -3,6 +3,7 @@ import { kv } from '@vercel/kv'
 import { LangChainStream, StreamingTextResponse } from 'ai'
 import { OpenAI } from 'langchain'
 import { NextRequest } from 'next/server'
+import invariant from 'tiny-invariant'
 
 import { db, eq, schema } from '@/lib/drizzle'
 import { getNewsArticleMetadata } from '@/lib/newscatcher'
@@ -17,6 +18,8 @@ export async function POST(req: NextRequest) {
       author: true,
     },
   })
+
+  invariant(article, 'Article not found.')
 
   const metadata = getNewsArticleMetadata(article)
 

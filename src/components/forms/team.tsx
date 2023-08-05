@@ -14,36 +14,38 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Team } from '@/lib/drizzle'
 import { trpc } from '@/lib/trpc'
 import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { onErrorToast } from '@/util/toast'
 
 interface Props {
-  team?: TeamSchemaInput
+  team?: Team
   onSuccess: (id: string) => void
 }
 
 export function TeamForm({ team, onSuccess }: Props) {
-  const form = useForm({
+  const form = useForm<TeamSchemaInput>({
     resolver: zodResolver(TeamSchema),
-    defaultValues: team,
+    defaultValues: TeamSchema.parse(team),
   })
   const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
-  async function onSubmit(values: TeamSchemaInput) {
-    mutation.mutate(values, {
-      onSuccess: (res) => {
-        onSuccess(res.id)
-      },
-      onError: onErrorToast,
-    })
-  }
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit((values) => {
+          mutation.mutate(values, {
+            onSuccess: (res) => {
+              onSuccess(res.id)
+            },
+            onError: onErrorToast,
+          })
+        })}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"

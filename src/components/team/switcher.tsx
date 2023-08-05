@@ -36,7 +36,7 @@ function TeamLabel({ team }: TeamLabelProps) {
     <>
       <Avatar className="mr-2 h-5 w-5">
         <AvatarFallback className="uppercase">
-          {team.name.slice(0, 2)}
+          {team.name?.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
       {team.name}
@@ -52,8 +52,8 @@ interface TeamSwitcherProps extends PopoverTriggerProps {
 
 export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
   const router = useRouter()
-  const params = useParams()
-  const pathname = usePathname()
+  const params = useParams() ?? {}
+  const pathname = usePathname() ?? ''
   const [, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)

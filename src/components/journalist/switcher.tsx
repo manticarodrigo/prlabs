@@ -45,7 +45,7 @@ function JournalistLabel({ journalist }: JournalistLabelProps) {
     <>
       <Avatar className="mr-2 h-5 w-5">
         <AvatarFallback className="uppercase">
-          {journalist.name.slice(0, 2)}
+          {journalist.name?.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
       {journalist.name}
@@ -65,8 +65,8 @@ export function JournalistSwitcher({
   journalists = [],
 }: JournalistSwitcherProps) {
   const router = useRouter()
-  const params = useParams()
-  const pathname = usePathname()
+  const params = useParams() ?? {}
+  const pathname = usePathname() ?? ''
   const [queryParams, setQueryParams] = useQueryParams()
 
   const [open, setOpen] = React.useState(false)

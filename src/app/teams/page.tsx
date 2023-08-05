@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs'
+import invariant from 'tiny-invariant'
 
 import { getTeams } from '@/app/api/team/model'
 import { TeamList } from '@/components/team/list'
@@ -23,24 +24,20 @@ const teams = [
   ['Airbnb', 'Belong anywhere.'],
 ]
 
-function genTeams() {
-  const timestamp = new Date().toISOString()
-  return teams.map(([name, description], i) => ({
-    id: `${i}`,
-    userId: `${i}`,
-    name,
-    description,
-    strategy: '',
-    updatedAt: timestamp,
-    createdAt: timestamp,
-  }))
+interface Props {
+  searchParams: {
+    team: string
+  }
 }
 
-export default async function TeamListPage({ searchParams }) {
+export default async function TeamListPage({ searchParams }: Props) {
   const { team: teamId } = searchParams
   const user = await currentUser()
-  const teams = user ? await getTeams(user.id) : genTeams()
-  const team = user ? teams.find((team) => team.id === teamId) : null
+
+  invariant(user, 'No user found.')
+
+  const teams = await getTeams(user.id)
+  const team = teams.find((team) => team.id === teamId)
 
   return (
     <main className="container flex flex-col py-6 px-4 w-full h-full gap-4 sm:gap-6">

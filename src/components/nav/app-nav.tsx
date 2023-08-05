@@ -42,7 +42,7 @@ interface Props {
 }
 
 export function AppNav({ children }: Props) {
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
   const [open, setOpen] = React.useState(false)
   return (
     <>

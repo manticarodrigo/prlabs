@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  const articles = author.articles.filter((article) => !article.analyses.length)
+  const articles = author?.articles.filter((article) => !article.analyses.length) ?? []
 
   const summarizationPrompt = await kv.get('native-prompt')
 

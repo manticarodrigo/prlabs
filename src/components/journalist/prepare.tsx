@@ -9,7 +9,7 @@ type JournalistPrepareProps = {
   author: Author
 }
 
-function prepare({ id }) {
+function prepare({ id }: { id: string }) {
   return fetch('/api/journalist/prepare', {
     method: 'POST',
     headers: {

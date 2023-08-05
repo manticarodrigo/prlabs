@@ -3,7 +3,7 @@ import { kv } from '@vercel/kv'
 import { NativePromptForm } from '@/components/forms/native-prompt'
 
 export default async function NativePromptPage() {
-  const prompt = (await kv.get('native-prompt')).toString()
+  const prompt = (await kv.get('native-prompt')) as string
 
   return (
     <main className="flex justify-center items-center w-full h-full overflow-auto">

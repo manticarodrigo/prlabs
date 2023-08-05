@@ -1,8 +1,16 @@
+import invariant from 'tiny-invariant'
+
 import { JournalistDetail } from '@/app/teams/[team]/journalists/[journalist]/detail'
 import { db, desc, eq, schema } from '@/lib/drizzle'
 import { getNotionPrompts } from '@/lib/notion'
 
-export default async function JournalistDetailPage({ params }) {
+interface Props {
+  params: {
+    journalist: string
+  }
+}
+
+export default async function JournalistDetailPage({ params }: Props) {
   const { journalist } = params
 
   const [prompts, author] = await Promise.all([
@@ -22,6 +30,8 @@ export default async function JournalistDetailPage({ params }) {
       },
     }),
   ])
+
+  invariant(author, 'Author not found')
 
   return <JournalistDetail author={author} prompts={prompts} />
 }

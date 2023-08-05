@@ -7,7 +7,6 @@ import { useRef } from 'react'
 import { JournalistChat } from '@/components/journalist/chat'
 import { JournalistPrepare } from '@/components/journalist/prepare'
 import { JournalistSidebar } from '@/components/journalist/sidebar'
-import { useToast } from '@/components/ui/use-toast'
 import { AuthorWithArticlesWithAnalyses } from '@/lib/drizzle'
 import { Prompt } from '@/lib/notion'
 import { onErrorToast } from '@/util/toast'
@@ -18,8 +17,6 @@ type JournalistDetailProps = {
 }
 
 export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
-  const { toast } = useToast()
-
   const {
     messages,
     input,
@@ -45,9 +42,9 @@ export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
   const inputRef = useRef(null)
   const buttonRef = useRef(null)
 
-  const hasAnalysesForLastTenArticles = author.articles
+  const hasAnalysesForLastTenArticles = (author.articles ?? [])
     .slice(0, 10)
-    .every((article) => article.analyses.length > 0)
+    .every((article) => (article.analyses ?? []).length > 0)
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-full">
@@ -57,8 +54,8 @@ export function JournalistDetail({ author, prompts }: JournalistDetailProps) {
         onClickPrompt={(prompt) => {
           setInput(
             prompt.prompt
-              .replace(/{interviewer}/g, author.name)
-              .replace(/{outlet}/g, author.outlet),
+              .replace(/{interviewer}/g, author.name ?? '')
+              .replace(/{outlet}/g, author.outlet ?? ''),
           )
           setTimeout(() => {
             if (inputRef.current) {

@@ -21,7 +21,9 @@ interface Props {
 }
 
 export function JournalistForm({ onSuccess }: Props) {
-  const form = useForm({ resolver: zodResolver(JournalistSchema) })
+  const form = useForm<JournalistSchemaInput>({
+    resolver: zodResolver(JournalistSchema),
+  })
   const mutation = trpc.journalist.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
@@ -37,7 +39,17 @@ export function JournalistForm({ onSuccess }: Props) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit((values) => {
+          mutation.mutate(values, {
+            onSuccess: (res) => {
+              onSuccess(res.id)
+            },
+            onError: onErrorToast,
+          })
+        })}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="name"

@@ -1,6 +1,14 @@
 import dayjs from 'dayjs'
 
-export async function getNewsArticles(author, source) {
+import { Article, Author } from '@/lib/drizzle'
+
+export type NewsArticle = Article & {
+  _id: string
+  _score: number
+  author: string
+}
+
+export async function getNewsArticles(author: string, source: string) {
   const endpoint = 'https://api.newscatcherapi.com/v2/search'
 
   const query = {
@@ -14,11 +22,11 @@ export async function getNewsArticles(author, source) {
 
   const res = await fetch(`${endpoint}?${new URLSearchParams(query)}`, {
     headers: {
-      'x-api-key': process.env.NEWSCATCHER_API_KEY,
+      'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '',
     },
   })
 
-  const json = await res.json()
+  const json = await res.json() as { articles: NewsArticle[] }
 
   return (json.articles || []).filter((article) => article.summary)
 }
@@ -32,10 +40,10 @@ export function getNewsArticleMetadata({
   authors,
   twitter_account,
   is_opinion,
-}) {
+}: Article & { author: Author | null }) {
   return `
-        author: ${author.name}
-        outlet: ${author.outlet}
+        author: ${author?.name}
+        outlet: ${author?.outlet}
         link: ${link}
         date: ${published_date}
         country: ${country}

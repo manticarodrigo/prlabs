@@ -26,25 +26,34 @@ export async function getNotionDb() {
 }
 
 export async function getNotionPrompts(): Promise<Prompt[]> {
-  const { results } = await getNotionDb()
+  const { results = [] } = await getNotionDb()
 
   return results.map((result) => {
+    let id = ''
+    let name = ''
+    let description = ''
+    let prompt = ''
+
     if ('properties' in result) {
-      const { id, properties } = result
-      const { name, description, prompt } = properties
+      const { properties } = result
 
       if (
-        'title' in name &&
-        'rich_text' in description &&
-        'rich_text' in prompt
+        'title' in properties.name &&
+        'rich_text' in properties.description &&
+        'rich_text' in properties.prompt
       ) {
-        return {
-          id,
-          description: description.rich_text[0]?.plain_text,
-          name: name.title[0]?.plain_text,
-          prompt: prompt.rich_text.map((text) => text.plain_text).join(' '),
-        }
+        id = result.id
+        name = properties.name.title[0]?.plain_text
+        description = properties.description.rich_text[0]?.plain_text
+        prompt = properties.prompt.rich_text.map((text) => text.plain_text).join(' ')
       }
+    }
+
+    return {
+      id,
+      description,
+      name,
+      prompt,
     }
   })
 }

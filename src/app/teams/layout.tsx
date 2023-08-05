@@ -1,5 +1,6 @@
 import { currentUser, SignInButton } from '@clerk/nextjs'
 import { ArrowRight } from 'lucide-react'
+import invariant from 'tiny-invariant'
 
 import { getJournalists } from '@/app/api/journalist/model'
 import { getTeams } from '@/app/api/team/model'
@@ -9,15 +10,22 @@ import { TeamSwitcher } from '@/components/team/switcher'
 import { Button } from '@/components/ui/button'
 import { UserMenu } from '@/components/user/user-menu'
 
-export default async function TeamLayout({ children, params }) {
+interface Props {
+  children: React.ReactNode
+  params: {
+    team: string
+  }
+}
+
+export default async function TeamLayout({ children, params }: Props) {
   const user = await currentUser()
+
+  invariant(user, 'No user found.')
 
   const [teams, journalists] = await Promise.all([
     getTeams(user.id),
     getJournalists(),
   ])
-
-  console.log(params)
 
   return (
     <>

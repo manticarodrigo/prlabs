@@ -1,7 +1,7 @@
 import { ToastAction } from '@/components/ui/toast'
 import { toast } from '@/components/ui/use-toast'
 
-export function onErrorToast(error = undefined) {
+export function onErrorToast(error?: { message?: string }) {
   toast({
     variant: 'destructive',
     title: 'Uh oh! Something went wrong.',

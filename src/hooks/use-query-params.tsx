@@ -10,8 +10,8 @@ type SetParams = (next: Params) => void
 
 export function useQueryParams(): [Params, SetParams] {
   const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname() ?? ''
+  const searchParams = useSearchParams() ?? new URLSearchParams()
   const params: Params = Object.fromEntries(searchParams)
 
   const setParams: SetParams = (next) => {
@@ -20,7 +20,6 @@ export function useQueryParams(): [Params, SetParams] {
       if (value) {
         current.set(key, value.trim())
       } else {
-        console.log('setParams', key, value)
         current.delete('team')
       }
     }

@@ -63,7 +63,7 @@ export function JournalistArticle({ article }: JournalistArticleProps) {
               <DialogFooter className="border-t pt-4">
                 <Button asChild>
                   <a
-                    href={article.link}
+                    href={article.link ?? ''}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -87,7 +87,10 @@ export function JournalistArticle({ article }: JournalistArticleProps) {
                     )}
                   </>
                 ) : (
-                  <>{article.analyses[0]?.content || 'No analysis found.'}</>
+                  <>
+                    {(article.analyses ?? [])[0]?.content ||
+                      'No analysis found.'}
+                  </>
                 )}
               </p>
               <DialogFooter className="border-t pt-4">

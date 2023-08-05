@@ -17,8 +17,8 @@ import {
 import { UserAvatar } from './user-avatar'
 
 export type User = {
-  firstName?: string
-  lastName?: string
+  firstName?: string | null
+  lastName?: string | null
   emailAddress: string
   profileImageUrl?: string
 }

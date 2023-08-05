@@ -1,13 +1,22 @@
 import { currentUser } from '@clerk/nextjs'
+import invariant from 'tiny-invariant'
 
 import { JournalistSearch } from '@/components/journalist/search'
 import { db, schema } from '@/lib/drizzle'
 
-export default async function JournalistsPage({ params }) {
+interface Props {
+  params: {
+    team: string
+  }
+}
+
+export default async function JournalistsPage({ params }: Props) {
   const [user, authors] = await Promise.all([
     currentUser(),
     db.select().from(schema.author),
   ])
+
+  invariant(user, 'User not found')
 
   return (
     <main className="flex flex-col lg:justify-center items-center py-4 px-2 w-full h-full">

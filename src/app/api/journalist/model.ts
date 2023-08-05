@@ -1,20 +1,23 @@
+// eslint-disable-next-line simple-import-sort/imports
 import { createId } from '@paralleldrive/cuid2'
+
 import { kv } from '@vercel/kv'
 import { OpenAI } from 'langchain'
+import invariant from 'tiny-invariant'
 
 import { and, db, desc, eq, schema } from '@/lib/drizzle'
-import { getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
+import { NewsArticle, getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
 import { mostCommonString } from '@/util/string'
 
 export function getJournalists() {
   return db.select().from(schema.author)
 }
 
-export function upsertJournalist(articles) {
-  const names: string[] = articles.map(({ author }) => author)
-  const outlets: string[] = articles.map(({ clean_url }) => clean_url)
-  const name = mostCommonString(names)
-  const outlet = mostCommonString(outlets)
+export function upsertJournalist(articles: NewsArticle[]) {
+  const names = articles.map(({ author }) => author)
+  const outlets = articles.map(({ clean_url }) => clean_url ?? '')
+  const name = mostCommonString(names) ?? ''
+  const outlet = mostCommonString(outlets) ?? ''
 
   return db.transaction(async (tx) => {
     let author = await tx.query.author.findFirst({
@@ -49,13 +52,13 @@ export function upsertJournalist(articles) {
             clean_url,
             ...rest
           }) => ({
+            ...rest,
             id: createId(),
-            authorId: author.id,
+            authorId: author?.id,
             external_id: _id,
             external_score: _score,
-            published_date: new Date(published_date),
-            updatedAt: new Date(),
-            ...rest,
+            published_date: new Date(published_date ?? '').toISOString(),
+            updatedAt: new Date().toISOString(),
           }),
         ),
       )
@@ -65,10 +68,14 @@ export function upsertJournalist(articles) {
   })
 }
 
-export async function getJournalistSummaries(id, take = 10) {
+export async function getJournalistSummaries(id: string, take = 10) {
   const author = await db.query.author.findFirst({
     where: eq(schema.author.id, id),
   })
+
+  invariant(author, 'Author not found')
+  invariant(author.name, 'Author not found')
+  invariant(author.outlet, 'Author not found')
 
   const _articles = await getNewsArticles(author.name, author.outlet)
 
@@ -92,7 +99,7 @@ export async function getJournalistSummaries(id, take = 10) {
         },
       },
     },
-  })
+  }) ?? { articles: [] }
 
   const summarizationPrompt = await kv.get('native-prompt')
 

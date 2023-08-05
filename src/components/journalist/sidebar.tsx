@@ -71,7 +71,7 @@ function JournalistSidebarTabs({
       </TabsContent>
       <TabsContent value="articles" className="border-t w-full h-full min-h-0">
         <ul className="space-y-2 p-2 w-full h-full min-h-0 overflow-auto">
-          {articles.map((article) => {
+          {(articles ?? []).map((article) => {
             return (
               <li key={article.id}>
                 <JournalistArticle article={article} />

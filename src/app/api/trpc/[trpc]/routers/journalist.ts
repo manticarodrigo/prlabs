@@ -4,8 +4,7 @@ import { upsertJournalist } from "@/app/api/journalist/model";
 import { getNewsArticles } from "@/lib/newscatcher";
 import { JournalistSchema } from "@/schema/journalist";
 
-import { createRouter, protectedProcedure } from "./trpc";
-
+import { createRouter, protectedProcedure } from "../trpc";
 
 export const journalistRouter = createRouter({
   upsert: protectedProcedure.input(JournalistSchema).mutation(async ({ input }) => {

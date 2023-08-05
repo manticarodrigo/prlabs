@@ -1,6 +1,7 @@
 import { createId } from '@paralleldrive/cuid2'
 
 import { db, desc, eq, schema } from '@/lib/drizzle'
+import { TeamSchemaInput } from '@/schema/team'
 
 export function getTeams(userId: string) {
   return db.query.team.findMany({
@@ -15,13 +16,12 @@ export function getTeam(id: string) {
   })
 }
 
-export async function upsertTeam({
-  userId,
-  id = undefined,
-  name = undefined,
-  description = undefined,
-  strategy = undefined,
-}) {
+export async function upsertTeam(userId: string, {
+  id,
+  name,
+  description,
+  strategy,
+}: TeamSchemaInput) {
   const baseFields = {
     name,
     description,

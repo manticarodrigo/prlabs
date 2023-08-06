@@ -13,14 +13,17 @@ import { useRouter } from '@/hooks/use-router'
 import { Team } from '@/lib/drizzle'
 
 interface Props {
-  team?: Team
+  teams?: Team[]
 }
 
 const CREATE_ID = 'create'
 
-export function TeamModal({ team }: Props) {
+export function TeamModal({ teams }: Props) {
   const router = useRouter()
   const [queryParams, setQueryParams] = useQueryParams()
+
+  const { team: teamId } = queryParams
+  const team = teams?.find((team) => team.id === teamId)
 
   const setShowCreateTeamDialog = (show: boolean) => {
     setQueryParams({ team: show ? CREATE_ID : '' })

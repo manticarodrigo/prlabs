@@ -6,18 +6,19 @@ import { getJournalists } from '@/app/api/journalist/model'
 import { getTeams } from '@/app/api/team/model'
 import { JournalistSwitcher } from '@/components/journalist/switcher'
 import { AppNav } from '@/components/nav/app-nav'
+import { TeamModal } from '@/components/team/modal'
 import { TeamSwitcher } from '@/components/team/switcher'
 import { Button } from '@/components/ui/button'
 import { UserMenu } from '@/components/user/user-menu'
 
 interface Props {
   children: React.ReactNode
-  params: {
+  searchParams: {
     team: string
   }
 }
 
-export default async function TeamLayout({ children, params }: Props) {
+export default async function TeamLayout({ children }: Props) {
   const user = await currentUser()
 
   invariant(user, 'No user found.')
@@ -57,6 +58,7 @@ export default async function TeamLayout({ children, params }: Props) {
         </div>
       </header>
       <main className="w-full h-full min-h-0 overflow-auto">{children}</main>
+      <TeamModal teams={teams} />
     </>
   )
 }

@@ -6,14 +6,14 @@ import { OpenAI } from 'langchain'
 import invariant from 'tiny-invariant'
 
 import { and, db, desc, eq, schema } from '@/lib/drizzle'
-import { NewsArticle, getNewsArticleMetadata, getNewsArticles } from '@/lib/newscatcher'
+import { NewsCatcherArticle, getAuthorArticles, getNewsArticleMetadata } from '@/lib/newscatcher'
 import { mostCommonString } from '@/util/string'
 
 export function getJournalists() {
   return db.select().from(schema.author)
 }
 
-export function upsertJournalist(articles: NewsArticle[]) {
+export function upsertJournalist(articles: NewsCatcherArticle[]) {
   const names = articles.map(({ author }) => author)
   const outlets = articles.map(({ clean_url }) => clean_url ?? '')
   const name = mostCommonString(names) ?? ''
@@ -77,7 +77,7 @@ export async function getJournalistSummaries(id: string, take = 10) {
   invariant(author.name, 'Author not found')
   invariant(author.outlet, 'Author not found')
 
-  const _articles = await getNewsArticles(author.name, author.outlet)
+  const _articles = await getAuthorArticles(author.name, author.outlet)
 
   await upsertJournalist(_articles)
 

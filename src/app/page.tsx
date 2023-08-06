@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import Discord from '@/components/icons/discord'
 import { AppNav } from '@/components/nav/app-nav'
+import { TeamList } from '@/components/team/list'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   PageHeader,
@@ -14,7 +15,35 @@ import { Separator } from '@/components/ui/separator'
 import { UserMenu } from '@/components/user/user-menu'
 import { cn } from '@/lib/utils'
 
-import TeamListPage from './teams/page'
+const brands = [
+  ['Apple', 'Think different.'],
+  ['Google', 'Organizing the world’s information.'],
+  ['Facebook', 'Connecting the world.'],
+  ['Amazon', 'Delivering smiles.'],
+  [
+    'Microsoft',
+    'Empowering every person and every organization on the planet to achieve more.',
+  ],
+  ['Netflix', 'Entertainment, anywhere, anytime.'],
+  ['Tesla', 'Accelerating the world’s transition to sustainable energy.'],
+  [
+    'Twitter',
+    'Giving everyone the power to create and share ideas and information instantly, without barriers.',
+  ],
+  ['Uber', 'Igniting opportunity by setting the world in motion.'],
+  ['Airbnb', 'Belong anywhere.'],
+]
+
+const timestamp = new Date().toISOString()
+const teams = brands.map(([name, description], i) => ({
+  id: `${i}`,
+  userId: `${i}`,
+  name,
+  description,
+  strategy: '',
+  updatedAt: timestamp,
+  createdAt: timestamp,
+}))
 
 export default async function HomePage() {
   const user = await currentUser()
@@ -76,10 +105,16 @@ export default async function HomePage() {
                 </Link>
               </div>
             </PageHeader>
-            <section className="">
-              <div className="flex items-center justify-center rounded-lg border p-6 bg-background shadow gap-2">
-                <TeamListPage />
+            <section className="flex flex-col justify-center rounded-lg border p-6 bg-background shadow gap-2 pointer-events-none gap-4 sm:gap-6">
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  Welcome back friend!
+                </h1>
+                <p className="text-muted-foreground">
+                  Select a team to get started.
+                </p>
               </div>
+              <TeamList teams={teams} />
             </section>
           </div>
         </div>

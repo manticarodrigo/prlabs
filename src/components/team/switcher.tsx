@@ -34,8 +34,8 @@ function TeamLabel({ team }: TeamLabelProps) {
   }
   return (
     <>
-      <Avatar className="mr-2 h-5 w-5">
-        <AvatarFallback className="uppercase">
+      <Avatar className="mr-2 h-6 w-6">
+        <AvatarFallback className="uppercase text-xs">
           {team.name?.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
@@ -125,7 +125,7 @@ export function TeamSwitcher({ teams = [] }: TeamSwitcherProps) {
                 }}
               >
                 <PlusCircle className="mr-2 h-5 w-5" />
-                Create Team
+                Create team
               </CommandItem>
             </CommandGroup>
           </CommandList>

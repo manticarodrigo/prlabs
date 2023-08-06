@@ -43,8 +43,8 @@ function JournalistLabel({ journalist }: JournalistLabelProps) {
   }
   return (
     <>
-      <Avatar className="mr-2 h-5 w-5">
-        <AvatarFallback className="uppercase">
+      <Avatar className="mr-2 h-6 w-6">
+        <AvatarFallback className="uppercase text-xs">
           {journalist.name?.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
@@ -160,7 +160,7 @@ export function JournalistSwitcher({
                     }}
                   >
                     <PlusCircle className="mr-2 h-5 w-5" />
-                    Create Journalist
+                    Create journalist
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>

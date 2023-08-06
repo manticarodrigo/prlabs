@@ -63,6 +63,12 @@ export function UserMenu({ user }: UserMenuProps) {
           <DropdownMenuItem asChild>
             <Link href="/account">Account settings</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/privacy">Privacy policy</Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
           <DropdownMenuItem onSelect={() => signOut()}>
             Log out
           </DropdownMenuItem>

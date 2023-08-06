@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant'
 
-import { JournalistDetail } from '@/app/teams/[team]/journalists/[journalist]/detail'
+import { JournalistDetail } from '@/app/(protected)/teams/[team]/journalists/[journalist]/detail'
 import { db, desc, eq, schema } from '@/lib/drizzle'
 import { getNotionPrompts } from '@/lib/notion'
 

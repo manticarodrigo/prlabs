@@ -19,29 +19,12 @@ type LinkConfig = {
   matches: string
 }
 
-export const links: LinkConfig[] = [
-  {
-    title: 'Teams',
-    href: '/teams',
-    matches: '/teams',
-  },
-  {
-    title: 'Privacy',
-    href: '/privacy',
-    matches: '/privacy-policy',
-  },
-  {
-    title: 'Account',
-    href: '/account',
-    matches: '/account',
-  },
-]
-
 interface Props {
   children?: JSX.Element
+  links: LinkConfig[]
 }
 
-export function AppNav({ children }: Props) {
+export function AppNav({ links, children }: Props) {
   const pathname = usePathname() ?? ''
   const [open, setOpen] = React.useState(false)
   return (

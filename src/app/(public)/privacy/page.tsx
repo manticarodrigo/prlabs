@@ -61,7 +61,7 @@ export default function PrivacyPage() {
   return (
     <main
       dangerouslySetInnerHTML={{ __html: snippet }}
-      className="w-full h-full p-8 overflow-auto"
+      className="container w-full h-full p-8 overflow-auto"
     />
   )
 }

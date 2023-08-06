@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 
 export default authMiddleware({
-  publicRoutes: ['/'],
+  publicRoutes: ['/', '/privacy'],
   async afterAuth(auth, req, evt) {
     // handle users who aren't authenticated
     if (!auth.userId && !auth.isPublicRoute) {

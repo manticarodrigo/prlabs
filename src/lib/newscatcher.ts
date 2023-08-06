@@ -9,60 +9,45 @@ export type NewsCatcherArticle = Omit<Article, "external_id" | "external_score">
 }
 
 interface NewsCatcherQuery {
-  author?: string
-  sources?: string
-  q?: string
+  q: string
   lang?: string
   from?: string
-  to?: string
+  author?: string
+  sources?: string
+  ranked_only?: boolean
   sort_by?: 'relevancy' | 'date' | 'rank'
   page_size?: number
 }
 
-export async function fetchArticles({
-  author,
-  sources,
-  q = '*',
-  lang = 'en',
-  from = dayjs().subtract(180, 'days').format('YYYY-MM-DD'),
-  sort_by = 'relevancy',
-  page_size = 100,
-}: NewsCatcherQuery) {
+export async function fetchArticles(query: NewsCatcherQuery) {
   const endpoint = 'https://api.newscatcherapi.com/v2/search'
-
-  const query = JSON.parse(JSON.stringify({
-    author,
-    sources,
-    q,
-    lang,
-    from,
-    sort_by,
-    page_size,
-  }))
-
-  const res = await fetch(`${endpoint}?${new URLSearchParams(query)}`, {
-    headers: {
-      'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '',
-    },
+  const res = await fetch(`${endpoint}?${new URLSearchParams(JSON.parse(JSON.stringify(query)))}`, {
+    headers: { 'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '', },
   })
-
   const json = await res.json() as { articles: NewsCatcherArticle[] }
-
-  return (json.articles || []).filter((article) => article.summary)
+  return (json.articles || []).filter((article) => article.summary && article.excerpt && article.authors)
 }
 
 export function getAuthorArticles(author: string, source: string) {
   return fetchArticles({
+    q: '*',
     author,
     sources: source,
+    lang: 'en',
+    from: dayjs().subtract(180, 'days').format('YYYY-MM-DD'),
+    sort_by: 'relevancy',
+    page_size: 100,
   })
 }
 
 export function getTopicArticles(topics: string[]) {
   return fetchArticles({
     q: topics.join(' OR '),
+    lang: 'en',
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
-    sort_by: "rank"
+    sort_by: "relevancy",
+    ranked_only: true,
+    page_size: 100,
   })
 }
 

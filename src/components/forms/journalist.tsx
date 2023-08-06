@@ -28,15 +28,6 @@ export function JournalistForm({ onSuccess }: Props) {
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
 
-  async function onSubmit(values: JournalistSchemaInput) {
-    mutation.mutate(values, {
-      onSuccess: (res) => {
-        onSuccess(res.id)
-      },
-      onError: onErrorToast,
-    })
-  }
-
   return (
     <Form {...form}>
       <form

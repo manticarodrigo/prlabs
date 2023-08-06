@@ -13,9 +13,6 @@ import { UserMenu } from '@/components/user/user-menu'
 
 interface Props {
   children: React.ReactNode
-  searchParams: {
-    team: string
-  }
 }
 
 export default async function TeamLayout({ children }: Props) {

@@ -1,19 +1,44 @@
 import { createId } from '@paralleldrive/cuid2'
 
 import { db, desc, eq, schema } from '@/lib/drizzle'
+import { KeywordSchemaInput } from '@/schema/keyword'
 import { TeamSchemaInput } from '@/schema/team'
 
-export function getTeams(userId: string) {
-  return db.query.team.findMany({
+export async function getTeams(userId: string) {
+  const teams = await db.query.team.findMany({
     where: eq(schema.team.userId, userId),
     orderBy: desc(schema.team.updatedAt),
+    with: {
+      keywords: {
+        with: {
+          keyword: true,
+        }
+      },
+    }
   })
+
+  return teams.map((team) => ({
+    ...team,
+    keywords: team.keywords?.map(({ keyword }) => keyword),
+  }))
 }
 
-export function getTeam(id: string) {
-  return db.query.team.findFirst({
+export async function getTeam(id: string) {
+  const team = await db.query.team.findFirst({
     where: eq(schema.team.id, id),
+    with: {
+      keywords: {
+        with: {
+          keyword: true,
+        }
+      },
+    }
   })
+
+  return team && {
+    ...team,
+    keywords: team.keywords?.map(({ keyword }) => keyword),
+  }
 }
 
 export async function upsertTeam(userId: string, {
@@ -21,7 +46,8 @@ export async function upsertTeam(userId: string, {
   name,
   description,
   strategy,
-}: TeamSchemaInput) {
+  keywords,
+}: TeamSchemaInput & { keywords?: KeywordSchemaInput[] }) {
   const baseFields = {
     name,
     description,
@@ -29,23 +55,54 @@ export async function upsertTeam(userId: string, {
     updatedAt: new Date().toISOString(),
   }
 
-  if (id) {
-    const [team] = await db
-      .update(schema.team)
-      .set(baseFields)
-      .where(eq(schema.team.id, id))
-      .returning({ id: schema.team.id })
+  return db.transaction(async (tx) => {
+    const [team] = id
+      ? await tx
+        .update(schema.team)
+        .set(baseFields)
+        .where(eq(schema.team.id, id))
+        .returning({ id: schema.team.id })
+      : await tx
+        .insert(schema.team)
+        .values({
+          ...baseFields,
+          id: createId(),
+          userId,
+        })
+        .returning({ id: schema.team.id })
+
+    if (team && keywords) {
+      await tx.delete(schema.teamKeywords).where(eq(schema.teamKeywords.teamId, team.id))
+
+      for (const keyword of keywords) {
+        if (keyword.id?.startsWith('temp')) {
+          keyword.id = undefined
+        }
+
+        const found = keyword.id && await tx.query.keyword.findFirst({
+          where: eq(schema.keyword.id, keyword.id),
+        })
+
+        const [created] = found
+          ? [found]
+          : await tx
+            .insert(schema.keyword)
+            .values({
+              id: keyword.id ?? createId(),
+              name: keyword.name,
+            })
+            .onConflictDoNothing()
+            .returning({ id: schema.keyword.id })
+
+        await tx.insert(schema.teamKeywords).values({
+          keywordId: created.id,
+          teamId: team.id ?? '',
+        }).onConflictDoNothing()
+      }
+    }
+
     return team
-  }
-  const [team] = await db
-    .insert(schema.team)
-    .values({
-      ...baseFields,
-      id: createId(),
-      userId,
-    })
-    .returning({ id: schema.team.id })
-  return team
+  })
 }
 
 export async function deleteTeam(id: string) {

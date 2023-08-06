@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "db:gen": "drizzle-kit generate:pg",
-    "db:push": "drizzle-kit push:pg",
     "db:pull": "drizzle-kit introspect:pg",
+    "db:push": "drizzle-kit push:pg",
+    "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "node scripts/migrate.mjs",
     "dev": "next dev",
     "build": "pnpm db:migrate && next build",

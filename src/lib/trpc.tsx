@@ -24,7 +24,9 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
   )
 
   const url =
-    typeof document !== 'undefined' && document.location.host
+    typeof document !== 'undefined' &&
+    document.location.host &&
+    document.location.host !== 'localhost:3000'
       ? `https://${document.location.host}/api/trpc/`
       : 'http://localhost:3000/api/trpc/'
 

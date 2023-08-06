@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { KeywordSchema } from "./keyword"
+
 export const TeamSchema = z.object({
   id: z.string().optional(),
   name: z
@@ -14,6 +16,7 @@ export const TeamSchema = z.object({
     .string()
     .min(10, 'Strategy must be at least 10 characters')
     .max(1000, 'Strategy must be less than 1000 characters'),
+  keywords: KeywordSchema.array(),
 })
 
 export type TeamSchemaInput = z.infer<typeof TeamSchema>

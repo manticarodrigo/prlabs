@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle } from 'lucide-react'
+import { Loader2, Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,8 @@ import { trpc } from '@/lib/trpc'
 import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { onErrorToast } from '@/util/toast'
 
+import { MultiSelect } from '../ui/multi-select'
+
 interface Props {
   team?: Team
   onSuccess: (id: string) => void
@@ -29,6 +31,8 @@ export function TeamForm({ team, onSuccess }: Props) {
     resolver: zodResolver(TeamSchema),
     defaultValues: team && TeamSchema.parse(team),
   })
+
+  const query = trpc.keyword.search.useQuery('')
   const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
@@ -106,13 +110,48 @@ export function TeamForm({ team, onSuccess }: Props) {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="keywords"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Keywords</FormLabel>
+              <FormControl>
+                <MultiSelect
+                  options={(query.data ?? []).map((kw) => ({
+                    value: kw.id,
+                    label: kw.name,
+                  }))}
+                  selected={(field.value ?? []).map((kw) => ({
+                    value: kw.id ?? kw.name,
+                    label: kw.name,
+                  }))}
+                  onChange={(values) => {
+                    field.onChange(
+                      values.map((v) => ({
+                        id: v.value,
+                        name: v.label,
+                      })),
+                    )
+                  }}
+                />
+              </FormControl>
+              <FormDescription>
+                Main topics or keywords to use for context search.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
             <Loader2 className="mr-2 w-4 h-4 animate-spin" />
           ) : (
-            <PlusCircle className="mr-2 w-4 h-4" />
+            <Save className="mr-2 w-4 h-4" />
           )}
-          Create team
+          {team?.id ? 'Update' : 'Create'} team
         </Button>
       </form>
     </Form>

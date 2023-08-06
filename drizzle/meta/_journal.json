@@ -36,6 +36,13 @@
       "when": 1691215024912,
       "tag": "0004_mysterious_namora",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1691268351683,
+      "tag": "0005_flashy_kronos",
+      "breakpoints": true
     }
   ]
 }

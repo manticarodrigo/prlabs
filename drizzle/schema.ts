@@ -88,10 +88,18 @@ export const article = pgTable(
   },
 )
 
+export const keyword = pgTable('Keyword', {
+  id: varchar('id').primaryKey().notNull(),
+  name: varchar('name').notNull().unique(),
+  createdAt: timestamp('createdAt', { precision: 3, mode: 'string' })
+    .defaultNow()
+    .notNull(),
+})
+
 export const team = pgTable('Team', {
-  id: varchar('id', { length: 255 }).primaryKey().notNull(),
-  userId: varchar('userId', { length: 255 }).notNull(),
-  name: varchar('name', { length: 255 }),
+  id: varchar('id').primaryKey().notNull(),
+  userId: varchar('userId').notNull(),
+  name: varchar('name'),
   description: text('description'),
   strategy: text('strategy'),
   createdAt: timestamp('createdAt', { precision: 3, mode: 'string' })
@@ -102,6 +110,36 @@ export const team = pgTable('Team', {
     mode: 'string',
   }).notNull(),
 })
+
+export const teamKeywords = pgTable(
+  'TeamKeywords',
+  {
+    teamId: varchar('teamId').notNull().references(() => team.id),
+    keywordId: varchar('keywordId').notNull().references(() => keyword.id),
+  },
+  (t) => ({
+    pk: uniqueIndex().on(t.teamId, t.keywordId),
+  }),
+)
+
+export const teamRelations = relations(team, ({ many }) => ({
+  keywords: many(teamKeywords),
+}))
+
+export const keywordRelations = relations(keyword, ({ many }) => ({
+  teams: many(teamKeywords),
+}))
+
+export const teamKeywordsRelations = relations(teamKeywords, ({ one }) => ({
+  team: one(team, {
+    fields: [teamKeywords.teamId],
+    references: [team.id],
+  }),
+  keyword: one(keyword, {
+    fields: [teamKeywords.keywordId],
+    references: [keyword.id],
+  }),
+}));
 
 export const authorRelations = relations(author, ({ many }) => ({
   articles: many(article),

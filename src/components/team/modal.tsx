@@ -30,7 +30,7 @@ export function TeamModal({ teams }: Props) {
   }
 
   return (
-    <Dialog open={!!queryParams.team} onOpenChange={setShowCreateTeamDialog}>
+    <Dialog open={!!teamId} onOpenChange={setShowCreateTeamDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{team ? 'Manage' : 'Create'} team</DialogTitle>

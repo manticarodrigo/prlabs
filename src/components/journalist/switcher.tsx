@@ -1,61 +1,23 @@
 'use client'
 
-import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
-import React from 'react'
 
 import { JournalistForm } from '@/components/forms/journalist'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from '@/components/ui/command'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { useQueryParams } from '@/hooks/use-query-params'
 import { useRouter } from '@/hooks/use-router'
 import { Author } from '@/lib/drizzle'
 
-interface JournalistLabelProps {
-  journalist?: Author
-}
+import { Switcher } from '../ui/switcher'
 
-function JournalistLabel({ journalist }: JournalistLabelProps) {
-  if (!journalist) {
-    return <span className="text-muted-foreground">No journalist selected</span>
-  }
-  return (
-    <>
-      <Avatar className="mr-2 h-6 w-6">
-        <AvatarFallback className="uppercase text-xs">
-          {journalist.name?.slice(0, 2)}
-        </AvatarFallback>
-      </Avatar>
-      {journalist.name}
-    </>
-  )
-}
-
-type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
-
-interface JournalistSwitcherProps extends PopoverTriggerProps {
+interface JournalistSwitcherProps {
   journalists?: Author[]
 }
 
@@ -68,14 +30,6 @@ export function JournalistSwitcher({
   const params = useParams() ?? {}
   const pathname = usePathname() ?? ''
   const [queryParams, setQueryParams] = useQueryParams()
-
-  const [open, setOpen] = React.useState(false)
-  const selectedJournalist = journalists.find(
-    (it) => it.id === params.journalist,
-  )
-  const unselectedJournalists = journalists.filter(
-    (it) => it.id !== params.journalist,
-  )
 
   const setShowCreateJournalistDialog = (show: boolean) => {
     if (show) {
@@ -93,7 +47,6 @@ export function JournalistSwitcher({
       : `journalists/${id}`
 
     router.push(route)
-    setOpen(false)
   }
 
   if (!params.team) {
@@ -101,82 +54,57 @@ export function JournalistSwitcher({
   }
 
   return (
-    <Dialog
-      open={queryParams.journalist === CREATE_ID}
-      onOpenChange={setShowCreateJournalistDialog}
-    >
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select a journalist"
-            className="w-[200px] justify-between"
-          >
-            <JournalistLabel journalist={selectedJournalist} />
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandList>
-              <CommandInput placeholder="Search journalists..." />
-              <CommandEmpty>No journalist found.</CommandEmpty>
-              {selectedJournalist && (
-                <CommandGroup heading="Selected journalist">
-                  <CommandItem
-                    value={selectedJournalist.id}
-                    className="text-sm"
-                  >
-                    <JournalistLabel journalist={selectedJournalist} />
-                    <Check className="ml-auto h-4 w-4" />
-                  </CommandItem>
-                </CommandGroup>
-              )}
-              {unselectedJournalists.length > 0 && (
-                <CommandGroup heading="Journalists">
-                  {unselectedJournalists.map((journalist) => (
-                    <CommandItem
-                      key={journalist.id}
-                      value={journalist.id}
-                      className="text-sm"
-                      onSelect={handleJournalistSelect}
-                    >
-                      <JournalistLabel journalist={journalist} />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                <DialogTrigger asChild>
-                  <CommandItem
-                    onSelect={() => {
-                      setOpen(false)
-                      setShowCreateJournalistDialog(true)
-                    }}
-                  >
-                    <PlusCircle className="mr-2 h-5 w-5" />
-                    Create journalist
-                  </CommandItem>
-                </DialogTrigger>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create journalist</DialogTitle>
-          <DialogDescription>
-            Add a new journalist to manage products and customers.
-          </DialogDescription>
-        </DialogHeader>
-        <JournalistForm onSuccess={handleJournalistSelect} />
-      </DialogContent>
-    </Dialog>
+    <>
+      <Switcher
+        labels={{
+          button: 'Select a journalist',
+          placeholder: 'Search journalist...',
+          empty: 'No journalist found.',
+          heading: 'Journalists',
+          selected: 'Selected journalist',
+          create: 'Create a journalist',
+        }}
+        value={params.journalist as string}
+        options={journalists.map((it) => ({
+          label: it.name ?? '',
+          value: it.id,
+        }))}
+        renderOption={(option) => {
+          if (!option) {
+            return (
+              <span className="text-muted-foreground truncate">
+                No journalist selected
+              </span>
+            )
+          }
+          return (
+            <div className="flex items-center truncate">
+              <Avatar className="hidden sm:block mr-2 h-6 w-6">
+                <AvatarFallback className="uppercase text-xs">
+                  {option.label.slice(0, 2)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="truncate">{option.label}</span>
+            </div>
+          )
+        }}
+        onSelect={handleJournalistSelect}
+        onCreate={() => setQueryParams({ journalist: CREATE_ID })}
+      />
+      <Dialog
+        open={queryParams.journalist === CREATE_ID}
+        onOpenChange={setShowCreateJournalistDialog}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create journalist</DialogTitle>
+            <DialogDescription>
+              Add a new journalist to manage products and customers.
+            </DialogDescription>
+          </DialogHeader>
+          <JournalistForm onSuccess={handleJournalistSelect} />
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

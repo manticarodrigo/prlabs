@@ -29,11 +29,15 @@ export function ProtectedLayoutHeader({ user, teams, journalists }: Props) {
               href: '/teams',
               matches: '/teams',
             },
-            {
-              title: 'Journalists',
-              href: `/teams/${params.team}/journalists` as Route,
-              matches: `/teams/${params.team}/journalists`,
-            },
+            ...(typeof params.team === 'string'
+              ? [
+                  {
+                    title: 'Journalists',
+                    href: `/teams/${params.team}/journalists` as Route,
+                    matches: `/teams/${params.team}/journalists`,
+                  },
+                ]
+              : []),
           ]}
         >
           <>

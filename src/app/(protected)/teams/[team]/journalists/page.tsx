@@ -22,6 +22,29 @@ export default async function JournalistsPage({ params }: Props) {
     team.keywords.map((k) => k.name) ?? [],
   )
 
+  const topJournalistsMap = articles
+    ?.map((a) => ({ author: a.author, outlet: a.clean_url }))
+    .reduce((acc, curr) => {
+      if (acc[curr.author]) {
+        acc[curr.author].count++
+      } else {
+        acc[curr.author] = {
+          count: 1,
+          outlet: curr.outlet ?? '',
+        }
+      }
+      return acc
+    }, {} as Record<string, { count: number; outlet: string }>)
+
+  const topJournalists = Object.entries(topJournalistsMap)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, 5)
+    .map(([name, { count, outlet }]) => ({
+      name,
+      count,
+      outlet,
+    }))
+
   return (
     <main className="container flex flex-col py-6 px-4 w-full min-h-full gap-4 sm:gap-6">
       <div className="flex flex-col gap-2">
@@ -33,14 +56,25 @@ export default async function JournalistsPage({ params }: Props) {
             </Badge>
           ))}
         </ul>
-        <p className="text-muted-foreground">
-          Here are the latest articles for your team based on your keywords:
-        </p>
       </div>
-      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <h2 className="text-lg font-bold tracking-tight">Journalists</h2>
+      <ul className="flex flex-wrap gap-2">
+        {topJournalists.map((j) => (
+          <li key={j.name}>
+            <Badge>
+              {j.name} ({j.count})
+            </Badge>
+          </li>
+        ))}
+      </ul>
+      <h2 className="text-lg font-bold tracking-tight">Articles</h2>
+      <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {articles?.map((article) => (
           <li key={article._id}>
-            <ArticleCard article={article} className="flex flex-col justify-between h-full max-h-[300]" />
+            <ArticleCard
+              article={article}
+              className="flex flex-col justify-between h-full max-h-[300]"
+            />
           </li>
         ))}
       </ul>

@@ -38,7 +38,7 @@ export default async function JournalistsPage({ params }: Props) {
 
   const topJournalists = Object.entries(topJournalistsMap)
     .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 5)
+    .slice(0, 50)
     .map(([name, { count, outlet }]) => ({
       name,
       count,
@@ -61,7 +61,7 @@ export default async function JournalistsPage({ params }: Props) {
       <ul className="flex flex-wrap gap-2">
         {topJournalists.map((j) => (
           <li key={j.name}>
-            <Badge>
+            <Badge variant="outline">
               {j.name} ({j.count})
             </Badge>
           </li>

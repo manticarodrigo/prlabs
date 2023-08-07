@@ -12,6 +12,7 @@ export type NewsCatcherArticle = Omit<Article, "external_id" | "external_score">
 interface NewsCatcherQuery {
   q: string
   lang?: string
+  countries?: string
   from?: string
   author?: string
   sources?: string
@@ -38,7 +39,7 @@ export function getAuthorArticles(author: string, source: string) {
     lang: 'en',
     from: dayjs().subtract(180, 'days').format('YYYY-MM-DD'),
     sort_by: 'relevancy',
-    page_size: 100,
+    page_size: 200,
   })
 }
 
@@ -46,10 +47,11 @@ export function getTopicArticles(topics: string[]) {
   return fetchArticles({
     q: topics.join(' OR '),
     lang: 'en',
+    countries: 'US',
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
     sort_by: "relevancy",
     ranked_only: true,
-    page_size: 100,
+    page_size: 200,
   })
 }
 

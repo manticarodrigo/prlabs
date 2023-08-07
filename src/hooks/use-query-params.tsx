@@ -20,7 +20,7 @@ export function useQueryParams(): [Params, SetParams] {
       if (value) {
         current.set(key, value.trim())
       } else {
-        current.delete('team')
+        current.delete(key)
       }
     }
     const search = current.toString()

@@ -32,11 +32,7 @@ export function JournalistSwitcher({
   const [queryParams, setQueryParams] = useQueryParams()
 
   const setShowCreateJournalistDialog = (show: boolean) => {
-    if (show) {
-      setQueryParams({ journalist: CREATE_ID })
-    } else {
-      setQueryParams({ journalist: '' })
-    }
+    setQueryParams({ journalist: show ? CREATE_ID : '' })
   }
 
   const handleJournalistSelect = (id: string) => {

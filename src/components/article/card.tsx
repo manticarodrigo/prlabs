@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import Image from 'next/image'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -23,6 +24,17 @@ export function ArticleCard({
   return (
     <Card {...props}>
       <CardHeader>
+        {!!article.media && (
+          <div className="w-full">
+            <Image
+              src={article.media}
+              alt="Article media"
+              width={300}
+              height={200}
+              className="w-full aspect-video object-cover"
+            />
+          </div>
+        )}
         <div className="text-sm text-muted-foreground">
           {article.clean_url} <Badge variant="secondary">{article.topic}</Badge>
         </div>

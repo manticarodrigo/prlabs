@@ -17,10 +17,10 @@ import {
 import { UserAvatar } from './user-avatar'
 
 export type User = {
-  firstName?: string | null
-  lastName?: string | null
+  firstName: string | null
+  lastName: string | null
   emailAddress: string
-  profileImageUrl?: string
+  profileImageUrl: string
 }
 
 interface UserMenuProps {

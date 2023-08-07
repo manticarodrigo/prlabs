@@ -9,14 +9,12 @@ import invariant from 'tiny-invariant'
 
 import { getJournalists } from '@/app/api/journalist/model'
 import { getTeams } from '@/app/api/team/model'
-import { JournalistSwitcher } from '@/components/journalist/switcher'
-import { AppNav } from '@/components/nav/app-nav'
 import { TeamModal } from '@/components/team/modal'
-import { TeamSwitcher } from '@/components/team/switcher'
 import { ProgressBar } from '@/components/ui/progress'
 import { Toaster } from '@/components/ui/toaster'
-import { UserMenu } from '@/components/user/user-menu'
 import { TrpcProvider } from '@/lib/trpc'
+
+import { ProtectedLayoutHeader } from './header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,7 +29,7 @@ interface Props {
   children: React.ReactNode
 }
 
-export default async function TeamLayout({ children }: Props) {
+export default async function ProtectedLayout({ children }: Props) {
   const user = await currentUser()
 
   invariant(user, 'No user found.')
@@ -47,37 +45,16 @@ export default async function TeamLayout({ children }: Props) {
       <body className={inter.className + ' w-full h-full flex flex-col'}>
         <TrpcProvider>
           <ClerkProvider>
-            <header className="border-b">
-              <div className="flex justify-between items-center px-4 py-2">
-                <AppNav
-                  links={[
-                    {
-                      title: 'Teams',
-                      href: '/teams',
-                      matches: '/teams',
-                    },
-                    {
-                      title: 'Journalists',
-                      href: '/',
-                      matches: '/',
-                    },
-                  ]}
-                >
-                  <>
-                    <TeamSwitcher teams={teams} />
-                    <JournalistSwitcher journalists={journalists} />
-                  </>
-                </AppNav>
-                <UserMenu
-                  user={{
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    emailAddress: user.emailAddresses[0].emailAddress,
-                    profileImageUrl: user.profileImageUrl,
-                  }}
-                />
-              </div>
-            </header>
+            <ProtectedLayoutHeader
+              user={{
+                firstName: user.firstName,
+                lastName: user.lastName,
+                emailAddress: user.emailAddresses[0].emailAddress,
+                profileImageUrl: user.profileImageUrl,
+              }}
+              teams={teams}
+              journalists={journalists}
+            />
             <main className="w-full h-full min-h-0 overflow-auto">
               {children}
             </main>

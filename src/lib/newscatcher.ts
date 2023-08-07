@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import invariant from 'tiny-invariant'
 
 import { Article, Author } from '@/lib/drizzle'
 
@@ -24,6 +25,7 @@ export async function fetchArticles(query: NewsCatcherQuery) {
   const res = await fetch(`${endpoint}?${new URLSearchParams(JSON.parse(JSON.stringify(query)))}`, {
     headers: { 'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '', },
   })
+  invariant(res.ok, `Unable to fetch articles.`)
   const json = await res.json() as { articles: NewsCatcherArticle[] }
   return (json.articles || []).filter((article) => article.summary && article.excerpt && article.authors)
 }

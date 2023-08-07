@@ -17,6 +17,7 @@ interface NewsCatcherQuery {
   author?: string
   sources?: string
   ranked_only?: boolean
+  from_rank?: number
   sort_by?: 'relevancy' | 'date' | 'rank'
   page_size?: number
 }
@@ -50,7 +51,7 @@ export function getTopicArticles(topics: string[]) {
     countries: 'US',
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
     sort_by: "relevancy",
-    ranked_only: true,
+    from_rank: 100,
     page_size: 200,
   })
 }

@@ -45,9 +45,7 @@ export async function fetchArticles(query: NewsCatcherQuery) {
   invariant(res.ok, `Unable to fetch articles.`)
   const json = (await res.json()) as { articles: NewsCatcherArticle[] }
   return {
-    ...articleResponseSchema.parse({
-      json,
-    }),
+    ...articleResponseSchema.parse(json),
     articles: (json.articles || []).filter(
       (article) => article.summary && article.excerpt && article.authors,
     ),

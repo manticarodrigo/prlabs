@@ -1,6 +1,6 @@
-import { currentUser } from '@clerk/nextjs'
 import invariant from 'tiny-invariant'
 
+import { processArticles } from '@/app/api/article/model'
 import { getTeam } from '@/app/api/team/model'
 import { ArticleCard } from '@/components/article/card'
 import { Badge } from '@/components/ui/badge'
@@ -13,13 +13,15 @@ interface Props {
 }
 
 export default async function JournalistsPage({ params }: Props) {
-  const [user, team] = await Promise.all([currentUser(), getTeam(params.team)])
+  const team = await getTeam(params.team)
 
-  invariant(user, 'User not found')
   invariant(team, 'Team not found')
 
-  const articles = await getTopicArticles(
-    team.keywords.map((k) => k.name) ?? [],
+  const topicArticles = await getTopicArticles(team.keywords.map((k) => k.name))
+  const processedArticles = await processArticles(team, topicArticles)
+
+  const articles = processedArticles?.sort(
+    (a, b) => b.analysis.score - a.analysis.score,
   )
 
   const topJournalistsMap = articles
@@ -73,8 +75,17 @@ export default async function JournalistsPage({ params }: Props) {
           <li key={article._id}>
             <ArticleCard
               article={article}
-              className="flex flex-col justify-between h-full max-h-[300]"
-            />
+              className="flex flex-col justify-between"
+            >
+              <ul className="flex flex-col gap-2">
+                {article.analysis.trends.map((t, i) => (
+                  <li key={i}>
+                    <div className="text-sm font-medium">{t.title}</div>
+                    <div className="text-xs">{t.summary}</div>
+                  </li>
+                ))}
+              </ul>
+            </ArticleCard>
           </li>
         ))}
       </ul>

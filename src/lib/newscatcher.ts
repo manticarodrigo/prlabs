@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import invariant from 'tiny-invariant'
 
-import { Article, Author } from '@/lib/drizzle'
+import { Article } from '@/lib/drizzle'
 
 export type NewsCatcherArticle = Omit<Article, "external_id" | "external_score"> & {
   _id: string
@@ -40,7 +40,7 @@ export function getAuthorArticles(author: string, source: string) {
     lang: 'en',
     from: dayjs().subtract(180, 'days').format('YYYY-MM-DD'),
     sort_by: 'relevancy',
-    page_size: 200,
+    page_size: 100,
   })
 }
 
@@ -51,30 +51,7 @@ export function getTopicArticles(topics: string[]) {
     countries: 'US',
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
     sort_by: "relevancy",
-    from_rank: 100,
-    page_size: 200,
+    from_rank: 50,
+    page_size: 100,
   })
-}
-
-export function getNewsArticleMetadata({
-  author,
-  link,
-  published_date,
-  country,
-  language,
-  authors,
-  twitter_account,
-  is_opinion,
-}: Article & { author: Author | null }) {
-  return `
-        author: ${author?.name}
-        outlet: ${author?.outlet}
-        link: ${link}
-        date: ${published_date}
-        country: ${country}
-        language: ${language}
-        authors: ${authors}
-        twitter account: ${twitter_account}
-        is opinion: ${is_opinion}
-  `
 }

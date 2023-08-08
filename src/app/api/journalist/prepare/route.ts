@@ -1,10 +1,10 @@
 import { createId } from '@paralleldrive/cuid2'
 import { kv } from '@vercel/kv'
-import { OpenAI } from 'langchain'
+import { OpenAI } from 'langchain/llms/openai'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { getNewsArticleMetadata } from '@/app/api/article/model'
 import { db, desc, eq, schema } from '@/lib/drizzle'
-import { getNewsArticleMetadata } from '@/lib/newscatcher'
 
 export const runtime = 'nodejs'
 

@@ -1,8 +1,22 @@
 import { createId } from '@paralleldrive/cuid2'
 
-import { db, desc, eq, schema } from '@/lib/drizzle'
+import { db, desc, eq, schema, Team } from '@/lib/drizzle'
 import { KeywordSchemaInput } from '@/schema/keyword'
 import { TeamSchemaInput } from '@/schema/team'
+
+export function getTeamMetadata({
+  name,
+  description,
+  strategy,
+  keywords,
+}: Team) {
+  return `
+        name: ${name}
+        description: ${description}
+        strategy: ${strategy}
+        keywords: ${keywords}
+  `
+}
 
 export async function getTeams(userId: string) {
   const teams = await db.query.team.findMany({

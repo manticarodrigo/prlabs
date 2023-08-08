@@ -55,9 +55,7 @@ export default async function ProtectedLayout({ children }: Props) {
               teams={teams}
               journalists={journalists}
             />
-            <main className="w-full h-full min-h-0 overflow-auto">
-              {children}
-            </main>
+            <main className="w-full h-full overflow-auto">{children}</main>
             <TeamModal teams={teams} />
             <Toaster />
             <ProgressBar />

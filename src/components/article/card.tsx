@@ -14,16 +14,24 @@ import { Article } from '@/lib/drizzle'
 import { NewsCatcherArticle } from '@/lib/newscatcher'
 
 interface Props {
-  article: Article | NewsCatcherArticle
+  article: (Article | NewsCatcherArticle) & { analysis?: { score: number } }
 }
 
 export function ArticleCard({
   article,
+  children,
   ...props
 }: Props & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Card {...props}>
+    <Card {...props} className={props.className + ' relative pt-8'}>
       <CardHeader>
+        {!!article.analysis && (
+          <div className="absolute top-0 right-0 p-2">
+            <Badge variant="outline">
+              Relevance: {article.analysis.score}%
+            </Badge>
+          </div>
+        )}
         {!!article.media && (
           <div className="w-full">
             <Image
@@ -45,10 +53,8 @@ export function ArticleCard({
           {article.authors?.split(',').join(', ')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-h-0 h-full line-clamp-4">
-        {article.summary}
-      </CardContent>
-      <CardFooter className="p-6">
+      <CardContent>{children || article.summary}</CardContent>
+      <CardFooter>
         {dayjs(article.published_date).format('MMMM D, YYYY')}
       </CardFooter>
     </Card>

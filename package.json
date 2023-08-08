@@ -56,7 +56,7 @@
     "eslint-config-next": "13.4.7",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eventsource-parser": "^1.0.0",
-    "langchain": "^0.0.96",
+    "langchain": "^0.0.124",
     "lucide-react": "^0.252.0",
     "next": "^13.4.10",
     "next-nprogress-bar": "^2.0.3",

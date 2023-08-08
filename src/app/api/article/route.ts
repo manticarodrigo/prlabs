@@ -1,12 +1,12 @@
 import { createId } from '@paralleldrive/cuid2'
 import { kv } from '@vercel/kv'
 import { LangChainStream, StreamingTextResponse } from 'ai'
-import { OpenAI } from 'langchain'
+import { OpenAI } from 'langchain/llms/openai'
 import { NextRequest } from 'next/server'
 import invariant from 'tiny-invariant'
 
+import { getNewsArticleMetadata } from '@/app/api/article/model'
 import { db, eq, schema } from '@/lib/drizzle'
-import { getNewsArticleMetadata } from '@/lib/newscatcher'
 
 
 export async function POST(req: NextRequest) {

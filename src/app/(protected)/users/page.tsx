@@ -4,7 +4,7 @@ export default async function UsersPage() {
   const users = await clerkClient.users.getUserList({ limit: 100 })
 
   return (
-    <main>
+    <main className="w-full min-h-full">
       <h1 className="p-2">{`Users (${users.length})`}</h1>
       <ul>
         {users.map((user) => (

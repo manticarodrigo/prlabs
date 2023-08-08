@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { getTopicArticles } from '@/lib/newscatcher'
 
 export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 interface Props {
   params: {

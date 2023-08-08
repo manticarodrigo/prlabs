@@ -19,7 +19,11 @@ export default async function JournalistsPage({ params }: Props) {
 
   invariant(team, 'Team not found')
 
-  const topicArticles = await getTopicArticles(team.keywords.map((k) => k.name))
+  const {
+    total_hits,
+    page_size,
+    articles: topicArticles,
+  } = await getTopicArticles(team.keywords.map((k) => k.name))
   const processedArticles = await processArticles(team, topicArticles)
 
   const articles = processedArticles?.sort(
@@ -62,6 +66,10 @@ export default async function JournalistsPage({ params }: Props) {
         </ul>
       </div>
       <h2 className="text-lg font-bold tracking-tight">Journalists</h2>
+      <p>
+        Here are the most frequently mentioned journalists in the top{' '}
+        {page_size} articles.
+      </p>
       <ul className="flex flex-wrap gap-2">
         {topJournalists.map((j) => (
           <li key={j.name}>
@@ -72,6 +80,9 @@ export default async function JournalistsPage({ params }: Props) {
         ))}
       </ul>
       <h2 className="text-lg font-bold tracking-tight">Articles</h2>
+      <p>
+        Here are the top {page_size} articles ({total_hits} total matches).
+      </p>
       <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {articles?.map((article) => (
           <li key={article._id}>

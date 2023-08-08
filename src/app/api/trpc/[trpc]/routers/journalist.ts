@@ -10,7 +10,7 @@ export const journalistRouter = createRouter({
   upsert: protectedProcedure.input(JournalistSchema).mutation(async ({ input }) => {
     const { name, outlet } = input
 
-    const articles = await getAuthorArticles(name, outlet)
+    const { articles } = await getAuthorArticles(name, outlet)
 
     invariant(articles && articles.length, 'No articles found. Please update the form and try again.')
 

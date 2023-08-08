@@ -80,7 +80,7 @@ export async function processArticles(team: Team, articles: NewsCatcherArticle[]
         team: teamMetadata,
         author: article.author || article.authors || article.twitter_account || article.clean_url,
         source: article.clean_url,
-        article: articleMetadata + '\n article content:' + (article.summary || article.excerpt)?.slice(0, 5000),
+        article: articleMetadata + '\n article content:' + (article.summary || article.excerpt)?.slice(0, 10000),
       })
       return { ...article, analysis: zodSchema.parse(analysis.output) }
     }),

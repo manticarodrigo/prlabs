@@ -80,7 +80,7 @@ export async function getJournalistSummaries(id: string, take = 10) {
   invariant(author.name, 'Author not found')
   invariant(author.outlet, 'Author not found')
 
-  const _articles = await getAuthorArticles(author.name, author.outlet)
+  const { articles: _articles } = await getAuthorArticles(author.name, author.outlet)
 
   await upsertJournalist(_articles)
 

@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useDebounce } from 'use-debounce'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,13 +14,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { MultiSelect } from '@/components/ui/multi-select'
 import { Textarea } from '@/components/ui/textarea'
 import { Team } from '@/lib/drizzle'
 import { trpc } from '@/lib/trpc'
 import { TeamSchema, TeamSchemaInput } from '@/schema/team'
 import { onErrorToast } from '@/util/toast'
-
-import { MultiSelect } from '../ui/multi-select'
 
 interface Props {
   team?: Team
@@ -32,7 +32,10 @@ export function TeamForm({ team, onSuccess }: Props) {
     defaultValues: team && TeamSchema.parse(team),
   })
 
-  const query = trpc.keyword.search.useQuery('')
+  const values = form.watch()
+  const [debounced] = useDebounce(values, 500)
+
+  const query = trpc.keyword.search.useQuery(debounced)
   const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
@@ -119,6 +122,7 @@ export function TeamForm({ team, onSuccess }: Props) {
               <FormLabel>Keywords</FormLabel>
               <FormControl>
                 <MultiSelect
+                  isLoading={query.isLoading}
                   options={(query.data ?? []).map((kw) => ({
                     value: kw.id,
                     label: kw.name,

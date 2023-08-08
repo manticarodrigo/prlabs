@@ -8,12 +8,13 @@ import { Command, CommandGroup, CommandItem } from '@/components/ui/command'
 type Option = Record<'value' | 'label', string>
 
 interface Props {
+  isLoading?: boolean
   options: Option[]
   selected: Option[]
   onChange: (value: Option[]) => void
 }
 
-export function MultiSelect({ options, selected, onChange }: Props) {
+export function MultiSelect({ isLoading, options, selected, onChange }: Props) {
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState('')
@@ -93,6 +94,11 @@ export function MultiSelect({ options, selected, onChange }: Props) {
       <div className="relative mt-2">
         {open && selectables.length > 0 ? (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              </div>
+            ) : null}
             <CommandGroup className="h-full overflow-auto">
               {selectables.map((option, index) => {
                 return (

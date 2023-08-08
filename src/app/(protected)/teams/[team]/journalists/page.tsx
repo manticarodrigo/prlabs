@@ -6,6 +6,8 @@ import { ArticleCard } from '@/components/article/card'
 import { Badge } from '@/components/ui/badge'
 import { getTopicArticles } from '@/lib/newscatcher'
 
+export const runtime = 'nodejs'
+
 interface Props {
   params: {
     team: string

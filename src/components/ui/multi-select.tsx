@@ -1,5 +1,5 @@
 import { Command as CommandPrimitive } from 'cmdk'
-import { X } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import * as React from 'react'
 
 import { Badge } from '@/components/ui/badge'
@@ -89,16 +89,16 @@ export function MultiSelect({ isLoading, options, selected, onChange }: Props) {
             placeholder="Press enter to create..."
             className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
           />
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="animate-spin h-6 w-6 text-primary" />
+            </div>
+          ) : null}
         </div>
       </div>
       <div className="relative mt-2">
         {open && selectables.length > 0 ? (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-            {isLoading ? (
-              <div className="flex items-center justify-center h-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-              </div>
-            ) : null}
             <CommandGroup className="h-full overflow-auto">
               {selectables.map((option, index) => {
                 return (

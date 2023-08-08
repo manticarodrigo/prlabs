@@ -6,7 +6,7 @@ import { Article } from '@/lib/drizzle'
 
 export type NewsCatcherArticle = Omit<
   Article,
-  'external_id' | 'external_score'
+  'id' | 'authorId' | 'external_id' | 'external_score' | 'createdAt' | 'updatedAt'
 > & {
   _id: string
   _score: number
@@ -20,8 +20,10 @@ interface NewsCatcherQuery {
   from?: string
   author?: string
   sources?: string
+  topic?: string
   ranked_only?: boolean
   from_rank?: number
+  to_rank?: number
   sort_by?: 'relevancy' | 'date' | 'rank'
   page_size?: number
 }
@@ -47,7 +49,11 @@ export async function fetchArticles(query: NewsCatcherQuery) {
   return {
     ...articleResponseSchema.parse(json),
     articles: (json.articles || []).filter(
-      (article) => article.summary && article.excerpt && article.authors,
+      (article) => {
+        const length = article.summary?.length ?? 0
+        if (length < 5000) return false
+        return (article.summary && article.excerpt && article.authors)?.slice(0, 10000)
+      },
     ),
   }
 }
@@ -70,8 +76,8 @@ export function getTopicArticles(topics: string[]) {
     lang: 'en',
     countries: 'US',
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
+    to_rank: 100,
     sort_by: 'relevancy',
-    from_rank: 100,
-    page_size: 100,
+    page_size: 500,
   })
 }

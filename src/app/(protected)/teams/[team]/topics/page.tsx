@@ -26,9 +26,11 @@ export default async function JournalistsPage({ params }: Props) {
   } = await getTopicArticles(team.keywords.map((k) => k.name))
   const processedArticles = await processArticles(team, topicArticles)
 
-  const articles = processedArticles?.sort(
-    (a, b) => b.analysis.score - a.analysis.score,
-  )
+  const hits = Math.min(100, page_size)
+
+  const articles = processedArticles
+    ?.sort((a, b) => b.analysis.score - a.analysis.score)
+    .slice(0, hits)
 
   const topJournalistsMap = articles
     ?.map((a) => ({ author: a.author, outlet: a.clean_url }))
@@ -55,7 +57,7 @@ export default async function JournalistsPage({ params }: Props) {
 
   return (
     <main className="container flex flex-col py-6 px-4 w-full min-h-full gap-4 sm:gap-6">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold tracking-tight">{team.name}</h1>
         <ul className="flex flex-wrap gap-2">
           {team.keywords.map((k) => (
@@ -64,12 +66,15 @@ export default async function JournalistsPage({ params }: Props) {
             </Badge>
           ))}
         </ul>
+        <p className="text-muted-foreground">{team.description}</p>
+        <p className="text-muted-foreground">{team.strategy}</p>
       </div>
-      <h2 className="text-lg font-bold tracking-tight">Journalists</h2>
-      <p>
-        Here are the most frequently mentioned journalists in the top{' '}
-        {page_size} articles.
-      </p>
+      <div>
+        <h2 className="text-lg font-bold tracking-tight">Journalists</h2>
+        <p className="text-muted-foreground">
+          Most frequently mentioned journalists.
+        </p>
+      </div>
       <ul className="flex flex-wrap gap-2">
         {topJournalists.map((j) => (
           <li key={j.name}>
@@ -79,10 +84,12 @@ export default async function JournalistsPage({ params }: Props) {
           </li>
         ))}
       </ul>
-      <h2 className="text-lg font-bold tracking-tight">Articles</h2>
-      <p>
-        Here are the top {page_size} articles ({total_hits} total matches).
-      </p>
+      <div>
+        <h2 className="text-lg font-bold tracking-tight">Articles</h2>
+        <p className="text-muted-foreground">
+          Top {hits} relevant articles ({total_hits} total matches).
+        </p>
+      </div>
       <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {articles?.map((article) => (
           <li key={article._id}>
@@ -91,10 +98,10 @@ export default async function JournalistsPage({ params }: Props) {
               className="flex flex-col justify-between"
             >
               <ul className="flex flex-col gap-2">
-                {article.analysis.trends.map((t, i) => (
+                {article.analysis.themes.map((t, i) => (
                   <li key={i}>
                     <div className="text-sm font-medium">{t.title}</div>
-                    <div className="text-xs">{t.summary}</div>
+                    <div className="text-xs">{t.headline}</div>
                   </li>
                 ))}
               </ul>

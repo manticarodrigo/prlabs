@@ -41,12 +41,12 @@ const zodSchema = z.object({
   trends: z
     .array(
       z.object({
-        title: z.string().describe("Title for trend or idea"),
-        summary: z.string().describe("Short, two-sentence summary of trend or idea"),
+        title: z.string().describe("Title for trend or idea."),
+        summary: z.string().describe("Short, two-sentence summary of trend or idea."),
       })
     )
-    .describe("An array of trends mentioned in the text"),
-  score: z.number().min(0).max(100).describe("A score from 0 to 100 for how closely the article aligns with the team context"),
+    .describe("An array of 3 trends discussed in the article which are most relevant to the team context."),
+  score: z.number().min(0).max(100).describe("A score from 0 to 100 for how closely the article aligns with the team context. A low score would mean that the article has some relevance to the team context, but not much. A high score would mean that the article is very relevant to the team context."),
 });
 
 export async function processArticles(team: Team, articles: NewsCatcherArticle[]) {
@@ -63,7 +63,7 @@ export async function processArticles(team: Team, articles: NewsCatcherArticle[]
     You are a public relations professional working for a team:    
     {team}
 
-    You are evaluating a recent article published by {author} at {source}. Provide 3 trends or ideas mentioned in the article:
+    You are evaluating a recent article published by {author} at {source}. Provide the requested output based on the article:
     {article}
     `
   });

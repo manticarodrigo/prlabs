@@ -42,7 +42,7 @@ const zodSchema = z.object({
     .array(
       z.object({
         title: z.string().describe("Title for trend or idea"),
-        summary: z.string().describe("Summary of trend or idea"),
+        summary: z.string().describe("Short, two-sentence summary of trend or idea"),
       })
     )
     .describe("An array of trends mentioned in the text"),
@@ -63,7 +63,7 @@ export async function processArticles(team: Team, articles: NewsCatcherArticle[]
     You are a public relations professional working for a team:    
     {team}
 
-    You are evaluating a recent article published by {author} at {source}. Please provide 3 trends or ideas mentioned in the article:
+    You are evaluating a recent article published by {author} at {source}. Provide 3 trends or ideas mentioned in the article:
     {article}
     `
   });

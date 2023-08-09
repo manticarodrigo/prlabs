@@ -4,6 +4,7 @@ import { AIChatMessage, HumanChatMessage } from 'langchain/schema'
 import { NextRequest } from 'next/server'
 
 import { getJournalistSummaries } from '@/app/api/journalist/model'
+import { logger } from '@/lib/logger'
 
 
 export async function POST(req: NextRequest) {
@@ -38,7 +39,7 @@ export async function POST(req: NextRequest) {
       {},
       [handlers],
     )
-    .catch((e) => console.error(e.message))
+    .catch((e) => logger.error(e.message))
 
   return new StreamingTextResponse(stream)
 }

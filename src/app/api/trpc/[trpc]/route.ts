@@ -3,10 +3,13 @@ import {
   fetchRequestHandler,
 } from "@trpc/server/adapters/fetch";
 
+import { logger } from "@/lib/logger";
+
 import { appRouter } from "./routers/app";
 
 const handler = (request: Request) => {
-  console.log(`incoming request ${request.url}`);
+  logger.info(request, `incoming request: ${request.url}`)
+
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req: request,

@@ -3,6 +3,7 @@ import invariant from 'tiny-invariant'
 import { z } from 'zod'
 
 import { Article } from '@/lib/drizzle'
+import { logger } from '@/lib/logger'
 
 export type NewsCatcherArticle = Omit<
   Article,
@@ -44,9 +45,10 @@ export async function fetchArticles(query: NewsCatcherQuery) {
       headers: { 'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '' },
     },
   )
+  logger.info(res, `requested articles with status ${res.status}`)
   invariant(res.ok, `Unable to fetch articles.`)
   const json = (await res.json()) as { articles: NewsCatcherArticle[] }
-  return {
+  const payload = {
     ...articleResponseSchema.parse(json),
     articles: (json.articles || []).filter(
       (article) => {
@@ -56,6 +58,8 @@ export async function fetchArticles(query: NewsCatcherQuery) {
       },
     ),
   }
+  logger.info(payload, `fetched ${payload.articles.length} articles`)
+  return payload
 }
 
 export function getAuthorArticles(author: string, source: string) {

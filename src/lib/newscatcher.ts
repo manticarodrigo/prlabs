@@ -88,6 +88,6 @@ export function getTopicArticles(topics: string[]) {
     from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
     to_rank: 100,
     sort_by: 'relevancy',
-    page_size: 200,
+    page_size: 100,
   })
 }

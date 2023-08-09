@@ -7,7 +7,12 @@ import { logger } from '@/lib/logger'
 
 export type NewsCatcherArticle = Omit<
   Article,
-  'id' | 'authorId' | 'external_id' | 'external_score' | 'createdAt' | 'updatedAt'
+  | 'id'
+  | 'authorId'
+  | 'external_id'
+  | 'external_score'
+  | 'createdAt'
+  | 'updatedAt'
 > & {
   _id: string
   _score: number
@@ -45,20 +50,21 @@ export async function fetchArticles(query: NewsCatcherQuery) {
       headers: { 'x-api-key': process.env.NEWSCATCHER_API_KEY ?? '' },
     },
   )
-  logger.info(res, `requested articles with status ${res.status}`)
+  logger.info(`requested articles with status ${res.status}`)
   invariant(res.ok, `Unable to fetch articles.`)
   const json = (await res.json()) as { articles: NewsCatcherArticle[] }
   const payload = {
     ...articleResponseSchema.parse(json),
-    articles: (json.articles || []).filter(
-      (article) => {
-        const length = article.summary?.length ?? 0
-        if (length < 5000) return false
-        return (article.summary && article.excerpt && article.authors)?.slice(0, 10000)
-      },
-    ),
+    articles: (json.articles || []).filter((article) => {
+      const length = article.summary?.length ?? 0
+      if (length < 5000) return false
+      return (article.summary && article.excerpt && article.authors)?.slice(
+        0,
+        10000,
+      )
+    }),
   }
-  logger.info(payload, `fetched ${payload.articles.length} articles`)
+  logger.info(`fetched ${payload.articles.length} articles`)
   return payload
 }
 

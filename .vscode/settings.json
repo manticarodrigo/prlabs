@@ -7,11 +7,5 @@
     "source.fixAll": true,
     "source.sortImports": false,
     "source.organizeImports": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

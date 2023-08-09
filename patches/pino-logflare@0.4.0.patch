@@ -1,0 +1,20 @@
+diff --git a/dist/index.js b/dist/index.js
+index 6db989b221059c37e37df295a8e32351ad611c5c..3bfe5cffac045d8e378ab736b26afdc6c3842bea 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -15,8 +15,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.createHttpWriteStream = exports.createConsoleWriteStream = exports.createPinoBrowserSend = exports.logflarePinoVercel = exports.createWriteStream = void 0;
+-var httpStream_1 = __importDefault(require("./httpStream"));
+-exports.createHttpWriteStream = httpStream_1.default;
+ var consoleStream_1 = __importDefault(require("./consoleStream"));
+ exports.createConsoleWriteStream = consoleStream_1.default;
+ var utils_1 = require("./utils");
+@@ -41,6 +39,4 @@ var logflarePinoVercel = function (options) {
+     };
+ };
+ exports.logflarePinoVercel = logflarePinoVercel;
+-var createWriteStream = httpStream_1.default;
+-exports.createWriteStream = createWriteStream;
+ //# sourceMappingURL=index.js.map

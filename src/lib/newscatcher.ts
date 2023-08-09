@@ -85,8 +85,7 @@ export function getTopicArticles(topics: string[]) {
     q: topics.join(' OR '),
     lang: 'en',
     countries: 'US',
-    from: dayjs().subtract(30, 'days').format('YYYY-MM-DD'),
-    to_rank: 100,
+    from: dayjs().subtract(60, 'days').format('YYYY-MM-DD'),
     sort_by: 'relevancy',
     page_size: 100,
   })

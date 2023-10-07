@@ -7,5 +7,5 @@ interface Props {
 }
 
 export default function TeamPage({ params }: Props) {
-  redirect(`/teams/${params.team}/topics`)
+  redirect(`/teams/${params.team}/journalists`)
 }

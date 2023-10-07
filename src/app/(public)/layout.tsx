@@ -1,11 +1,12 @@
 import '@/app/globals.css'
 
-import { ClerkProvider, SignInButton } from '@clerk/nextjs'
+import { ClerkProvider } from '@clerk/nextjs'
 import { GoogleTagManagerBody, GoogleTagManagerHead } from '@thgh/next-gtm'
 import { Analytics } from '@vercel/analytics/react'
 import { ArrowRight } from 'lucide-react'
 import { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 
 import { AppNav } from '@/components/nav/app-nav'
 import { Button } from '@/components/ui/button'
@@ -50,12 +51,12 @@ export default function AppLayout({ children }: Props) {
                       },
                     ]}
                   />
-                  <SignInButton>
-                    <Button className="bg-violet-700">
+                  <Button asChild className="bg-violet-700">
+                    <Link href="/teams">
                       Go to app
                       <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </SignInButton>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </header>

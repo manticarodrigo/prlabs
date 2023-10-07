@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 
 import * as schema from '../../drizzle/schema'
 
-export const db = drizzle(sql, { schema, logger: true })
+export const db = drizzle(sql, { schema, logger: false })
 
 export type Article = InferModel<typeof schema.article>
 export type ArticleAnalysis = InferModel<typeof schema.articleAnalysis>
@@ -20,4 +20,3 @@ export type AuthorWithArticlesWithAnalyses = Author & {
 
 export * from 'drizzle-orm'
 export { schema }
-

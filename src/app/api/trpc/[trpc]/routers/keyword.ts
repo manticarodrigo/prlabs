@@ -8,7 +8,9 @@ import { TeamSchema } from '@/schema/team'
 import { createRouter, protectedProcedure } from '../trpc'
 
 const zodSchema = z.object({
-  keywords: z.array(z.string().describe('Short 3-20 character keyword')).describe('Array of 10 keywords for search.'),
+  keywords: z
+    .array(z.string().describe('Short 3-20 character keyword'))
+    .describe('Array of 10 keywords for search.'),
 })
 
 export const keywordRouter = createRouter({
@@ -36,9 +38,18 @@ export const keywordRouter = createRouter({
       llm,
     })
 
-    const result = await chain.call({
-      team: JSON.stringify(input),
-    })
+    const result = await chain
+      .call({
+        team: JSON.stringify(input),
+      })
+      .catch((err) => {
+        console.error(err.message)
+        return {
+          output: {
+            keywords: [],
+          },
+        }
+      })
 
     const parsed = result.output as z.infer<typeof zodSchema>
 

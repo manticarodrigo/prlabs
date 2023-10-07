@@ -29,13 +29,23 @@ interface Props {
 export function TeamForm({ team, onSuccess }: Props) {
   const form = useForm<TeamSchemaInput>({
     resolver: zodResolver(TeamSchema),
-    defaultValues: team && TeamSchema.parse(team),
+    defaultValues: team
+      ? TeamSchema.parse(team)
+      : {
+          name: '',
+          description: '',
+          strategy: '',
+          keywords: [],
+        },
   })
 
   const values = form.watch()
   const [debounced] = useDebounce(values, 500)
 
-  const query = trpc.keyword.search.useQuery(debounced)
+  const query = trpc.keyword.search.useQuery(debounced, {
+    keepPreviousData: true,
+    enabled: form.formState.isValid,
+  })
   const mutation = trpc.team.upsert.useMutation()
 
   const isLoading = mutation.isLoading || form.formState.isSubmitting
@@ -122,7 +132,10 @@ export function TeamForm({ team, onSuccess }: Props) {
               <FormLabel>Keywords</FormLabel>
               <FormControl>
                 <MultiSelect
-                  isLoading={query.isLoading}
+                  isLoading={
+                    form.formState.isValid &&
+                    (query.isLoading || query.isPreviousData)
+                  }
                   options={(query.data ?? []).map((kw) => ({
                     value: kw.id,
                     label: kw.name,

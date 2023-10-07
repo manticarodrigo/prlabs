@@ -2,7 +2,6 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 import Discord from '@/components/icons/discord'
-import { TeamList } from '@/components/team/list'
 import { buttonVariants } from '@/components/ui/button'
 import {
   PageHeader,
@@ -51,9 +50,13 @@ export default function HomePage() {
           <PageHeader className="pb-8">
             <Link
               href="/teams"
-              className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium"
+              className="inline-flex items-center rounded-lg bg-violet-200 px-3 py-1 text-sm font-medium"
             >
-              🎉 <Separator className="mx-2 h-4" orientation="vertical" />{' '}
+              🎉{' '}
+              <Separator
+                className="mx-2 h-4 bg-violet-400"
+                orientation="vertical"
+              />{' '}
               Journalist Search, a new media exploration tool.
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -77,17 +80,6 @@ export default function HomePage() {
               </Link>
             </div>
           </PageHeader>
-          <section className="flex flex-col justify-center rounded-lg border p-6 bg-background shadow gap-2 pointer-events-none gap-4 sm:gap-6">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">
-                Welcome back friend!
-              </h1>
-              <p className="text-muted-foreground">
-                Select a team to get started.
-              </p>
-            </div>
-            <TeamList teams={teams} />
-          </section>
         </div>
       </div>
     </main>

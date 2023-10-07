@@ -12,14 +12,16 @@ export default async function TeamListPage() {
   const teams = await getTeams(user.id)
 
   return (
-    <main className="container flex flex-col py-6 px-4 w-full h-full gap-4 sm:gap-6">
-      <div>
+    <main className="container flex flex-col items-center py-6 px-4 w-full h-full gap-4 sm:gap-6">
+      <div className="text-center">
         <h1 className="text-2xl font-bold tracking-tight">
           Welcome back {user.firstName}!
         </h1>
         <p className="text-muted-foreground">Select a team to get started.</p>
       </div>
-      <TeamList teams={teams} />
+      <div className="w-full max-w-xl">
+        <TeamList teams={teams} />
+      </div>
     </main>
   )
 }

@@ -4,8 +4,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.sortImports": false,
-    "source.organizeImports": true
+    "source.fixAll": "explicit",
+    "source.sortImports": "never",
+    "source.organizeImports": "explicit"
   }
 }
